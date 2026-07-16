@@ -1,5 +1,6 @@
+// Netlify Function for Gemini API
 exports.handler = async (event) => {
-    // Only allow POST requests
+    // Allow only POST requests
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -9,8 +10,8 @@ exports.handler = async (event) => {
 
     try {
         const { message } = JSON.parse(event.body);
-        const API_KEY = process.env.GEMINI_API_KEY;
 
+        // Check if message exists
         if (!message) {
             return {
                 statusCode: 400,
@@ -18,45 +19,67 @@ exports.handler = async (event) => {
             };
         }
 
+        // Get API key from environment variables
+        const API_KEY = process.env.GEMINI_API_KEY;
+
         if (!API_KEY) {
             return {
                 statusCode: 500,
-                body: JSON.stringify({ error: 'API key not configured' })
+                body: JSON.stringify({ error: 'API key not configured. Please set GEMINI_API_KEY in Netlify environment variables.' })
             };
         }
 
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: message }] }]
-                })
-            }
-        );
+        // Gemini API URL - using gemini-2.0-flash model
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+        // Call Gemini API
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: message
+                            }
+                        ]
+                    }
+                ]
+            })
+        });
 
         const data = await response.json();
 
+        // Check for API errors
         if (data.error) {
             return {
                 statusCode: 500,
-                body: JSON.stringify({ error: data.error.message })
+                body: JSON.stringify({
+                    error: data.error.message || 'Gemini API returned an error'
+                })
             };
         }
 
+        // Extract reply from response
         const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.';
 
         return {
             statusCode: 200,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ reply })
         };
 
     } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: error.message })
+            body: JSON.stringify({
+                error: error.message || 'Internal server error'
+            })
         };
     }
 };
