@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Generator - AIToolsNova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #4F46E5;
+            --secondary: #06B6D4;
+            --light: #F8FAFC;
+            --border: #E2E8F0;
+            --text: #0F172A;
+            --text2: #64748B;
+            --shadow: 0 12px 35px rgba(15, 23, 42, .08);
+            --radius: 18px;
+            --transition: .35s ease;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .container {
+            width: min(1200px, 92%);
+            margin: auto;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 72px;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+        }
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .logo span {
+            color: var(--primary);
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            font-weight: 600;
+            color: var(--text2);
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        .back-btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, .3);
+        }
+        .tool-hero {
+            padding: 50px 0 30px;
+            text-align: center;
+        }
+        .tool-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .tool-hero p {
+            color: var(--text2);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: auto;
+        }
+        .tool-area {
+            padding: 30px 0 70px;
+        }
+        .tool-box {
+            max-width: 850px;
+            margin: auto;
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .tool-box textarea,
+        .tool-box input,
+        .tool-box select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--light);
+        }
+        .tool-box textarea:focus,
+        .tool-box input:focus,
+        .tool-box select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, .1);
+        }
+        .tool-box textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .tool-box label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        .tool-box .row {
+            margin-bottom: 18px;
+        }
+        .tool-btn {
+            padding: 14px 34px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tool-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, .35);
+        }
+        .tool-btn.secondary {
+            background: var(--light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .tool-btn.secondary:hover {
+            background: var(--border);
+        }
+        .output-box {
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            min-height: 80px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            display: none;
+        }
+        .output-box.show {
+            display: block;
+            animation: fadeIn .3s ease;
+        }
+        .output-box .copy-btn {
+            margin-top: 14px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .footer {
+            background: #020617;
+            padding: 50px 0 20px;
+            color: #CBD5E1;
+            text-align: center;
+        }
+        .footer a {
+            color: #94A3B8;
+            margin: 0 12px;
+            font-size: 0.9rem;
+        }
+        .footer a:hover {
+            color: #fff;
+        }
+        .footer p {
+            color: #64748B;
+            margin-top: 16px;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .tool-box {
+                padding: 20px 16px;
+            }
+            .tool-hero h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="../index.html" class="logo">🤖 <span>AITools</span>Nova</a>
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="../tools.html">Tools</a>
+                <a href="../blogs.html">Blogs</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+            </nav>
+            <a href="../index.html#donate" class="back-btn">❤️ Donate</a>
+        </div>
+    </header>
+
+    <section class="tool-hero">
+        <div class="container">
+            <h1>📧 Email Generator</h1>
+            <p>Create professional emails for any situation — fast.</p>
+        </div>
+    </section>
+
+    <section class="tool-area">
+        <div class="container">
+            <div class="tool-box">
+                <div class="row">
+                    <label for="emailType">📌 Email Type</label>
+                    <select id="emailType">
+                        <option value="professional">Professional / Business</option>
+                        <option value="job-application">Job Application</option>
+                        <option value="follow-up">Follow-Up</option>
+                        <option value="sales">Sales / Pitch</option>
+                        <option value="personal">Personal / Casual</option>
+                        <option value="complaint">Complaint / Feedback</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label for="recipient">👤 Recipient Name</label>
+                    <input type="text" id="recipient" placeholder="e.g. Mr. Sharma" />
+                </div>
+                <div class="row">
+                    <label for="purpose">📝 Purpose / Context</label>
+                    <textarea id="purpose" placeholder="e.g. Applying for the Software Engineer position at your company..."></textarea>
+                </div>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;">
+                    <button class="tool-btn" id="generateEmail">✉️ Generate Email</button>
+                    <button class="tool-btn secondary" id="clearEmail">🗑️ Clear</button>
+                </div>
+                <div class="output-box" id="outputBox">
+                    <div id="outputContent">Your professional email will appear here...</div>
+                    <button class="copy-btn" id="copyBtn">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="../index.html">Home</a>
+            <a href="../tools.html">Tools</a>
+            <a href="../blogs.html">Blogs</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy-policy.html">Privacy</a>
+            <p>&copy; 2026 AIToolsNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const typeSelect = document.getElementById('emailType');
+        const recipientInput = document.getElementById('recipient');
+        const purposeInput = document.getElementById('purpose');
+        const generateBtn = document.getElementById('generateEmail');
+        const clearBtn = document.getElementById('clearEmail');
+        const outputBox = document.getElementById('outputBox');
+        const outputContent = document.getElementById('outputContent');
+        const copyBtn = document.getElementById('copyBtn');
+
+        const emailTemplates = {
+            'professional': {
+                subject: 'Professional Inquiry',
+                body: (recipient, purpose) =>
+                    `Dear ${recipient || 'Sir/Madam'},\n\nI hope this email finds you well. I am writing to ${purpose || 'discuss potential collaboration opportunities'}. I believe that my experience and skills align well with your requirements.\n\nI would appreciate the opportunity to connect further and explore how we can work together. Please let me know a convenient time for a discussion.\n\nLooking forward to your positive response.\n\nBest regards,\n[Your Name]\n[Your Position]\n[Your Contact]`
+            },
+            'job-application': {
+                subject: 'Application for [Position Name]',
+                body: (recipient, purpose) =>
+                    `Dear ${recipient || 'Hiring Manager'},\n\nI am writing to express my interest in the position at your esteemed organization. ${purpose || 'I am confident that my skills and experience make me a strong candidate for this role.'}\n\nI have attached my resume for your review. I would welcome the opportunity to discuss how my background and skills can contribute to your team.\n\nThank you for considering my application. I look forward to hearing from you.\n\nSincerely,\n[Your Name]\n[Your Contact]`
+            },
+            'follow-up': {
+                subject: 'Follow-Up on Previous Conversation',
+                body: (recipient, purpose) =>
+                    `Dear ${recipient || 'Team'},\n\nI hope you are having a good day. I am following up on ${purpose || 'our previous discussion regarding the project'}. I wanted to check in and see if you have any updates or if there's anything else you need from my side.\n\nPlease feel free to reach out if you have any questions. I look forward to hearing from you.\n\nBest regards,\n[Your Name]`
+            },
+            'sales': {
+                subject: 'How We Can Help You Grow',
+                body: (recipient, purpose) =>
+                    `Dear ${recipient || 'Prospect'},\n\nI hope this email finds you well. I'm reaching out because ${purpose || 'we believe our solution can significantly benefit your business'}. Our platform has helped companies like yours achieve remarkable results.\n\nI'd love to schedule a brief call to discuss how we can support your goals. Let me know what time works best for you.\n\nLooking forward to connecting.\n\nWarm regards,\n[Your Name]\n[Your Company]`
+            },
+            'personal': {
+                subject: 'Hello from [Your Name]',
+                body: (recipient, purpose) =>
+                    `Hey ${recipient || 'Friend'},\n\nI hope you're doing great! I wanted to reach out because ${purpose || 'I was thinking about you and wanted to catch up'}. It's been a while since we last connected.\n\nLet me know when you're free to chat — would love to hear what you've been up to!\n\nTake care,\n[Your Name]`
+            },
+            'complaint': {
+                subject: 'Feedback Regarding [Issue]',
+                body: (recipient, purpose) =>
+                    `Dear ${recipient || 'Customer Support'},\n\nI am writing to bring to your attention an issue I have experienced. ${purpose || 'I recently encountered a problem with your service/product that I would like to address.'}\n\nI would appreciate it if you could look into this matter and get back to me at your earliest convenience. I hope we can resolve this amicably.\n\nThank you for your attention to this matter.\n\nSincerely,\n[Your Name]\n[Your Contact]`
+            }
+        };
+
+        function generateEmail(type, recipient, purpose) {
+            const template = emailTemplates[type] || emailTemplates['professional'];
+            const subject = template.subject;
+            let body = template.body(recipient || 'Recipient', purpose || 'share my thoughts with you');
+
+            return `📧 Subject: ${subject}\n\n${body}`;
+        }
+
+        generateBtn.addEventListener('click', function() {
+            const type = typeSelect.value;
+            const recipient = recipientInput.value.trim();
+            const purpose = purposeInput.value.trim();
+            const result = generateEmail(type, recipient, purpose);
+            outputContent.textContent = result;
+            outputBox.classList.add('show');
+        });
+
+        clearBtn.addEventListener('click', function() {
+            recipientInput.value = '';
+            purposeInput.value = '';
+            outputBox.classList.remove('show');
+            outputContent.textContent = 'Your professional email will appear here...';
+        });
+
+        copyBtn.addEventListener('click', function() {
+            const text = outputContent.textContent;
+            if (text && text !== 'Your professional email will appear here...') {
+                navigator.clipboard.writeText(text).then(() => {
+                    copyBtn.textContent = '✅ Copied!';
+                    setTimeout(() => copyBtn.textContent = '📋 Copy', 2000);
+                }).catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                    copyBtn.textContent = '✅ Copied!';
+                    setTimeout(() => copyBtn.textContent = '📋 Copy', 2000);
+                });
+            }
+        });
+
+        console.log('📧 Email Generator loaded.');
+    </script>
+</body>
+</html>

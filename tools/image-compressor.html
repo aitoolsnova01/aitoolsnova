@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Compressor - AIToolsNova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #4F46E5;
+            --secondary: #06B6D4;
+            --light: #F8FAFC;
+            --border: #E2E8F0;
+            --text: #0F172A;
+            --text2: #64748B;
+            --shadow: 0 12px 35px rgba(15, 23, 42, .08);
+            --radius: 18px;
+            --transition: .35s ease;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .container {
+            width: min(1200px, 92%);
+            margin: auto;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 72px;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+        }
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .logo span {
+            color: var(--primary);
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            font-weight: 600;
+            color: var(--text2);
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        .back-btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, .3);
+        }
+        .tool-hero {
+            padding: 50px 0 30px;
+            text-align: center;
+        }
+        .tool-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .tool-hero p {
+            color: var(--text2);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: auto;
+        }
+        .tool-area {
+            padding: 30px 0 70px;
+        }
+        .tool-box {
+            max-width: 850px;
+            margin: auto;
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .drop-zone {
+            border: 3px dashed var(--border);
+            border-radius: 20px;
+            padding: 50px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--light);
+        }
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, .05);
+        }
+        .drop-zone .icon {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+        .drop-zone p {
+            color: var(--text2);
+        }
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+        .preview-area {
+            margin-top: 24px;
+            display: none;
+        }
+        .preview-area.show {
+            display: block;
+            animation: fadeIn .3s ease;
+        }
+        .preview-area img {
+            max-width: 100%;
+            max-height: 320px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        .preview-area .info {
+            margin: 16px 0;
+            font-size: 0.95rem;
+            color: var(--text2);
+        }
+        .preview-area .info strong {
+            color: var(--text);
+        }
+        .tool-btn {
+            padding: 14px 34px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 6px;
+        }
+        .tool-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, .35);
+        }
+        .tool-btn.secondary {
+            background: var(--light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .tool-btn.secondary:hover {
+            background: var(--border);
+        }
+        .tool-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .quality-control {
+            margin: 18px 0;
+        }
+        .quality-control label {
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        .quality-control input[type="range"] {
+            width: 200px;
+            accent-color: var(--primary);
+        }
+        .quality-control span {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .footer {
+            background: #020617;
+            padding: 50px 0 20px;
+            color: #CBD5E1;
+            text-align: center;
+        }
+        .footer a {
+            color: #94A3B8;
+            margin: 0 12px;
+            font-size: 0.9rem;
+        }
+        .footer a:hover {
+            color: #fff;
+        }
+        .footer p {
+            color: #64748B;
+            margin-top: 16px;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .tool-box {
+                padding: 20px 16px;
+            }
+            .tool-hero h1 {
+                font-size: 1.6rem;
+            }
+            .quality-control input[type="range"] {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="../index.html" class="logo">🤖 <span>AITools</span>Nova</a>
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="../tools.html">Tools</a>
+                <a href="../blogs.html">Blogs</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+            </nav>
+            <a href="../index.html#donate" class="back-btn">❤️ Donate</a>
+        </div>
+    </header>
+
+    <section class="tool-hero">
+        <div class="container">
+            <h1>🗜️ Image Compressor</h1>
+            <p>Compress images without losing quality. Supports JPG, PNG, WebP.</p>
+        </div>
+    </section>
+
+    <section class="tool-area">
+        <div class="container">
+            <div class="tool-box">
+                <div class="drop-zone" id="dropZone">
+                    <div class="icon">🖼️</div>
+                    <p><strong>Click to upload</strong> or drag &amp; drop your image here</p>
+                    <p style="font-size:0.85rem;margin-top:6px;">Supports JPG, PNG, WebP up to 10MB</p>
+                    <input type="file" id="fileInput" accept="image/*" />
+                </div>
+
+                <div class="preview-area" id="previewArea">
+                    <img id="previewImg" src="" alt="Preview" />
+                    <div class="info" id="fileInfo">Original: <span id="origSize">0 KB</span></div>
+
+                    <div class="quality-control">
+                        <label for="qualityRange">Quality:</label>
+                        <input type="range" id="qualityRange" min="10" max="100" value="80" />
+                        <span id="qualityLabel">80%</span>
+                    </div>
+
+                    <div>
+                        <button class="tool-btn" id="compressBtn">⬇️ Compress &amp; Download</button>
+                        <button class="tool-btn secondary" id="clearImage">🗑️ Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="../index.html">Home</a>
+            <a href="../tools.html">Tools</a>
+            <a href="../blogs.html">Blogs</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy-policy.html">Privacy</a>
+            <p>&copy; 2026 AIToolsNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewArea = document.getElementById('previewArea');
+        const previewImg = document.getElementById('previewImg');
+        const origSize = document.getElementById('origSize');
+        const qualityRange = document.getElementById('qualityRange');
+        const qualityLabel = document.getElementById('qualityLabel');
+        const compressBtn = document.getElementById('compressBtn');
+        const clearBtn = document.getElementById('clearImage');
+
+        let currentFile = null;
+
+        // Quality range label
+        qualityRange.addEventListener('input', function() {
+            qualityLabel.textContent = this.value + '%';
+        });
+
+        // Click to upload
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        // Drag & drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file.');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size exceeds 10MB limit.');
+                return;
+            }
+
+            currentFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                origSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+                previewArea.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Clear
+        clearBtn.addEventListener('click', function() {
+            currentFile = null;
+            fileInput.value = '';
+            previewImg.src = '';
+            previewArea.classList.remove('show');
+            origSize.textContent = '0 KB';
+        });
+
+        // Compress & Download
+        compressBtn.addEventListener('click', function() {
+            if (!currentFile) {
+                alert('Please upload an image first.');
+                return;
+            }
+
+            const quality = parseInt(qualityRange.value) / 100;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const format = currentFile.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                const compressedDataUrl = canvas.toDataURL(format, quality);
+
+                // Download
+                const link = document.createElement('a');
+                link.download = 'compressed_' + currentFile.name.replace(/\.[^.]+$/, '.jpg');
+                link.href = compressedDataUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Show compressed size
+                const compressedSize = Math.round((compressedDataUrl.length * 3 / 4) / 1024);
+                alert(`✅ Compressed!\nOriginal: ${(currentFile.size / 1024).toFixed(1)} KB\nCompressed: ${compressedSize} KB\nQuality: ${qualityRange.value}%`);
+            };
+
+            img.src = previewImg.src;
+        });
+
+        console.log('🗜️ Image Compressor loaded.');
+    </script>
+</body>
+</html>

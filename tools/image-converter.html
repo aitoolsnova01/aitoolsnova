@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter - AIToolsNova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Same base styles as above - shortened for brevity */
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#4F46E5;--secondary:#06B6D4;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--radius:18px;--transition:.35s ease}
+        html{scroll-behavior:smooth;font-size:16px}
+        body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.7}
+        .container{width:min(1200px,92%);margin:auto}
+        a{text-decoration:none;color:inherit}
+        button{font-family:inherit;cursor:pointer;border:none}
+        .header{position:sticky;top:0;width:100%;height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}
+        .header .container{display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800}
+        .logo span{color:var(--primary)}
+        .nav-links{display:flex;gap:28px;font-weight:600;color:var(--text2)}
+        .nav-links a:hover{color:var(--primary)}
+        .back-btn{padding:10px 22px;border-radius:50px;background:var(--primary);color:#fff;font-weight:600;transition:var(--transition)}
+        .back-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(79,70,229,.3)}
+        .tool-hero{padding:50px 0 30px;text-align:center}
+        .tool-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;margin-bottom:10px}
+        .tool-hero p{color:var(--text2);font-size:1.1rem;max-width:600px;margin:auto}
+        .tool-area{padding:30px 0 70px}
+        .tool-box{max-width:850px;margin:auto;background:#fff;border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);border:1px solid var(--border)}
+        .tool-box select{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;background:var(--light);margin-bottom:16px}
+        .drop-zone{border:3px dashed var(--border);border-radius:20px;padding:40px 20px;cursor:pointer;transition:var(--transition);background:var(--light);text-align:center;margin-bottom:16px}
+        .drop-zone:hover{border-color:var(--primary);background:rgba(79,70,229,.05)}
+        .drop-zone input{display:none}
+        .preview-area{display:none;margin-top:16px}
+        .preview-area.show{display:block;animation:fadeIn .3s ease}
+        .preview-area img{max-width:100%;max-height:280px;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow)}
+        .tool-btn{padding:14px 34px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:1rem;transition:var(--transition);display:inline-flex;align-items:center;gap:10px;margin:6px}
+        .tool-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(79,70,229,.35)}
+        .tool-btn.secondary{background:var(--light);color:var(--text);border:1px solid var(--border)}
+        .tool-btn.secondary:hover{background:var(--border)}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .footer{background:#020617;padding:50px 0 20px;color:#CBD5E1;text-align:center}
+        .footer a{color:#94A3B8;margin:0 12px;font-size:0.9rem}
+        .footer a:hover{color:#fff}
+        .footer p{color:#64748B;margin-top:16px;font-size:0.85rem}
+        @media(max-width:768px){.nav-links{display:none}.tool-box{padding:20px 16px}.tool-hero h1{font-size:1.6rem}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="../index.html" class="logo">🤖 <span>AITools</span>Nova</a>
+            <nav class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="../tools.html">Tools</a>
+                <a href="../blogs.html">Blogs</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+            </nav>
+            <a href="../index.html#donate" class="back-btn">❤️ Donate</a>
+        </div>
+    </header>
+
+    <section class="tool-hero">
+        <div class="container">
+            <h1>🔄 Image Converter</h1>
+            <p>Convert JPG, PNG, WebP — choose your output format.</p>
+        </div>
+    </section>
+
+    <section class="tool-area">
+        <div class="container">
+            <div class="tool-box">
+                <div class="drop-zone" id="dropZone">
+                    <p style="font-size:2.5rem;margin-bottom:8px;">🖼️</p>
+                    <p><strong>Click to upload</strong> or drag &amp; drop</p>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+                <label for="formatSelect">Output Format</label>
+                <select id="formatSelect">
+                    <option value="image/jpeg">JPEG</option>
+                    <option value="image/png">PNG</option>
+                    <option value="image/webp">WebP</option>
+                </select>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                    <button class="tool-btn" id="convertBtn">⬇️ Convert & Download</button>
+                    <button class="tool-btn secondary" id="clearBtn">🗑️ Clear</button>
+                </div>
+                <div class="preview-area" id="previewArea">
+                    <img id="previewImg" src="" alt="Preview">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="../index.html">Home</a><a href="../tools.html">Tools</a><a href="../blogs.html">Blogs</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy-policy.html">Privacy</a>
+            <p>&copy; 2026 AIToolsNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewArea = document.getElementById('previewArea');
+        const previewImg = document.getElementById('previewImg');
+        const formatSelect = document.getElementById('formatSelect');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        let currentFile = null;
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', e => e.preventDefault());
+        dropZone.addEventListener('drop', e => { e.preventDefault(); if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', e => { if(e.target.files.length) handleFile(e.target.files[0]); });
+
+        function handleFile(file) {
+            if(!file.type.startsWith('image/')) return alert('Please upload an image.');
+            currentFile = file;
+            const reader = new FileReader();
+            reader.onload = e => { previewImg.src = e.target.result; previewArea.classList.add('show'); };
+            reader.readAsDataURL(file);
+        }
+
+        convertBtn.addEventListener('click', function() {
+            if(!currentFile) return alert('Upload an image first.');
+            const format = formatSelect.value;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = function() {
+                canvas.width = img.width; canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const ext = format.split('/')[1];
+                const link = document.createElement('a');
+                link.download = 'converted.' + ext;
+                link.href = canvas.toDataURL(format, 0.92);
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            };
+            img.src = previewImg.src;
+        });
+
+        clearBtn.addEventListener('click', function() {
+            currentFile = null; fileInput.value = ''; previewImg.src = ''; previewArea.classList.remove('show');
+        });
+        console.log('🔄 Image Converter loaded.');
+    </script>
+</body>
+</html>
