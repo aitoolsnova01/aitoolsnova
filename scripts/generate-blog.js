@@ -102,3 +102,61 @@ async function requestGroq(messages) {
 
 console.log("✅ Core Engine Loaded");
 await writeLog("Core Engine Started");
+
+
+const KEYWORD_FILE = "./data/keywords.json";
+const PUBLISHED_FILE = "./data/published.json";
+
+async function getNextKeyword() {
+
+  const keywords = await loadJson(KEYWORD_FILE, []);
+  const published = await loadJson(PUBLISHED_FILE, []);
+
+  const remaining = keywords.filter(
+    keyword => !published.includes(keyword)
+  );
+
+  if (remaining.length === 0) {
+    throw new Error("No keywords remaining.");
+  }
+
+  const keyword =
+    remaining[Math.floor(Math.random() * remaining.length)];
+
+  return keyword;
+
+}
+
+async function markKeywordPublished(keyword) {
+
+  const published = await loadJson(PUBLISHED_FILE, []);
+
+  if (!published.includes(keyword)) {
+
+    published.push(keyword);
+
+    await saveJson(PUBLISHED_FILE, published);
+
+  }
+
+}
+
+async function generateSlug(keyword) {
+
+  return createSlug(keyword);
+
+}
+
+async function main() {
+
+    const keyword = await getNextKeyword();
+
+    console.log("Selected Keyword:", keyword);
+
+    await writeLog(`Keyword Selected: ${keyword}`);
+
+    return keyword;
+
+}
+
+await main();
