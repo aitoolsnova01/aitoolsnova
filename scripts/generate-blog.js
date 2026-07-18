@@ -149,14 +149,64 @@ async function generateSlug(keyword) {
 
 async function main() {
 
-    const keyword = await getNextKeyword();
+  const keyword = await getNextKeyword();
 
-    console.log("Selected Keyword:", keyword);
+  console.log("Selected Keyword:", keyword);
 
-    await writeLog(`Keyword Selected: ${keyword}`);
+  await writeLog(`Keyword Selected: ${keyword}`);
 
-    return keyword;
+  const article = await generateBlog(keyword);
+
+const slug = await generateSlug(keyword);
+
+console.log("Slug:", slug);
+
+await markKeywordPublished(keyword);
+
+console.log("Keyword marked as published");
+
+  console.log(article);
+
+  await writeLog("Blog Generated Successfully");
+
+  return {
+  keyword,
+  slug,
+  article
+};
 
 }
 
 await main();
+
+async function generateBlog(keyword) {
+
+  const prompt = `
+Write a detailed SEO optimized blog about:
+
+${keyword}
+
+Requirements:
+
+- 2000+ words
+- Human readable
+- H1 Title
+- Meta Description
+- Introduction
+- Table of Contents
+- H2 & H3 headings
+- FAQs
+- Conclusion
+- Use Markdown formatting
+`;
+
+  const article = await requestGroq([
+    {
+      role: "user",
+      content: prompt
+    }
+  ]);
+
+  return article;
+
+}
