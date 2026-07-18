@@ -10,20 +10,25 @@
     <meta name="theme-color" content="#4F46E5">
 
     <!-- Google AdSense -->
-    <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728"
+     crossorigin="anonymous"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
 
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-    </script>
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+
+  gtag('config', 'G-KJ0WTD0R0M', {
+    page_path: window.location.pathname,
+    anonymize_ip: true
+  });
+</script>
 
     <style>
         /* ===== SAME STYLES AS PREVIOUS BLOGS ===== */
