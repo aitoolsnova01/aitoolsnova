@@ -1,1 +1,2 @@
-
+# This file ensures the data folder is tracked by git
+# Contains keywords.json and published.json for blog automation
