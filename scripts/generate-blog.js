@@ -159,7 +159,7 @@ async function main() {
 
 const slug = await generateSlug(keyword);
 
-console.log("Slug:", slug);
+await saveBlog(slug, article);
 
 await markKeywordPublished(keyword);
 
