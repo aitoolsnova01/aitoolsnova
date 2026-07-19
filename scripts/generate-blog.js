@@ -210,3 +210,97 @@ Requirements:
   return article;
 
 }
+
+// ======================================================
+// BLOG HTML + SAVE ENGINE
+// ======================================================
+
+function markdownToHtml(markdown = "") {
+  let html = markdown;
+
+  html = html.replace(/^### (.*)$/gm, "<h3>$1</h3>");
+  html = html.replace(/^## (.*)$/gm, "<h2>$1</h2>");
+  html = html.replace(/^# (.*)$/gm, "<h1>$1</h1>");
+
+  html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+  const blocks = html.split(/\n\s*\n/);
+
+  html = blocks
+    .map(block => {
+      if (/^<h[1-6]>/.test(block.trim())) return block;
+      return `<p>${block.replace(/\n/g, "<br>")}</p>`;
+    })
+    .join("\n");
+
+  return html;
+}
+
+function getTitle(article) {
+
+  const match = article.match(/^#\s+(.+)$/m);
+
+  if (match) return match[1];
+
+  return "AIToolsNova Blog";
+
+}
+
+function getMeta(article) {
+
+  return article
+    .replace(/^#.*$/gm, "")
+    .replace(/\*/g, "")
+    .replace(/\n/g, " ")
+    .trim()
+    .substring(0, 155);
+
+}
+
+async function saveBlog(slug, article) {
+
+  const title = getTitle(article);
+
+  const description = getMeta(article);
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>${title}</title>
+
+<meta name="description"
+content="${description}">
+
+<link rel="canonical"
+href="${CONFIG.siteUrl}/blog/${slug}.html">
+
+</head>
+
+<body>
+
+${markdownToHtml(article)}
+
+</body>
+
+</html>`;
+
+  const file = path.join(
+    CONFIG.blogDir,
+    `${slug}.html`
+  );
+
+  await fs.writeFile(file, html);
+
+  console.log("✅ Blog Saved:", file);
+
+  await writeLog(`Blog Saved : ${slug}.html`);
+
+}
