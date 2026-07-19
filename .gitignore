@@ -141,3 +141,33 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+# ===== AIToolsNova Specific =====
+/logs/
+*.log
+
+# Generated blog files (tracked via git, but ignore auto-generated temp)
+/blog/*.html
+!/blog/.gitkeep
+
+# Data files (keep published.json for tracking)
+/data/*.json
+!/data/.gitkeep
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
