@@ -304,3 +304,52 @@ ${markdownToHtml(article)}
   await writeLog(`Blog Saved : ${slug}.html`);
 
 }
+// ======================================================
+// BLOG INDEX UPDATER
+// ======================================================
+
+async function updateBlogIndex(title, slug, description) {
+
+  const indexFile = CONFIG.indexFile;
+
+  let html = "";
+
+  if (await fs.pathExists(indexFile)) {
+    html = await fs.readFile(indexFile, "utf8");
+  }
+
+  const card = `
+<div class="blog-card">
+<h2>
+<a href="/blog/${slug}.html">${title}</a>
+</h2>
+
+<p>${description}</p>
+
+<a href="/blog/${slug}.html">
+Read More →
+</a>
+
+</div>
+`;
+
+  if (html.includes("</body>")) {
+
+    html = html.replace(
+      "</body>",
+      `${card}\n</body>`
+    );
+
+  } else {
+
+    html += card;
+
+  }
+
+  await fs.writeFile(indexFile, html);
+
+  console.log("✅ blogs.html Updated");
+
+  await writeLog("blogs.html Updated");
+
+}
