@@ -9,15 +9,15 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "echo 'Development server not configured'",
-    "build": "echo 'Build complete'",
+    "dev": "echo \"Development server not configured\"",
+    "build": "echo \"Build complete\"",
     "blog": "node generate-blog.js",
     "test": "node --check generate-blog.js",
-    "lint": "echo 'No linter configured'",
+    "lint": "echo \"No linter configured\"",
     "start": "node generate-blog.js"
   },
   "dependencies": {
-    "@groq/groq-sdk": "^1.0.0",
+    "groq-sdk": "^0.30.0",
     "axios": "^1.8.1",
     "cheerio": "^1.0.0",
     "dotenv": "^16.4.7",
