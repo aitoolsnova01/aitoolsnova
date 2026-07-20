@@ -1,4 +1,152 @@
+# ============================================
+# ROBOTS.TXT - AIToolsNova.com
+# ============================================
+
+# ---------- MAIN RULES ----------
 User-agent: *
 Allow: /
 
-Sitemap: https://aitoolsnova.com/sitemap.xml
+# Block sensitive folders
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /temp/
+Disallow: /backup/
+Disallow: /logs/
+Disallow: /config/
+Disallow: /database/
+Disallow: /vendor/
+Disallow: /node_modules/
+
+# Block system files
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /.env
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /readme.html
+Disallow: /license.txt
+
+# Block duplicate content
+Disallow: /print/
+Disallow: /pdf/
+Disallow: /tag/
+Disallow: /category/
+
+# Block URL parameters
+Disallow: /*?*
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.docx$
+
+# Sitemap location
+Sitemap: https://www.aitoolsnova.com/sitemap.xml
+
+# ============================================
+# SPECIFIC SEARCH ENGINES
+# ============================================
+
+# ---------- GOOGLE ----------
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+# ---------- BING ----------
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0.5
+
+# ---------- YANDEX ----------
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# ---------- BAIDU ----------
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+# ---------- DUCKDUCKGO ----------
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# ============================================
+# BLOCK BAD BOTS (SPAM/SCRAPERS)
+# ============================================
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: Mail.RU
+Disallow: /
+
+User-agent:ia_archiver
+Disallow: /
+
+User-agent: Ezooms
+Disallow: /
+
+User-agent: YandexImages
+Disallow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+# ============================================
+# MOBILE CRAWLERS (Allow Full Access)
+# ============================================
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Bingbot-Mobile
+Allow: /
+
+# ============================================
+# SOCIAL MEDIA BOTS (Allow Full Access)
+# ============================================
+
+User-agent: Facebookbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Pinterestbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# ============================================
+# OTHER IMPORTANT BOTS
+# ============================================
+
+User-agent: Google-Read-Aloud
+Allow: /
+
+User-agent: Google-Site-Verification
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
