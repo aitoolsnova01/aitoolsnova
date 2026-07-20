@@ -1,44 +1,287 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<url>
-<loc>https://aitoolsnova.com/</loc>
-<priority>1.0</priority>
-</url>
+    <!-- MAIN PAGES -->
+    <url>
+        <loc>https://www.aitoolsnova.com/</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/about.html</loc>
-<priority>0.8</priority>
-</url>
+    <url>
+        <loc>https://www.aitoolsnova.com/tools.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/contact.html</loc>
-<priority>0.8</priority>
-</url>
+    <url>
+        <loc>https://www.aitoolsnova.com/blogs.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/blogs.html</loc>
-<priority>0.9</priority>
-</url>
+    <url>
+        <loc>https://www.aitoolsnova.com/about.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/tools.html</loc>
-<priority>0.9</priority>
-</url>
+    <url>
+        <loc>https://www.aitoolsnova.com/contact.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/privacy-policy.html</loc>
-<priority>0.5</priority>
-</url>
+    <!-- LEGAL PAGES -->
+    <url>
+        <loc>https://www.aitoolsnova.com/privacy-policy.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/disclaimer.html</loc>
-<priority>0.5</priority>
-</url>
+    <url>
+        <loc>https://www.aitoolsnova.com/terms-and-conditions.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+    </url>
 
-<url>
-<loc>https://aitoolsnova.com/terms-and-conditions.html</loc>
-<priority>0.5</priority>
-</url>
+    <url>
+        <loc>https://www.aitoolsnova.com/disclaimer.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/cookie-policy.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- AI TOOLS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/ai-chat.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/resume-builder.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/ai-writer.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/email-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- IMAGE TOOLS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/image-compressor.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/image-resizer.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/image-converter.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/background-remover.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- SEO TOOLS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/meta-tag-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/sitemap-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/keyword-density.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/robots-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- SOCIAL MEDIA TOOLS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/youtube-title.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/youtube-description.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/facebook-description.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/instagram-caption.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/hashtag-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- PDF TOOLS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/pdf-converter.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/pdf-merger.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/pdf-splitter.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- CALCULATORS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/sleep-calculator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/rain-calculator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/snow-calculator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- UTILITY TOOLS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/qr-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/password-generator.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/tools/unit-converter.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- BLOG POSTS -->
+    <url>
+        <loc>https://www.aitoolsnova.com/blog/ai-tools.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/blog/seo-guide.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/blog/social-media.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.aitoolsnova.com/blog/image-guide.html</loc>
+        <lastmod>2026-07-20</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
 
 </urlset>
