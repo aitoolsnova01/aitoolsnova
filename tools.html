@@ -4,877 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free AI Tools, SEO Tools & Online Utilities - AIToolsNova</title>
-    <meta name="description" content="100+ Free AI Tools, SEO Tools, Image Tools, PDF Tools, Calculators and Online Utilities. No signup required.">
-    <meta name="keywords" content="AI Tools, SEO Tools, PDF Tools, Image Tools, QR Generator, Calculators">
-    <meta name="robots" content="index,follow">
+    <meta name="description" content="100+ Free AI Tools, SEO Tools, Image Tools, PDF Tools, Calculators and Online Utilities. No signup required. Boost your productivity now.">
+    <meta name="keywords" content="AI Tools, SEO Tools, PDF Tools, Image Tools, QR Generator, Calculators, Social Media Tools, Free Online Tools">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#4F46E5">
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728"
-     crossorigin="anonymous"></script>
-
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  gtag('js', new Date());
-
-  gtag('config', 'G-KJ0WTD0R0M', {
-    page_path: window.location.pathname,
-    anonymize_ip: true
-  });
-</script>
+    <link rel="canonical" href="https://www.aitoolsnova.com/tools.html">
     
+    <!-- ===== OPEN GRAPH & TWITTER ===== -->
+    <meta property="og:title" content="Free AI Tools, SEO Tools & Online Utilities - AIToolsNova">
+    <meta property="og:description" content="100+ Free AI Tools, SEO Tools, Image Tools, PDF Tools, Calculators and Online Utilities. No signup required.">
+    <meta property="og:url" content="https://www.aitoolsnova.com/tools.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://www.aitoolsnova.com/images/og-image.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free AI Tools, SEO Tools & Online Utilities - AIToolsNova">
+    <meta name="twitter:description" content="100+ Free AI Tools, SEO Tools, Image Tools, PDF Tools, Calculators and Online Utilities. No signup required.">
+    
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+    <!-- ===== SCHEMA MARKUP ===== -->
+    <!-- Breadcrumb -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.aitoolsnova.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://www.aitoolsnova.com/tools.html" }
+        ]
+    }
+    </script>
+    <!-- ItemList Schema for Tools -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "AI Chat", "url": "https://www.aitoolsnova.com/tools/ai-chat.html" },
+            { "@type": "ListItem", "position": 2, "name": "Resume Builder", "url": "https://www.aitoolsnova.com/tools/resume-builder.html" },
+            { "@type": "ListItem", "position": 3, "name": "AI Writer", "url": "https://www.aitoolsnova.com/tools/ai-writer.html" },
+            { "@type": "ListItem", "position": 4, "name": "Email Generator", "url": "https://www.aitoolsnova.com/tools/email-generator.html" }
+        ]
+    }
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-KJ0WTD0R0M', { page_path: window.location.pathname, anonymize_ip: true });
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728" crossorigin="anonymous"></script>
 
     <style>
-        /* ===== GLOBAL STYLES (same as index.html) ===== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== COMPLETE CSS (same as index.html, with small additions) ===== */
         :root {
             --primary: #4F46E5;
+            --primary2: #6366F1;
             --secondary: #06B6D4;
             --dark: #0F172A;
+            --dark2: #1E293B;
+            --white: #fff;
             --light: #F8FAFC;
             --border: #E2E8F0;
             --text: #0F172A;
             --text2: #64748B;
-            --shadow: 0 12px 35px rgba(15, 23, 42, .08);
-            --shadowHover: 0 18px 55px rgba(15, 23, 42, .15);
-            --radius: 18px;
-            --transition: .35s ease;
-        }
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-        body {
-            font-family: "Inter", sans-serif;
-            background: var(--light);
-            color: var(--text);
-            line-height: 1.7;
-        }
-        .container {
-            width: min(1320px, 92%);
-            margin: auto;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: var(--transition);
-        }
-        button {
-            font-family: inherit;
-            cursor: pointer;
-            border: none;
-        }
-        img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        h1 {
-            font-size: clamp(2.6rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-        h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-        }
-        h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        p {
-            color: var(--text2);
-        }
-
-        section {
-            padding: 80px 0;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        .section-title p {
-            max-width: 720px;
-            margin: 15px auto 0;
-        }
-
-        /* ===== BUTTONS ===== */
-        .primary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 32px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-weight: 700;
-            transition: var(--transition);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, .30);
-        }
-        .primary-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 45px rgba(79, 70, 229, .40);
-        }
-        .secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 32px;
-            border-radius: 50px;
-            background: #fff;
-            border: 1px solid var(--border);
-            font-weight: 700;
-            transition: var(--transition);
-        }
-        .secondary-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-        .donate-btn-header {
-            padding: 12px 24px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #ff4d4d, #ff7b00);
-            color: #fff;
-            font-weight: 700;
-            transition: var(--transition);
-            box-shadow: 0 12px 28px rgba(255, 77, 77, .28);
-        }
-        .donate-btn-header:hover {
-            transform: translateY(-3px);
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 72px;
-            background: rgba(255, 255, 255, .92);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            z-index: 9999;
-        }
-        .header .container {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .logo span {
-            color: var(--primary);
-        }
-        .desktop-menu {
-            display: flex;
-            gap: 28px;
-            align-items: center;
-        }
-        .desktop-menu a {
-            font-weight: 600;
-            color: var(--text2);
-            font-size: 0.95rem;
-            position: relative;
-        }
-        .desktop-menu a:hover,
-        .desktop-menu a.active {
-            color: var(--primary);
-        }
-        .desktop-menu a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .icon-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #fff;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: var(--transition);
-        }
-        .icon-btn:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        .menu-btn {
-            display: none;
-            font-size: 26px;
-            background: none;
-            padding: 6px 10px;
-        }
-
-        /* ===== MOBILE MENU ===== */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 300px;
-            height: 100vh;
-            background: #fff;
-            padding: 30px 25px;
-            transition: .4s cubic-bezier(.4, 0, .2, 1);
-            z-index: 10000;
-            box-shadow: -15px 0 40px rgba(0, 0, 0, .10);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            overflow-y: auto;
-        }
-        .mobile-menu.active {
-            right: 0;
-        }
-        .mobile-menu .close-menu {
-            align-self: flex-end;
-            font-size: 28px;
-            background: none;
-            padding: 6px 10px;
-            color: var(--text);
-        }
-        .mobile-menu a {
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        .mobile-menu a:hover {
-            background: #EEF2FF;
-            color: var(--primary);
-        }
-        .mobile-menu .mobile-donate {
-            margin-top: 10px;
-            background: linear-gradient(135deg, #ff4d4d, #ff7b00);
-            color: #fff;
-            text-align: center;
-            border-radius: 50px;
-        }
-        .mobile-menu .mobile-donate:hover {
-            background: #ff4d4d;
-            color: #fff;
-        }
-
-        /* ===== TOOL HERO ===== */
-        .tool-hero {
-            padding-top: 130px;
-            padding-bottom: 50px;
-            background: linear-gradient(180deg, #ffffff 0%, #F8FAFC 50%, #EEF2FF 100%);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .tool-hero::before {
-            content: "";
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: rgba(79, 70, 229, .08);
-            border-radius: 50%;
-            filter: blur(100px);
-            top: -220px;
-            right: -100px;
-        }
-        .tool-hero .container {
-            position: relative;
-            z-index: 2;
-        }
-        .tool-hero h1 {
-            max-width: 900px;
-            margin: auto;
-            margin-bottom: 20px;
-        }
-        .tool-hero p {
-            max-width: 760px;
-            margin: auto;
-            font-size: 1.15rem;
-            margin-bottom: 30px;
-        }
-
-        /* ===== CATEGORY FILTER TABS ===== */
-        .category-tabs {
-            padding: 20px 0 40px;
-            background: var(--light);
-        }
-        .category-tabs .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-        .category-tabs a {
-            padding: 10px 22px;
-            border-radius: 50px;
-            background: #fff;
-            border: 1px solid var(--border);
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            color: var(--text2);
-        }
-        .category-tabs a:hover,
-        .category-tabs a.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-
-        /* ===== TOOLS SECTION ===== */
-        .tools-section {
-            padding: 40px 0 80px;
-            background: var(--light);
-        }
-        .tool-category {
-            margin-bottom: 70px;
-            scroll-margin-top: 90px;
-        }
-        .category-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .category-heading h3 {
-            font-size: clamp(1.4rem, 2vw, 2rem);
-            font-weight: 800;
-        }
-        .category-heading a {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-        .category-heading a:hover {
-            text-decoration: underline;
-        }
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 28px;
-        }
-        .tool-card {
-            background: #fff;
-            border-radius: 22px;
-            padding: 28px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            transition: .35s;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-        .tool-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadowHover);
-        }
-        .tool-card::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: .35s;
-        }
-        .tool-card:hover::before {
-            transform: scaleX(1);
-        }
-        .tool-icon {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            border-radius: 16px;
-            background: #EEF2FF;
-            margin-bottom: 18px;
-            transition: .35s;
-        }
-        .tool-card:hover .tool-icon {
-            transform: rotate(-6deg) scale(1.06);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-        }
-        .tool-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        .tool-card p {
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            flex: 1;
-            color: var(--text2);
-        }
-        .tool-btn {
-            margin-top: auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 44px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.95rem;
-            transition: .35s;
-        }
-        .tool-btn:hover {
-            transform: translateY(-3px);
-        }
-
-        /* ===== AD PLACEHOLDER ===== */
-        .ad-placeholder {
-            padding: 20px 0;
-            text-align: center;
-            background: var(--light);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .ad-placeholder .ad-box {
-            max-width: 728px;
-            margin: auto;
-            padding: 30px 20px;
-            background: #fff;
-            border: 2px dashed var(--border);
-            border-radius: 14px;
-            color: var(--text2);
-            font-size: 0.9rem;
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ===== DONATE ===== */
-        .donate-section {
-            padding: 70px 0;
-            background: linear-gradient(135deg, #0F172A, #1E293B);
-        }
-        .donate-box {
-            max-width: 840px;
-            margin: auto;
-            padding: 50px;
-            text-align: center;
-            background: rgba(255, 255, 255, .06);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, .10);
-            border-radius: 28px;
-        }
-        .donate-box h2 {
-            color: #fff;
-            font-size: clamp(1.8rem, 3vw, 2.6rem);
-            margin-bottom: 14px;
-        }
-        .donate-box p {
-            color: rgba(255, 255, 255, .8);
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        .donate-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: #020617;
-            padding: 60px 0 20px;
-            color: #CBD5E1;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        .footer h3,
-        .footer h4 {
-            color: #fff;
-            margin-bottom: 18px;
-            font-size: 1.1rem;
-        }
-        .footer p {
-            color: #94A3B8;
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-        .footer ul {
-            list-style: none;
-        }
-        .footer li {
-            margin-bottom: 12px;
-        }
-        .footer a {
-            display: inline-block;
-            color: #CBD5E1;
-            transition: .3s;
-            font-size: 0.95rem;
-        }
-        .footer a:hover {
-            color: #fff;
-            transform: translateX(4px);
-        }
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, .08);
-            padding-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .footer-bottom p {
-            color: #94A3B8;
-            font-size: 0.85rem;
-        }
-
-        /* ===== FLOATING BUTTONS ===== */
-        .floating-donate {
-            position: fixed;
-            right: 18px;
-            bottom: 90px;
-            background: linear-gradient(135deg, #ff4d4d, #ff7b00);
-            color: #fff;
-            padding: 13px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            box-shadow: 0 12px 35px rgba(255, 77, 77, .35);
-            z-index: 999;
-            transition: .35s;
-        }
-        .floating-donate:hover {
-            transform: translateY(-4px);
-        }
-        .floating-support {
-            position: fixed;
-            right: 18px;
-            bottom: 22px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            padding: 13px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            box-shadow: 0 12px 35px rgba(79, 70, 229, .30);
-            z-index: 999;
-            transition: .35s;
-        }
-        .floating-support:hover {
-            transform: translateY(-4px);
-        }
-        .back-to-top {
-            position: fixed;
-            left: 18px;
-            bottom: 22px;
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 12px 35px rgba(79, 70, 229, .35);
-            transition: .35s;
-            z-index: 999;
-        }
-        .back-to-top:hover {
-            transform: translateY(-4px);
-        }
-
-        /* ===== DARK MODE ===== */
-        body.dark {
-            --light: #020617;
-            --border: #1E293B;
-            --text: #F8FAFC;
-            --text2: #CBD5E1;
-            background: #020617;
-            color: #F8FAFC;
-        }
-        body.dark .header {
-            background: rgba(15, 23, 42, .92);
-            border-color: #1E293B;
-        }
-        body.dark .header .logo {
-            color: #F8FAFC;
-        }
-        body.dark .desktop-menu a {
-            color: #CBD5E1;
-        }
-        body.dark .desktop-menu a:hover {
-            color: var(--primary);
-        }
-        body.dark .icon-btn {
-            background: #1E293B;
-            border-color: #334155;
-            color: #CBD5E1;
-        }
-        body.dark .icon-btn:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        body.dark .mobile-menu {
-            background: #0F172A;
-        }
-        body.dark .mobile-menu a {
-            color: #F8FAFC;
-        }
-        body.dark .mobile-menu a:hover {
-            background: #1E293B;
-            color: var(--primary);
-        }
-        body.dark .mobile-menu .close-menu {
-            color: #F8FAFC;
-        }
-        body.dark .tool-hero {
-            background: linear-gradient(180deg, #0F172A 0%, #020617 50%, #0F172A 100%);
-        }
-        body.dark .tool-hero h1 {
-            color: #F8FAFC;
-        }
-        body.dark .tool-hero p {
-            color: #CBD5E1;
-        }
-        body.dark .category-tabs {
-            background: #020617;
-        }
-        body.dark .category-tabs a {
-            background: #0F172A;
-            border-color: #1E293B;
-            color: #CBD5E1;
-        }
-        body.dark .category-tabs a:hover,
-        body.dark .category-tabs a.active {
-            background: var(--primary);
-            color: #fff;
-        }
-        body.dark .tool-card {
-            background: #0F172A;
-            border-color: #1E293B;
-        }
-        body.dark .tool-card h3 {
-            color: #F8FAFC;
-        }
-        body.dark .tool-card p {
-            color: #CBD5E1;
-        }
-        body.dark .tool-icon {
-            background: #1E293B;
-        }
-        body.dark .tool-card:hover .tool-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-        }
-        body.dark .footer {
-            background: #000814;
-        }
-        body.dark .ad-placeholder {
-            background: #020617;
-        }
-        body.dark .ad-placeholder .ad-box {
-            background: #0F172A;
-            border-color: #1E293B;
-            color: #CBD5E1;
-        }
-        body.dark .secondary-btn {
-            background: #0F172A;
-            border-color: #1E293B;
-            color: #F8FAFC;
-        }
-        body.dark .secondary-btn:hover {
-            background: #1E293B;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media(max-width:992px) {
-            .desktop-menu {
-                display: none;
-            }
-            .menu-btn {
-                display: block;
-            }
-            .donate-btn-header {
-                display: none;
-            }
-            .tool-hero {
-                padding-top: 110px;
-            }
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 30px;
-            }
-        }
-
-        @media(max-width:768px) {
-            section {
-                padding: 55px 0;
-            }
-            .header {
-                height: 64px;
-            }
-            .tool-hero {
-                padding-top: 95px;
-                padding-bottom: 35px;
-            }
-            .tool-hero h1 {
-                font-size: 1.9rem;
-            }
-            .tool-hero p {
-                font-size: 0.95rem;
-            }
-            .tools-grid {
-                grid-template-columns: 1fr;
-                gap: 18px;
-            }
-            .tool-card {
-                padding: 20px;
-            }
-            .category-tabs a {
-                padding: 8px 16px;
-                font-size: 0.8rem;
-            }
-            .donate-box {
-                padding: 30px 20px;
-            }
-            .donate-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            .donate-buttons a {
-                width: 100%;
-                max-width: 300px;
-            }
-            .footer-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 24px;
-            }
-            .footer-bottom {
-                justify-content: center;
-                text-align: center;
-            }
-            .floating-donate {
-                right: 12px;
-                bottom: 80px;
-                padding: 11px 16px;
-                font-size: 0.8rem;
-            }
-            .floating-support {
-                right: 12px;
-                bottom: 18px;
-                padding: 11px 16px;
-                font-size: 0.8rem;
-            }
-            .back-to-top {
-                left: 12px;
-                bottom: 18px;
-                width: 44px;
-                height: 44px;
-                font-size: 18px;
-            }
-            .category-heading {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        @media(max-width:480px) {
-            .tool-hero h1 {
-                font-size: 1.6rem;
-            }
-            .tool-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 26px;
-            }
-            .category-tabs {
-                padding: 16px 0 30px;
-            }
-            .category-tabs a {
-                padding: 6px 12px;
-                font-size: 0.7rem;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #E5E7EB;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 20px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-        ::selection {
-            background: var(--primary);
-            color: #fff;
-        }
-        @media(prefers-reduced-motion:reduce) {
-            * {
-                animation: none !important;
-                transition: none !important;
-                scroll-behavior: auto;
-            }
-        }
+            --shadow: 0 8px 25px rgba(15,23,42,.06);
+            --shadowHover: 0 12px 40px rgba(15,23,42,.10);
+            --transition: .3s ease
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;font-size:16px;overflow-x:hidden}
+        body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.6;overflow-x:hidden}
+        .container{width:min(1320px,92%);margin:auto}
+        h1{font-size:clamp(2.2rem,6vw,4.2rem);font-weight:800;line-height:1.1;letter-spacing:-0.5px}
+        h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
+        h3{font-size:1.2rem;font-weight:700}
+        h4{font-size:1.05rem;font-weight:600}
+        p{color:var(--text2)}
+        a{text-decoration:none;color:inherit;transition:var(--transition)}
+        button{font-family:inherit;cursor:pointer;border:none}
+        .primary-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;transition:var(--transition);box-shadow:0 8px 20px rgba(79,70,229,.25)}
+        .primary-btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(79,70,229,.35)}
+        .secondary-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 28px;border-radius:50px;background:#fff;border:1px solid var(--border);font-weight:700;transition:var(--transition)}
+        .secondary-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+        section{padding:60px 0}
+        .section-title{text-align:center;margin-bottom:40px}
+        .section-title p{max-width:700px;margin:12px auto 0}
+        .header{position:fixed;top:0;left:0;width:100%;height:68px;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:9999}
+        .header .container{height:100%;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:var(--text)}
+        .desktop-menu{display:flex;gap:28px;align-items:center}
+        .desktop-menu a{font-weight:600;color:var(--text2);font-size:.95rem}
+        .desktop-menu a:hover{color:var(--primary)}
+        .desktop-menu a.active{color:var(--primary)}
+        .header-right{display:flex;align-items:center;gap:10px}
+        .icon-btn{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:var(--transition)}
+        .icon-btn:hover{background:var(--primary);color:#fff}
+        .donate-btn{padding:10px 22px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:.9rem;box-shadow:0 8px 20px rgba(79,70,229,.25);transition:var(--transition)}
+        .donate-btn:hover{transform:translateY(-2px)}
+        .menu-btn{display:none;font-size:26px;background:none;padding:4px}
+        .mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;padding:30px 20px;transition:.4s;z-index:10000;box-shadow:-10px 0 30px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+        .mobile-menu.active{right:0}
+        .mobile-menu .close-menu{align-self:flex-end;font-size:28px;background:none;padding:4px 10px;color:var(--text);line-height:1}
+        .mobile-menu .close-menu:hover{color:var(--primary)}
+        .mobile-menu a{padding:12px 16px;border-radius:10px;font-weight:600;color:var(--text2);font-size:.95rem}
+        .mobile-menu a:hover{background:#EEF2FF;color:var(--primary)}
+        .mobile-menu .mobile-donate{margin-top:4px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;border-radius:50px}
+        .mobile-menu .mobile-donate:hover{background:linear-gradient(135deg,var(--primary2),var(--secondary));color:#fff}
+        @media(max-width:992px){.desktop-menu,.donate-btn{display:none}.menu-btn{display:block}}
+        @media(max-width:768px){section{padding:50px 0}.header{height:60px}h1{font-size:2rem}.mobile-menu{width:260px;padding:25px 16px}}
+        .page-hero{padding-top:120px;padding-bottom:40px;background:linear-gradient(180deg,#fff 0%,#F8FAFC 50%,#EEF2FF 100%);text-align:center;position:relative;overflow:hidden}
+        .page-hero .container{position:relative;z-index:2}
+        .page-hero h1{max-width:800px;margin:auto auto 18px}
+        .page-hero p{max-width:700px;margin:auto auto 28px;font-size:1.05rem}
+        @media(max-width:992px){.page-hero{padding-top:100px}}
+        @media(max-width:768px){.page-hero{padding-top:85px;padding-bottom:30px}.page-hero p{font-size:.95rem}}
+        .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+        .tool-card{background:#fff;border-radius:20px;padding:24px;border:1px solid var(--border);box-shadow:var(--shadow);transition:.3s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+        .tool-card:hover{transform:translateY(-6px);box-shadow:var(--shadowHover)}
+        .tool-card::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));transform:scaleX(0);transition:.3s}
+        .tool-card:hover::before{transform:scaleX(1)}
+        .tool-card .tool-icon{width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:28px;border-radius:14px;background:#EEF2FF;margin-bottom:16px;transition:.3s}
+        .tool-card:hover .tool-icon{transform:rotate(-4deg) scale(1.04);background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff}
+        .tool-card h3{font-size:1.15rem;margin-bottom:8px}
+        .tool-card p{margin-bottom:18px;line-height:1.5;font-size:.9rem;flex:1}
+        .tool-card .tool-btn{margin-top:auto;display:flex;justify-content:center;align-items:center;height:40px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:.85rem;transition:.3s}
+        .tool-card .tool-btn:hover{transform:translateY(-2px)}
+        @media(max-width:768px){.tools-grid{grid-template-columns:1fr;gap:16px}.tool-card{padding:18px}}
+        .category-filter{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:40px}
+        .category-filter a{padding:10px 22px;border-radius:50px;background:#fff;border:1px solid var(--border);font-weight:600;font-size:.9rem;transition:.3s;color:var(--text2)}
+        .category-filter a:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+        .category-filter a.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+        .tool-category{margin-bottom:50px;scroll-margin-top:80px}
+        .category-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap;gap:10px}
+        .category-heading h3{font-size:1.6rem;font-weight:800}
+        .category-heading a{color:var(--primary);font-weight:700;font-size:.9rem}
+        .category-heading a:hover{text-decoration:underline}
+        .no-results{text-align:center;padding:40px 20px;display:none}
+        .no-results.show{display:block}
+        .no-results h3{font-size:1.5rem;margin-bottom:10px}
+        .no-results p{color:var(--text2)}
+        .footer{background:#020617;padding:60px 0 16px;color:#CBD5E1}
+        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:35px;margin-bottom:35px}
+        .footer h3,.footer h4{color:#fff;margin-bottom:18px}
+        .footer h3{font-size:1.2rem}
+        .footer h4{font-size:1rem}
+        .footer p{color:#94A3B8;line-height:1.6;font-size:.9rem}
+        .footer ul{list-style:none}
+        .footer li{margin-bottom:10px}
+        .footer a{display:inline-block;color:#CBD5E1;transition:.3s;font-size:.9rem}
+        .footer a:hover{color:#fff;transform:translateX(4px)}
+        .footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .footer-bottom p{color:#94A3B8;font-size:.85rem}
+        @media(max-width:992px){.footer-grid{grid-template-columns:repeat(2,1fr);gap:28px}}
+        @media(max-width:768px){.footer{padding:40px 0 12px}.footer-grid{grid-template-columns:1fr;text-align:center;gap:22px}.footer-bottom{justify-content:center;text-align:center}.footer ul{padding:0}}
+        .floating-donate{position:fixed;right:16px;bottom:80px;background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(255,77,77,.3);z-index:999;transition:.3s}
+        .floating-donate:hover{transform:translateY(-3px)}
+        .floating-support{position:fixed;right:16px;bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;transition:.3s}
+        .floating-support:hover{transform:translateY(-3px)}
+        .back-to-top{position:fixed;left:16px;bottom:20px;width:46px;height:46px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(79,70,229,.3);transition:.3s;z-index:999}
+        .back-to-top:hover{transform:translateY(-3px)}
+        @media(max-width:768px){.floating-donate{right:12px;bottom:72px;padding:10px 14px;font-size:.75rem}.floating-support{right:12px;bottom:16px;padding:10px 14px;font-size:.75rem}.back-to-top{left:12px;bottom:16px;width:40px;height:40px;font-size:16px}}
+        body.dark{--light:#020617;--white:#0F172A;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}
+        body.dark .header{background:rgba(15,23,42,.92)}
+        body.dark .header,body.dark .tool-card,body.dark .category-filter a{background:#0F172A;border-color:#1E293B}
+        body.dark .search-box{background:#0F172A;border-color:#1E293B}
+        body.dark input{background:#020617;color:#fff}
+        body.dark .footer{background:#000814}
+        body.dark .mobile-menu{background:#0F172A}
+        body.dark .mobile-menu a{color:#CBD5E1}
+        body.dark .mobile-menu a:hover{background:#1E293B;color:#fff}
+        body.dark .mobile-menu .close-menu{color:#CBD5E1}
+        body.dark .mobile-menu .close-menu:hover{color:#fff}
+        body.dark .page-hero{background:linear-gradient(180deg,#0F172A 0%,#020617 50%,#0F172A 100%)}
+        body.dark .page-hero h1{color:#F8FAFC}
+        body.dark .page-hero p{color:#CBD5E1}
+        body.dark .secondary-btn{background:#0F172A;border-color:#1E293B;color:#CBD5E1}
+        body.dark .secondary-btn:hover{background:#1E293B}
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:#E5E7EB}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:20px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+        ::selection{background:var(--primary);color:#fff}
+        @media(max-width:768px){body{font-size:15px}.container{width:92%}.primary-btn,.secondary-btn{width:100%;justify-content:center;padding:12px 20px}}
+        @media(max-width:480px){body{font-size:14px}.tool-card{padding:16px}}
+        section{content-visibility:auto;contain-intrinsic-size:500px}
+        @media print{.header,.footer,.floating-donate,.floating-support,.back-to-top{display:none!important}body{background:#fff;color:#000}}
+        @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
     </style>
 </head>
 <body>
 
     <!-- ===== HEADER ===== -->
-    <header class="header">
+    <header class="header" role="banner">
         <div class="container">
-            <a href="index.html" class="logo">🤖 <span>AITools</span>Nova</a>
-            <nav class="desktop-menu">
+            <a href="index.html" class="logo" aria-label="AIToolsNova Home">🤖 <span>AIToolsNova</span></a>
+            <nav class="desktop-menu" aria-label="Main Navigation">
                 <a href="index.html">Home</a>
                 <a href="tools.html" class="active">Tools</a>
                 <a href="blogs.html">Blogs</a>
@@ -882,334 +214,326 @@
                 <a href="contact.html">Contact</a>
             </nav>
             <div class="header-right">
-                <button id="themeToggle" class="icon-btn">🌙</button>
-                <a href="#donate" class="donate-btn-header">❤️ Donate</a>
-                <button class="menu-btn" id="menuBtn">☰</button>
+                <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode">🌙</button>
+                <a href="#donate" class="donate-btn" aria-label="Donate">❤️ Donate</a>
+                <button class="menu-btn" id="menuBtn" aria-label="Open mobile menu">☰</button>
             </div>
         </div>
     </header>
 
     <!-- ===== MOBILE MENU ===== -->
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="close-menu" id="closeMenuBtn">✕</button>
+    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+        <button class="close-menu" id="closeMenuBtn" aria-label="Close menu">✕</button>
         <a href="index.html">🏠 Home</a>
         <a href="tools.html">🛠 Tools</a>
         <a href="blogs.html">📝 Blogs</a>
-        <a href="about.html">ℹ About</a>
-        <a href="disclaimer.html">⚠ Disclaimer</a>
+        <a href="about.html"> About</a>
         <a href="contact.html">📧 Contact</a>
         <a href="privacy-policy.html">🔒 Privacy Policy</a>
+        <a href="disclaimer.html">⚠ Disclaimer</a>
         <a href="terms-and-conditions.html">📜 Terms &amp; Conditions</a>
         <a href="#donate" class="mobile-donate">❤️ Donate</a>
     </div>
 
-    <!-- ===== MAIN ===== -->
+    <!-- ===== MAIN CONTENT ===== -->
     <main>
 
-        <!-- ===== AD PLACEHOLDER (TOP) ===== -->
-        <div class="ad-placeholder">
+        <!-- PAGE HERO -->
+        <section class="page-hero" aria-labelledby="tools-title">
             <div class="container">
-                <div class="ad-box">
-                    📢 <strong>AdSense Code Here</strong> — 728x90 Banner
+                <h1 id="tools-title">🛠 All Free Online Tools</h1>
+                <p>Explore 100+ AI Tools, SEO Tools, Image Tools, PDF Tools, Calculators &amp; Utilities – all completely free.</p>
+                <!-- Search on tools page -->
+                <div class="search-box" style="max-width:600px;margin:auto;">
+                    <input type="search" id="searchInput" placeholder="Search tools by name or category..." style="flex:1;height:50px;padding:0 20px;border:none;outline:none;font-size:1rem;background:transparent;min-width:0;">
+                    <button id="searchBtn" style="padding:0 24px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:1rem;white-space:nowrap;border:none;cursor:pointer;">Search</button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- ===== TOOL HERO ===== -->
-        <section class="tool-hero">
+        <!-- CATEGORY FILTER -->
+        <section style="padding:20px 0 0;">
             <div class="container">
-                <h1>🛠 Free Online Tools</h1>
-                <p>100+ AI Tools, SEO Tools, Image Tools, PDF Tools, Calculators &amp; Utilities — all free to use.</p>
+                <div class="category-filter" id="categoryFilter">
+                    <a href="#" class="active" data-category="all">All Tools</a>
+                    <a href="#" data-category="ai">🤖 AI</a>
+                    <a href="#" data-category="image">🖼 Image</a>
+                    <a href="#" data-category="seo">📈 SEO</a>
+                    <a href="#" data-category="social">📱 Social</a>
+                    <a href="#" data-category="pdf">📄 PDF</a>
+                    <a href="#" data-category="calculator">🧮 Calculators</a>
+                    <a href="#" data-category="utility">⚙ Utilities</a>
+                </div>
             </div>
         </section>
 
-        <!-- ===== CATEGORY TABS ===== -->
-        <section class="category-tabs">
-            <div class="container">
-                <a href="#ai" class="active">🤖 AI Tools</a>
-                <a href="#image">🖼 Image Tools</a>
-                <a href="#seo">📈 SEO Tools</a>
-                <a href="#social">📱 Social Media</a>
-                <a href="#pdf">📄 PDF Tools</a>
-                <a href="#calculator">🧮 Calculators</a>
-                <a href="#utility">⚙ Utilities</a>
-            </div>
-        </section>
-
-        <!-- ===== TOOLS SECTION ===== -->
-        <section class="tools-section">
-
+        <!-- ALL TOOLS -->
+        <section id="tools-section" style="padding-top:30px;">
             <div class="container">
 
-                <!-- ===== AI TOOLS ===== -->
-                <div class="tool-category" id="ai">
+                <!-- No Results Message -->
+                <div class="no-results" id="noResults">
+                    <h3>🔍 No tools found</h3>
+                    <p>Try adjusting your search or filter.</p>
+                </div>
+
+                <!-- AI TOOLS -->
+                <div class="tool-category" id="cat-ai" data-category="ai">
                     <div class="category-heading">
                         <h3>🤖 AI Tools</h3>
-                        <a href="#ai">View All →</a>
+                        <a href="#cat-ai">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">🤖</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🤖</div>
                             <h3>AI Chat</h3>
-                            <p>Smart AI assistant for daily work and brainstorming.</p>
+                            <p>Smart AI assistant for daily work, brainstorming, and problem-solving.</p>
                             <a href="tools/ai-chat.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">📝</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📝</div>
                             <h3>Resume Builder</h3>
-                            <p>Create ATS-friendly resumes in minutes.</p>
+                            <p>Create ATS-friendly resumes that get you hired faster.</p>
                             <a href="tools/resume-builder.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">✍️</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">✍️</div>
                             <h3>AI Writer</h3>
-                            <p>Generate blogs and articles instantly.</p>
+                            <p>Generate high-quality blog posts, articles, and content in seconds.</p>
                             <a href="tools/ai-writer.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">📧</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📧</div>
                             <h3>Email Generator</h3>
-                            <p>Create professional emails for any situation.</p>
+                            <p>Write professional emails for any purpose – business, job, or personal.</p>
                             <a href="tools/email-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
-                <!-- ===== IMAGE TOOLS ===== -->
-                <div class="tool-category" id="image">
+                <!-- IMAGE TOOLS -->
+                <div class="tool-category" id="cat-image" data-category="image">
                     <div class="category-heading">
                         <h3>🖼 Image Tools</h3>
-                        <a href="#image">View All →</a>
+                        <a href="#cat-image">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">🗜️</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🗜️</div>
                             <h3>Image Compressor</h3>
-                            <p>Compress images without losing quality.</p>
+                            <p>Compress images without losing quality. Perfect for web and mobile.</p>
                             <a href="tools/image-compressor.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">📐</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📐</div>
                             <h3>Image Resizer</h3>
-                            <p>Resize any image to desired dimensions.</p>
+                            <p>Resize any image to your desired dimensions quickly.</p>
                             <a href="tools/image-resizer.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🔄</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🔄</div>
                             <h3>Image Converter</h3>
-                            <p>Convert JPG, PNG, WebP formats.</p>
+                            <p>Convert between JPG, PNG, and WebP formats easily.</p>
                             <a href="tools/image-converter.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🎨</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🎨</div>
                             <h3>Background Remover</h3>
-                            <p>Remove image backgrounds instantly.</p>
+                            <p>Remove image backgrounds in one click.</p>
                             <a href="tools/background-remover.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
-                <!-- ===== SEO TOOLS ===== -->
-                <div class="tool-category" id="seo">
+                <!-- SEO TOOLS -->
+                <div class="tool-category" id="cat-seo" data-category="seo">
                     <div class="category-heading">
                         <h3>📈 SEO Tools</h3>
-                        <a href="#seo">View All →</a>
+                        <a href="#cat-seo">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">🏷️</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🏷️</div>
                             <h3>Meta Tag Generator</h3>
-                            <p>Generate SEO meta tags for your website.</p>
+                            <p>Generate SEO-optimized meta tags for your web pages.</p>
                             <a href="tools/meta-tag-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🗺️</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🗺️</div>
                             <h3>Sitemap Generator</h3>
-                            <p>Create XML sitemaps for search engines.</p>
+                            <p>Create XML sitemaps to help search engines index your site.</p>
                             <a href="tools/sitemap-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">📊</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📊</div>
                             <h3>Keyword Density</h3>
-                            <p>Analyze keyword density in your content.</p>
+                            <p>Analyze keyword density in your content for better SEO.</p>
                             <a href="tools/keyword-density.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🤖</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🤖</div>
                             <h3>Robots.txt Generator</h3>
-                            <p>Create robots.txt for crawling control.</p>
+                            <p>Create robots.txt files to control search engine crawling.</p>
                             <a href="tools/robots-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
-                <!-- ===== SOCIAL MEDIA TOOLS ===== -->
-                <div class="tool-category" id="social">
+                <!-- SOCIAL MEDIA TOOLS -->
+                <div class="tool-category" id="cat-social" data-category="social">
                     <div class="category-heading">
                         <h3>📱 Social Media Tools</h3>
-                        <a href="#social">View All →</a>
+                        <a href="#cat-social">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">▶️</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">▶️</div>
                             <h3>YouTube Title Generator</h3>
-                            <p>Create click-worthy YouTube titles.</p>
+                            <p>Create click-worthy titles for your YouTube videos.</p>
                             <a href="tools/youtube-title.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">📝</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📝</div>
                             <h3>YouTube Description</h3>
-                            <p>Generate SEO-friendly video descriptions.</p>
+                            <p>Generate SEO-friendly YouTube video descriptions.</p>
                             <a href="tools/youtube-description.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">👍</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">👍</div>
                             <h3>Facebook Description</h3>
-                            <p>Write engaging Facebook post descriptions.</p>
+                            <p>Write engaging descriptions for your Facebook posts.</p>
                             <a href="tools/facebook-description.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">📸</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📸</div>
                             <h3>Instagram Caption</h3>
-                            <p>Create viral Instagram captions.</p>
+                            <p>Create viral captions for your Instagram posts.</p>
                             <a href="tools/instagram-caption.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">#️⃣</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">#️⃣</div>
                             <h3>Hashtag Generator</h3>
-                            <p>Find trending hashtags for any niche.</p>
+                            <p>Find the best trending hashtags for any niche.</p>
                             <a href="tools/hashtag-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
-                <!-- ===== PDF TOOLS ===== -->
-                <div class="tool-category" id="pdf">
+                <!-- PDF TOOLS -->
+                <div class="tool-category" id="cat-pdf" data-category="pdf">
                     <div class="category-heading">
                         <h3>📄 PDF Tools</h3>
-                        <a href="#pdf">View All →</a>
+                        <a href="#cat-pdf">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">📄</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📄</div>
                             <h3>PDF Converter</h3>
-                            <p>Convert documents into PDF instantly.</p>
+                            <p>Convert any document into a PDF file instantly.</p>
                             <a href="tools/pdf-converter.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🔗</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🔗</div>
                             <h3>PDF Merger</h3>
-                            <p>Merge multiple PDFs into one file.</p>
+                            <p>Combine multiple PDF files into one document.</p>
                             <a href="tools/pdf-merger.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">✂️</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">✂️</div>
                             <h3>PDF Splitter</h3>
                             <p>Split PDF pages into separate files.</p>
                             <a href="tools/pdf-splitter.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
-                <!-- ===== CALCULATORS ===== -->
-                <div class="tool-category" id="calculator">
+                <!-- CALCULATORS -->
+                <div class="tool-category" id="cat-calculator" data-category="calculator">
                     <div class="category-heading">
                         <h3>🧮 Calculators</h3>
-                        <a href="#calculator">View All →</a>
+                        <a href="#cat-calculator">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">😴</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">😴</div>
                             <h3>Sleep Calculator</h3>
-                            <p>Find your ideal sleep and wake-up times.</p>
+                            <p>Find your ideal sleep and wake-up times for better health.</p>
                             <a href="tools/sleep-calculator.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🌧️</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🌧️</div>
                             <h3>Rain Day Calculator</h3>
-                            <p>Estimate rain probability for planning.</p>
+                            <p>Estimate rain probability for your outdoor plans.</p>
                             <a href="tools/rain-calculator.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">❄️</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">❄️</div>
                             <h3>Snow Day Calculator</h3>
-                            <p>Predict snow day likelihood.</p>
+                            <p>Predict the likelihood of a snow day.</p>
                             <a href="tools/snow-calculator.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
-                <!-- ===== UTILITY TOOLS ===== -->
-                <div class="tool-category" id="utility">
+                <!-- UTILITY TOOLS -->
+                <div class="tool-category" id="cat-utility" data-category="utility">
                     <div class="category-heading">
                         <h3>⚙ Utility Tools</h3>
-                        <a href="#utility">View All →</a>
+                        <a href="#cat-utility">View All →</a>
                     </div>
                     <div class="tools-grid">
-                        <div class="tool-card">
-                            <div class="tool-icon">📷</div>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">📷</div>
                             <h3>QR Generator</h3>
-                            <p>Create beautiful QR Codes instantly.</p>
+                            <p>Create high-quality QR codes for any URL or text.</p>
                             <a href="tools/qr-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-icon">🔐</div>
+                        </article>
+                        <article class="tool-card">
+                            <div class="tool-icon" aria-hidden="true">🔐</div>
                             <h3>Password Generator</h3>
-                            <p>Generate strong, secure passwords.</p>
+                            <p>Generate strong, secure passwords for your accounts.</p>
                             <a href="tools/password-generator.html" class="tool-btn">Open Tool</a>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- ===== AD PLACEHOLDER (MIDDLE) ===== -->
-        <div class="ad-placeholder">
-            <div class="container">
-                <div class="ad-box">
-                    📢 <strong>AdSense Code Here</strong> — 728x90 Banner
-                </div>
+        <!-- ===== CTA ===== -->
+        <section style="background:linear-gradient(135deg,var(--primary),var(--secondary));padding:50px 0;">
+            <div class="container" style="text-align:center;color:#fff;">
+                <h2 style="color:#fff;font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:14px;">🚀 Start Using Free Tools Now</h2>
+                <p style="color:rgba(255,255,255,.9);max-width:600px;margin:0 auto 24px;">No signup. No limits. Just open and use.</p>
+                <a href="index.html" class="primary-btn" style="background:#fff;color:var(--primary);box-shadow:0 8px 20px rgba(0,0,0,.1);">Back to Home</a>
             </div>
-        </div>
+        </section>
 
         <!-- ===== DONATE ===== -->
-        <section class="donate-section" id="donate">
+        <section class="donate-section" id="donate" style="padding:50px 0;background:linear-gradient(135deg,#0F172A,#1E293B);">
             <div class="container">
-                <div class="donate-box">
-                    <h2>❤️ Support AIToolsNova</h2>
-                    <p>Help us keep every tool free forever. Your support matters.</p>
-                    <div class="donate-buttons">
-                        <a href="https://paypal.me/YOURUSERNAME" target="_blank" class="primary-btn">Donate with PayPal</a>
-                        <a href="contact.html" class="secondary-btn">Contact Us</a>
+                <div class="donate-box" style="max-width:780px;margin:auto;padding:40px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:24px;">
+                    <h2 style="color:#fff;font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:14px;">❤️ Support AIToolsNova</h2>
+                    <p style="color:rgba(255,255,255,.8);max-width:550px;margin:0 auto 24px;">Help us keep every tool free forever.</p>
+                    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+                        <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" class="primary-btn">Donate with PayPal</a>
+                        <a href="contact.html" class="secondary-btn" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff;">Contact Us</a>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- ===== AD PLACEHOLDER (BOTTOM) ===== -->
-        <div class="ad-placeholder">
-            <div class="container">
-                <div class="ad-box">
-                    📢 <strong>AdSense Code Here</strong> — 728x90 Banner
-                </div>
-            </div>
-        </div>
 
     </main>
 
     <!-- ===== FOOTER ===== -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-grid">
-                <div>
+                <div class="footer-about">
                     <h3>AIToolsNova</h3>
                     <p>Free AI Tools, Image Tools, SEO Tools, PDF Tools, Social Media Tools and Smart Online Utilities.</p>
-                    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-                        <a href="#donate" style="background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:10px 20px;border-radius:50px;font-weight:700;">❤️ Donate</a>
-                    </div>
                 </div>
-                <div>
+                <div class="footer-links">
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
@@ -1219,94 +543,180 @@
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-                <div>
+                <div class="footer-links">
                     <h4>Legal</h4>
                     <ul>
                         <li><a href="privacy-policy.html">Privacy Policy</a></li>
                         <li><a href="terms-and-conditions.html">Terms &amp; Conditions</a></li>
                         <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                        <li><a href="sitemap.xml">Sitemap</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4>Support</h4>
+                <div class="footer-links">
+                    <h4>Follow Us</h4>
                     <ul>
-                        <li><a href="#donate">Donate</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="mailto:support@aitoolsnova.com">Email Support</a></li>
+                        <li><a href="#" rel="noopener">Facebook</a></li>
+                        <li><a href="#" rel="noopener">Instagram</a></li>
+                        <li><a href="#" rel="noopener">YouTube</a></li>
+                        <li><a href="#" rel="noopener">X (Twitter)</a></li>
+                        <li><a href="#" rel="noopener">LinkedIn</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 AIToolsNova. All Rights Reserved.</p>
-                <div>
-                    <a href="privacy-policy.html">Privacy</a> |
-                    <a href="terms-and-conditions.html">Terms</a> |
-                    <a href="disclaimer.html">Disclaimer</a>
-                </div>
+                <p>© 2026 AIToolsNova. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
     <!-- ===== FLOATING BUTTONS ===== -->
-    <a href="https://paypal.me/YOURUSERNAME" target="_blank" class="floating-donate">❤️ Donate</a>
-    <a href="contact.html" class="floating-support">💬 Support</a>
-    <button id="backToTop" class="back-to-top">↑</button>
+    <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" class="floating-donate" aria-label="Donate">❤️ Donate</a>
+    <a href="contact.html" class="floating-support" aria-label="Support">💬 Support</a>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ---- Dark Mode ----
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark');
-            this.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        });
-
-        // ---- Mobile Menu ----
-        const menuBtn = document.getElementById('menuBtn');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        function openMenu() { mobileMenu.classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeMenu() { mobileMenu.classList.remove('active'); document.body.style.overflow = ''; }
-
-        menuBtn.addEventListener('click', openMenu);
-        closeMenuBtn.addEventListener('click', closeMenu);
-        document.addEventListener('click', function(e) {
-            if (mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
-                closeMenu();
+        document.addEventListener('DOMContentLoaded', function() {
+            // === DARK MODE ===
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark');
+                    this.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                });
             }
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) closeMenu();
-        });
 
-        // ---- Category Tabs Scroll ----
-        document.querySelectorAll('.category-tabs a').forEach(tab => {
-            tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const target = document.getElementById(targetId);
-                if (target) {
-                    document.querySelectorAll('.category-tabs a').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const headerHeight = document.querySelector('.header').offsetHeight;
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            // === MOBILE MENU ===
+            const menuBtn = document.getElementById('menuBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            if (closeMenuBtn) {
+                closeMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            document.addEventListener('click', function(e) {
+                if (mobileMenu && mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
             });
-        });
 
-        // ---- Back to Top ----
-        const backToTop = document.getElementById('backToTop');
-        window.addEventListener('scroll', function() {
-            backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
-        });
-        backToTop.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+            // === BACK TO TOP ===
+            var backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', function() {
+                    backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
+                });
+                backToTop.addEventListener('click', function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
 
-        console.log('🚀 AIToolsNova Tools page loaded.');
+            // === SEARCH FUNCTIONALITY ===
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const toolCards = document.querySelectorAll('.tool-card');
+            const toolCategories = document.querySelectorAll('.tool-category');
+            const noResults = document.getElementById('noResults');
+            const filterLinks = document.querySelectorAll('.category-filter a');
+            let currentCategory = 'all';
+
+            function performSearch() {
+                const query = searchInput.value.trim().toLowerCase();
+                let hasVisible = false;
+
+                toolCards.forEach(card => {
+                    const title = card.querySelector('h3')?.textContent?.toLowerCase() || '';
+                    const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                    const matches = !query || title.includes(query) || desc.includes(query);
+                    const category = card.closest('.tool-category');
+                    const categoryMatch = currentCategory === 'all' || (category && category.dataset.category === currentCategory);
+                    
+                    if (matches && categoryMatch) {
+                        card.style.display = '';
+                        hasVisible = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show/hide categories
+                toolCategories.forEach(cat => {
+                    const visibleCards = cat.querySelectorAll('.tool-card[style*="display: none;"]');
+                    const totalCards = cat.querySelectorAll('.tool-card').length;
+                    const hasVisibleCards = visibleCards.length < totalCards;
+                    cat.style.display = hasVisibleCards ? '' : 'none';
+                });
+
+                // Show no results message
+                if (hasVisible) {
+                    noResults.classList.remove('show');
+                } else {
+                    noResults.classList.add('show');
+                }
+            }
+
+            // Search on button click
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', performSearch);
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // === CATEGORY FILTER ===
+            filterLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    filterLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    
+                    // Show/hide categories based on filter
+                    toolCategories.forEach(cat => {
+                        if (currentCategory === 'all' || cat.dataset.category === currentCategory) {
+                            cat.style.display = '';
+                        } else {
+                            cat.style.display = 'none';
+                        }
+                    });
+                    
+                    // Reset search if needed
+                    if (searchInput.value.trim()) {
+                        performSearch();
+                    }
+                    
+                    // Reset no results if categories visible
+                    const hasVisibleCat = document.querySelector('.tool-category[style*="display: none;"]');
+                    if (!hasVisibleCat) {
+                        noResults.classList.remove('show');
+                    }
+                });
+            });
+
+            // === HANDLE URL QUERY PARAMETER (from home page search) ===
+            const urlParams = new URLSearchParams(window.location.search);
+            const qParam = urlParams.get('q');
+            if (qParam) {
+                searchInput.value = qParam;
+                performSearch();
+                // Scroll to search
+                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            console.log('🛠 Tools page loaded successfully.');
+        });
     </script>
-
 </body>
 </html>
