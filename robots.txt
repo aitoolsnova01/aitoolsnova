@@ -1,12 +1,19 @@
 # ============================================
 # ROBOTS.TXT - AIToolsNova.com
+# Version: 3.0 - July 23, 2026
 # ============================================
 
 # ---------- MAIN RULES ----------
 User-agent: *
 Allow: /
 
-# Block sensitive folders
+# Allow all important sections
+Allow: /tools/
+Allow: /blog/
+Allow: /images/
+Allow: /assets/
+
+# ---------- BLOCK SENSITIVE FOLDERS ----------
 Disallow: /admin/
 Disallow: /includes/
 Disallow: /temp/
@@ -16,10 +23,10 @@ Disallow: /config/
 Disallow: /database/
 Disallow: /vendor/
 Disallow: /node_modules/
+Disallow: /functions/
+Disallow: /data/
 
-# Block system files
-Disallow: /wp-admin/
-Disallow: /wp-includes/
+# ---------- BLOCK SYSTEM FILES ----------
 Disallow: /.env
 Disallow: /composer.json
 Disallow: /composer.lock
@@ -27,21 +34,45 @@ Disallow: /package.json
 Disallow: /package-lock.json
 Disallow: /readme.html
 Disallow: /license.txt
+Disallow: /gitignore
+Disallow: /*.git/
+Disallow: /.*.yml
+Disallow: /.*.yaml
+Disallow: /.*.json$
+Disallow: /.*.log$
 
-# Block duplicate content
+# ---------- BLOCK DUPLICATE CONTENT ----------
 Disallow: /print/
 Disallow: /pdf/
 Disallow: /tag/
 Disallow: /category/
-
-# Block URL parameters
 Disallow: /*?*
 Disallow: /*.pdf$
 Disallow: /*.doc$
 Disallow: /*.docx$
 
-# Sitemap location
-Sitemap: https://www.aitoolsnova.com/sitemap.xml
+# ---------- BLOCK TEMP & CACHE ----------
+Disallow: /cache/
+Disallow: /tmp/
+Disallow: /temp/
+Disallow: /backup/
+
+# ---------- BLOCK DEVELOPMENT FILES ----------
+Disallow: /*.scss$
+Disallow: /*.less$
+Disallow: /*.sass$
+Disallow: /*.ts$
+Disallow: /*.js.map$
+Disallow: /*.css.map$
+
+# ---------- BLOCK URL PARAMETERS ----------
+Disallow: /*?ref=
+Disallow: /*?utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?utm_campaign=
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+Disallow: /*?msclkid=
 
 # ============================================
 # SPECIFIC SEARCH ENGINES
@@ -51,6 +82,16 @@ Sitemap: https://www.aitoolsnova.com/sitemap.xml
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0.5
+
+# ---------- GOOGLE IMAGE ----------
+User-agent: Googlebot-Image
+Allow: /images/
+Crawl-delay: 1
+
+# ---------- GOOGLE VIDEO ----------
+User-agent: Googlebot-Video
+Allow: /videos/
+Crawl-delay: 1
 
 # ---------- BING ----------
 User-agent: Bingbot
@@ -94,7 +135,7 @@ Disallow: /
 User-agent: Mail.RU
 Disallow: /
 
-User-agent:ia_archiver
+User-agent: ia_archiver
 Disallow: /
 
 User-agent: Ezooms
@@ -103,11 +144,32 @@ Disallow: /
 User-agent: YandexImages
 Disallow: /
 
-User-agent: Googlebot-Image
-Allow: /
+User-agent: rogerbot
+Disallow: /
 
-User-agent: Googlebot-Video
-Allow: /
+User-agent: exabot
+Disallow: /
+
+User-agent: spbot
+Disallow: /
+
+User-agent: SISTRIX
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: ScoutJet
+Disallow: /
+
+User-agent: SemrushBot-SA
+Disallow: /
+
+User-agent: SemrushBot-SI
+Disallow: /
+
+User-agent: AhrefsSiteAudit
+Disallow: /
 
 # ============================================
 # MOBILE CRAWLERS (Allow Full Access)
@@ -138,6 +200,9 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
+User-agent: Slackbot
+Allow: /
+
 # ============================================
 # OTHER IMPORTANT BOTS
 # ============================================
@@ -150,3 +215,15 @@ Allow: /
 
 User-agent: Mediapartners-Google
 Allow: /
+
+# ============================================
+# SITEMAP LOCATION
+# ============================================
+
+Sitemap: https://www.aitoolsnova.com/sitemap.xml
+
+# ============================================
+# HOST
+# ============================================
+
+Host: https://www.aitoolsnova.com
