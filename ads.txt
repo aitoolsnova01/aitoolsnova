@@ -1,1 +1,6 @@
+# ============================================
+# ADS.TXT - AIToolsNova.com
+# Google AdSense Authorization
+# ============================================
+
 google.com, pub-2278101269918728, DIRECT, f08c47fec0942fa0
