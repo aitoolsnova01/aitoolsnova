@@ -3,792 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blogs - AIToolsNova | AI, SEO & Productivity Tips</title>
-    <meta name="description" content="Read latest blogs on AI tools, SEO strategies, image optimization, social media tips and online productivity.">
+    <title>AI Tools, SEO & Productivity Blogs | AIToolsNova</title>
+    <meta name="description" content="Read the latest blogs on AI tools, SEO strategies, image optimization, social media tips and online productivity.">
     <meta name="keywords" content="AI blogs, SEO tips, image optimization, social media marketing, productivity">
-    <meta name="robots" content="index,follow">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#4F46E5">
+    <link rel="canonical" href="https://www.aitoolsnova.com/blogs.html">
 
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728"
-     crossorigin="anonymous"></script>
+    <!-- Open Graph -->
+    <meta property="og:title" content="AI Tools, SEO & Productivity Blogs | AIToolsNova">
+    <meta property="og:description" content="Read the latest blogs on AI tools, SEO strategies, image optimization, social media tips and online productivity.">
+    <meta property="og:url" content="https://www.aitoolsnova.com/blogs.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://www.aitoolsnova.com/images/og-image.webp">
+    <meta name="twitter:card" content="summary_large_image">
 
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
+    <!-- Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.aitoolsnova.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Blogs", "item": "https://www.aitoolsnova.com/blogs.html" }
+        ]
+    }
+    </script>
 
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  gtag('js', new Date());
-
-  gtag('config', 'G-KJ0WTD0R0M', {
-    page_path: window.location.pathname,
-    anonymize_ip: true
-  });
-</script>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728" crossorigin="anonymous"></script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-KJ0WTD0R0M', { page_path: window.location.pathname, anonymize_ip: true });
+    </script>
 
     <style>
-        /* ===== GLOBAL STYLES (same as before) ===== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary: #4F46E5;
-            --secondary: #06B6D4;
-            --dark: #0F172A;
-            --light: #F8FAFC;
-            --border: #E2E8F0;
-            --text: #0F172A;
-            --text2: #64748B;
-            --shadow: 0 12px 35px rgba(15, 23, 42, .08);
-            --shadowHover: 0 18px 55px rgba(15, 23, 42, .15);
-            --radius: 18px;
-            --transition: .35s ease;
-        }
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-        body {
-            font-family: "Inter", sans-serif;
-            background: var(--light);
-            color: var(--text);
-            line-height: 1.7;
-        }
-        .container {
-            width: min(1320px, 92%);
-            margin: auto;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: var(--transition);
-        }
-        button {
-            font-family: inherit;
-            cursor: pointer;
-            border: none;
-        }
-        img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#4F46E5;--secondary:#06B6D4;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--shadowHover:0 18px 55px rgba(15,23,42,.15);--radius:18px;--transition:.35s ease}
+        html{scroll-behavior:smooth;font-size:16px}
+        body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.7}
+        .container{width:min(1320px,92%);margin:auto}
+        a{text-decoration:none;color:inherit;transition:var(--transition)}
+        button{font-family:inherit;cursor:pointer;border:none}
+        h1{font-size:clamp(2.6rem,6vw,4.5rem);font-weight:800;line-height:1.1;letter-spacing:-1px}
+        h2{font-size:clamp(2rem,4vw,3rem);font-weight:800}
+        h3{font-size:1.3rem;font-weight:700}
+        p{color:var(--text2)}
+        section{padding:60px 0}
+        .section-title{text-align:center;margin-bottom:40px}
+        .section-title p{max-width:720px;margin:12px auto 0}
 
-        h1 {
-            font-size: clamp(2.6rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-        h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-        }
-        h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        p {
-            color: var(--text2);
-        }
+        .primary-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 28px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;transition:var(--transition);box-shadow:0 10px 30px rgba(79,70,229,.30)}
+        .primary-btn:hover{transform:translateY(-4px);box-shadow:0 20px 45px rgba(79,70,229,.40)}
+        .secondary-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 28px;border-radius:50px;background:#fff;border:1px solid var(--border);font-weight:700;transition:var(--transition)}
+        .secondary-btn:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
 
-        section {
-            padding: 80px 0;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        .section-title p {
-            max-width: 720px;
-            margin: 15px auto 0;
-        }
+        .header{position:fixed;top:0;left:0;width:100%;height:68px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:9999}
+        .header .container{height:100%;display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:var(--text)}
+        .logo span{color:var(--primary)}
+        .desktop-menu{display:flex;gap:28px;align-items:center}
+        .desktop-menu a{font-weight:600;color:var(--text2);font-size:.95rem}
+        .desktop-menu a:hover,.desktop-menu a.active{color:var(--primary)}
+        .header-right{display:flex;align-items:center;gap:10px}
+        .icon-btn{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:var(--transition)}
+        .icon-btn:hover{background:var(--primary);color:#fff}
+        .donate-btn{padding:10px 22px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:.9rem;box-shadow:0 8px 20px rgba(79,70,229,.25);transition:var(--transition)}
+        .donate-btn:hover{transform:translateY(-2px)}
+        .menu-btn{display:none;font-size:26px;background:none;padding:4px}
+        .mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;padding:30px 20px;transition:.4s;z-index:10000;box-shadow:-10px 0 30px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+        .mobile-menu.active{right:0}
+        .mobile-menu .close-menu{align-self:flex-end;font-size:28px;background:none;padding:4px 10px;color:var(--text);line-height:1}
+        .mobile-menu .close-menu:hover{color:var(--primary)}
+        .mobile-menu a{padding:12px 16px;border-radius:10px;font-weight:600;color:var(--text2);font-size:.95rem}
+        .mobile-menu a:hover{background:#EEF2FF;color:var(--primary)}
+        .mobile-menu .mobile-donate{margin-top:4px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;border-radius:50px}
+        .mobile-menu .mobile-donate:hover{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff}
+        @media(max-width:992px){.desktop-menu,.donate-btn{display:none}.menu-btn{display:block}}
+        @media(max-width:768px){section{padding:50px 0}.header{height:60px}h1{font-size:2rem}.mobile-menu{width:260px;padding:25px 16px}}
 
-        /* ===== BUTTONS ===== */
-        .primary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 32px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-weight: 700;
-            transition: var(--transition);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, .30);
-        }
-        .primary-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 45px rgba(79, 70, 229, .40);
-        }
-        .secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 32px;
-            border-radius: 50px;
-            background: #fff;
-            border: 1px solid var(--border);
-            font-weight: 700;
-            transition: var(--transition);
-        }
-        .secondary-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-        .donate-btn-header {
-            padding: 12px 24px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #ff4d4d, #ff7b00);
-            color: #fff;
-            font-weight: 700;
-            transition: var(--transition);
-            box-shadow: 0 12px 28px rgba(255, 77, 77, .28);
-        }
-        .donate-btn-header:hover {
-            transform: translateY(-3px);
-        }
+        .page-hero{padding-top:120px;padding-bottom:40px;background:linear-gradient(180deg,#ffffff 0%,#F8FAFC 50%,#EEF2FF 100%);text-align:center;position:relative;overflow:hidden}
+        .page-hero .container{position:relative;z-index:2}
+        .page-hero h1{max-width:900px;margin:auto;margin-bottom:16px}
+        .page-hero p{max-width:760px;margin:auto;font-size:1.1rem;margin-bottom:20px}
+        @media(max-width:992px){.page-hero{padding-top:100px}}
+        @media(max-width:768px){.page-hero{padding-top:85px;padding-bottom:30px}.page-hero h1{font-size:1.9rem}.page-hero p{font-size:.95rem}}
 
-        /* ===== HEADER ===== */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 72px;
-            background: rgba(255, 255, 255, .92);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            z-index: 9999;
-        }
-        .header .container {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .logo span {
-            color: var(--primary);
-        }
-        .desktop-menu {
-            display: flex;
-            gap: 28px;
-            align-items: center;
-        }
-        .desktop-menu a {
-            font-weight: 600;
-            color: var(--text2);
-            font-size: 0.95rem;
-            position: relative;
-        }
-        .desktop-menu a:hover,
-        .desktop-menu a.active {
-            color: var(--primary);
-        }
-        .desktop-menu a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .icon-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #fff;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: var(--transition);
-        }
-        .icon-btn:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        .menu-btn {
-            display: none;
-            font-size: 26px;
-            background: none;
-            padding: 6px 10px;
-        }
+        .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;margin-top:30px}
+        .blog-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:.35s;border:1px solid var(--border)}
+        .blog-card:hover{transform:translateY(-6px);box-shadow:var(--shadowHover)}
+        .blog-card .blog-img{height:180px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--primary)}
+        .blog-card .blog-content{padding:22px 24px}
+        .blog-card .blog-tag{display:inline-block;padding:4px 14px;border-radius:30px;background:#EEF2FF;color:var(--primary);font-size:.7rem;font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+        .blog-card h3{font-size:1.2rem;margin-bottom:10px;line-height:1.3}
+        .blog-card p{font-size:.9rem;margin-bottom:16px;color:var(--text2)}
+        .blog-card .blog-meta{font-size:.8rem;color:var(--text2);display:flex;gap:16px;margin-bottom:12px}
+        .blog-card .blog-meta span{display:flex;align-items:center;gap:4px}
+        .blog-card .read-more{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--primary);transition:var(--transition)}
+        .blog-card .read-more:hover{gap:12px}
 
-        /* ===== MOBILE MENU ===== */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 300px;
-            height: 100vh;
-            background: #fff;
-            padding: 30px 25px;
-            transition: .4s cubic-bezier(.4, 0, .2, 1);
-            z-index: 10000;
-            box-shadow: -15px 0 40px rgba(0, 0, 0, .10);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            overflow-y: auto;
-        }
-        .mobile-menu.active {
-            right: 0;
-        }
-        .mobile-menu .close-menu {
-            align-self: flex-end;
-            font-size: 28px;
-            background: none;
-            padding: 6px 10px;
-            color: var(--text);
-        }
-        .mobile-menu a {
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        .mobile-menu a:hover {
-            background: #EEF2FF;
-            color: var(--primary);
-        }
-        .mobile-menu .mobile-donate {
-            margin-top: 10px;
-            background: linear-gradient(135deg, #ff4d4d, #ff7b00);
-            color: #fff;
-            text-align: center;
-            border-radius: 50px;
-        }
-        .mobile-menu .mobile-donate:hover {
-            background: #ff4d4d;
-            color: #fff;
-        }
+        .search-box{max-width:600px;margin:0 auto 30px;display:flex;background:#fff;border-radius:60px;overflow:hidden;box-shadow:0 8px 20px rgba(15,23,42,.06);border:1px solid var(--border)}
+        .search-box input{flex:1;height:50px;padding:0 24px;border:none;outline:none;font-size:1rem;background:transparent;min-width:0}
+        .search-box button{padding:0 24px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:1rem;white-space:nowrap;border:none;cursor:pointer}
+        @media(max-width:768px){.search-box{flex-direction:column;border-radius:16px}.search-box input{height:44px}.search-box button{height:44px;width:100%}}
 
-        /* ===== BLOG HERO ===== */
-        .blog-hero {
-            padding-top: 130px;
-            padding-bottom: 50px;
-            background: linear-gradient(180deg, #ffffff 0%, #F8FAFC 50%, #EEF2FF 100%);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .blog-hero::before {
-            content: "";
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: rgba(79, 70, 229, .08);
-            border-radius: 50%;
-            filter: blur(100px);
-            top: -220px;
-            right: -100px;
-        }
-        .blog-hero .container {
-            position: relative;
-            z-index: 2;
-        }
-        .blog-hero h1 {
-            max-width: 900px;
-            margin: auto;
-            margin-bottom: 20px;
-        }
-        .blog-hero p {
-            max-width: 760px;
-            margin: auto;
-            font-size: 1.15rem;
-            margin-bottom: 30px;
-        }
+        .category-filter{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:20px 0 10px}
+        .category-filter a{padding:8px 18px;border-radius:50px;background:#fff;border:1px solid var(--border);font-weight:600;font-size:.8rem;transition:.3s;color:var(--text2)}
+        .category-filter a:hover,.category-filter a.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+        @media(max-width:768px){.category-filter a{padding:6px 14px;font-size:.75rem}}
 
-        /* ===== BLOG GRID ===== */
-        .blogs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-        .blog-card {
-            background: #fff;
-            border-radius: 22px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: .35s;
-            border: 1px solid var(--border);
-        }
-        .blog-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadowHover);
-        }
-        .blog-card .blog-img {
-            height: 220px;
-            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: var(--primary);
-        }
-        .blog-card .blog-content {
-            padding: 24px;
-        }
-        .blog-card .blog-tag {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 30px;
-            background: #EEF2FF;
-            color: var(--primary);
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .blog-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        .blog-card p {
-            font-size: 0.95rem;
-            margin-bottom: 16px;
-            color: var(--text2);
-        }
-        .blog-card .blog-meta {
-            font-size: 0.85rem;
-            color: var(--text2);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 14px;
-        }
-        .blog-card .blog-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .blog-card .read-more {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 700;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-        .blog-card .read-more:hover {
-            gap: 12px;
-        }
+        .no-results{text-align:center;padding:40px 20px;display:none}
+        .no-results.show{display:block}
+        .no-results h3{font-size:1.3rem;margin-bottom:10px}
 
-        /* ===== AD PLACEHOLDER ===== */
-        .ad-placeholder {
-            padding: 20px 0;
-            text-align: center;
-            background: var(--light);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .ad-placeholder .ad-box {
-            max-width: 728px;
-            margin: auto;
-            padding: 30px 20px;
-            background: #fff;
-            border: 2px dashed var(--border);
-            border-radius: 14px;
-            color: var(--text2);
-            font-size: 0.9rem;
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .footer{background:#020617;padding:60px 0 16px;color:#CBD5E1}
+        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:35px;margin-bottom:35px}
+        .footer h3,.footer h4{color:#fff;margin-bottom:18px}
+        .footer h3{font-size:1.2rem}
+        .footer h4{font-size:1rem}
+        .footer p{color:#94A3B8;line-height:1.6;font-size:.9rem}
+        .footer ul{list-style:none}
+        .footer li{margin-bottom:10px}
+        .footer a{display:inline-block;color:#CBD5E1;transition:.3s;font-size:.9rem}
+        .footer a:hover{color:#fff;transform:translateX(4px)}
+        .footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .footer-bottom p{color:#94A3B8;font-size:.85rem}
+        @media(max-width:992px){.footer-grid{grid-template-columns:repeat(2,1fr);gap:28px}}
+        @media(max-width:768px){.footer{padding:40px 0 12px}.footer-grid{grid-template-columns:1fr;text-align:center;gap:22px}.footer-bottom{justify-content:center;text-align:center}.footer ul{padding:0}}
 
-        /* ===== DONATE ===== */
-        .donate-section {
-            padding: 70px 0;
-            background: linear-gradient(135deg, #0F172A, #1E293B);
-        }
-        .donate-box {
-            max-width: 840px;
-            margin: auto;
-            padding: 50px;
-            text-align: center;
-            background: rgba(255, 255, 255, .06);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, .10);
-            border-radius: 28px;
-        }
-        .donate-box h2 {
-            color: #fff;
-            font-size: clamp(1.8rem, 3vw, 2.6rem);
-            margin-bottom: 14px;
-        }
-        .donate-box p {
-            color: rgba(255, 255, 255, .8);
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        .donate-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
+        .floating-donate{position:fixed;right:16px;bottom:80px;background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(255,77,77,.3);z-index:999;transition:.3s}
+        .floating-donate:hover{transform:translateY(-3px)}
+        .floating-support{position:fixed;right:16px;bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;transition:.3s}
+        .floating-support:hover{transform:translateY(-3px)}
+        .back-to-top{position:fixed;left:16px;bottom:20px;width:46px;height:46px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(79,70,229,.3);transition:.3s;z-index:999}
+        .back-to-top:hover{transform:translateY(-3px)}
+        @media(max-width:768px){.floating-donate{right:12px;bottom:72px;padding:10px 14px;font-size:.75rem}.floating-support{right:12px;bottom:16px;padding:10px 14px;font-size:.75rem}.back-to-top{left:12px;bottom:16px;width:40px;height:40px;font-size:16px}}
 
-        /* ===== FOOTER ===== */
-        .footer {
-            background: #020617;
-            padding: 60px 0 20px;
-            color: #CBD5E1;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        .footer h3,
-        .footer h4 {
-            color: #fff;
-            margin-bottom: 18px;
-            font-size: 1.1rem;
-        }
-        .footer p {
-            color: #94A3B8;
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-        .footer ul {
-            list-style: none;
-        }
-        .footer li {
-            margin-bottom: 12px;
-        }
-        .footer a {
-            display: inline-block;
-            color: #CBD5E1;
-            transition: .3s;
-            font-size: 0.95rem;
-        }
-        .footer a:hover {
-            color: #fff;
-            transform: translateX(4px);
-        }
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, .08);
-            padding-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .footer-bottom p {
-            color: #94A3B8;
-            font-size: 0.85rem;
-        }
+        body.dark{--light:#020617;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}
+        body.dark .header{background:rgba(15,23,42,.92)}
+        body.dark .header,body.dark .blog-card,body.dark .search-box,body.dark .category-filter a{background:#0F172A;border-color:#1E293B}
+        body.dark .blog-card .blog-img{background:#1E293B;color:var(--primary)}
+        body.dark .blog-card .blog-tag{background:#1E293B;color:var(--primary)}
+        body.dark input{background:#020617;color:#fff}
+        body.dark .footer{background:#000814}
+        body.dark .mobile-menu{background:#0F172A}
+        body.dark .mobile-menu a{color:#CBD5E1}
+        body.dark .mobile-menu a:hover{background:#1E293B;color:#fff}
+        body.dark .page-hero{background:linear-gradient(180deg,#0F172A 0%,#020617 50%,#0F172A 100%)}
+        body.dark .page-hero h1{color:#F8FAFC}
+        body.dark .page-hero p{color:#CBD5E1}
+        body.dark .secondary-btn{background:#0F172A;border-color:#1E293B;color:#CBD5E1}
+        body.dark .secondary-btn:hover{background:#1E293B}
+        body.dark .category-filter a:hover,body.dark .category-filter a.active{background:var(--primary);color:#fff}
 
-        /* ===== FLOATING BUTTONS ===== */
-        .floating-donate {
-            position: fixed;
-            right: 18px;
-            bottom: 90px;
-            background: linear-gradient(135deg, #ff4d4d, #ff7b00);
-            color: #fff;
-            padding: 13px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            box-shadow: 0 12px 35px rgba(255, 77, 77, .35);
-            z-index: 999;
-            transition: .35s;
-        }
-        .floating-donate:hover {
-            transform: translateY(-4px);
-        }
-        .floating-support {
-            position: fixed;
-            right: 18px;
-            bottom: 22px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            padding: 13px 20px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            box-shadow: 0 12px 35px rgba(79, 70, 229, .30);
-            z-index: 999;
-            transition: .35s;
-        }
-        .floating-support:hover {
-            transform: translateY(-4px);
-        }
-        .back-to-top {
-            position: fixed;
-            left: 18px;
-            bottom: 22px;
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 12px 35px rgba(79, 70, 229, .35);
-            transition: .35s;
-            z-index: 999;
-        }
-        .back-to-top:hover {
-            transform: translateY(-4px);
-        }
-
-        /* ===== DARK MODE ===== */
-        body.dark {
-            --light: #020617;
-            --border: #1E293B;
-            --text: #F8FAFC;
-            --text2: #CBD5E1;
-            background: #020617;
-            color: #F8FAFC;
-        }
-        body.dark .header {
-            background: rgba(15, 23, 42, .92);
-            border-color: #1E293B;
-        }
-        body.dark .header .logo {
-            color: #F8FAFC;
-        }
-        body.dark .desktop-menu a {
-            color: #CBD5E1;
-        }
-        body.dark .desktop-menu a:hover {
-            color: var(--primary);
-        }
-        body.dark .icon-btn {
-            background: #1E293B;
-            border-color: #334155;
-            color: #CBD5E1;
-        }
-        body.dark .icon-btn:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        body.dark .mobile-menu {
-            background: #0F172A;
-        }
-        body.dark .mobile-menu a {
-            color: #F8FAFC;
-        }
-        body.dark .mobile-menu a:hover {
-            background: #1E293B;
-            color: var(--primary);
-        }
-        body.dark .mobile-menu .close-menu {
-            color: #F8FAFC;
-        }
-        body.dark .blog-hero {
-            background: linear-gradient(180deg, #0F172A 0%, #020617 50%, #0F172A 100%);
-        }
-        body.dark .blog-hero h1 {
-            color: #F8FAFC;
-        }
-        body.dark .blog-hero p {
-            color: #CBD5E1;
-        }
-        body.dark .blog-card {
-            background: #0F172A;
-            border-color: #1E293B;
-        }
-        body.dark .blog-card h3 {
-            color: #F8FAFC;
-        }
-        body.dark .blog-card p {
-            color: #CBD5E1;
-        }
-        body.dark .blog-card .blog-tag {
-            background: #1E293B;
-            color: var(--primary2);
-        }
-        body.dark .blog-card .blog-img {
-            background: #1E293B;
-            color: var(--primary2);
-        }
-        body.dark .blog-card .blog-meta {
-            color: #94A3B8;
-        }
-        body.dark .footer {
-            background: #000814;
-        }
-        body.dark .ad-placeholder {
-            background: #020617;
-        }
-        body.dark .ad-placeholder .ad-box {
-            background: #0F172A;
-            border-color: #1E293B;
-            color: #CBD5E1;
-        }
-        body.dark .secondary-btn {
-            background: #0F172A;
-            border-color: #1E293B;
-            color: #F8FAFC;
-        }
-        body.dark .secondary-btn:hover {
-            background: #1E293B;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media(max-width:992px) {
-            .desktop-menu {
-                display: none;
-            }
-            .menu-btn {
-                display: block;
-            }
-            .donate-btn-header {
-                display: none;
-            }
-            .blog-hero {
-                padding-top: 110px;
-            }
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 30px;
-            }
-        }
-
-        @media(max-width:768px) {
-            section {
-                padding: 55px 0;
-            }
-            .header {
-                height: 64px;
-            }
-            .blog-hero {
-                padding-top: 95px;
-                padding-bottom: 35px;
-            }
-            .blog-hero h1 {
-                font-size: 1.9rem;
-            }
-            .blog-hero p {
-                font-size: 0.95rem;
-            }
-            .blogs-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .blog-card .blog-img {
-                height: 160px;
-            }
-            .donate-box {
-                padding: 30px 20px;
-            }
-            .donate-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            .donate-buttons a {
-                width: 100%;
-                max-width: 300px;
-            }
-            .footer-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 24px;
-            }
-            .footer-bottom {
-                justify-content: center;
-                text-align: center;
-            }
-            .floating-donate {
-                right: 12px;
-                bottom: 80px;
-                padding: 11px 16px;
-                font-size: 0.8rem;
-            }
-            .floating-support {
-                right: 12px;
-                bottom: 18px;
-                padding: 11px 16px;
-                font-size: 0.8rem;
-            }
-            .back-to-top {
-                left: 12px;
-                bottom: 18px;
-                width: 44px;
-                height: 44px;
-                font-size: 18px;
-            }
-        }
-
-        @media(max-width:480px) {
-            .blog-hero h1 {
-                font-size: 1.6rem;
-            }
-            .blog-card .blog-content {
-                padding: 18px;
-            }
-            .blog-card h3 {
-                font-size: 1.1rem;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #E5E7EB;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 20px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-        ::selection {
-            background: var(--primary);
-            color: #fff;
-        }
-        @media(prefers-reduced-motion:reduce) {
-            * {
-                animation: none !important;
-                transition: none !important;
-                scroll-behavior: auto;
-            }
-        }
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:#E5E7EB}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:20px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+        ::selection{background:var(--primary);color:#fff}
+        @media(max-width:768px){body{font-size:15px}.container{width:92%}}
+        @media(max-width:480px){body{font-size:14px}}
+        @media print{.header,.footer,.floating-donate,.floating-support,.back-to-top{display:none!important}body{background:#fff;color:#000}}
+        @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
     </style>
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
-    <header class="header">
+    <header class="header" role="banner">
         <div class="container">
-            <a href="index.html" class="logo">🤖 <span>AITools</span>Nova</a>
+            <a href="index.html" class="logo">🤖 <span>AIToolsNova</span></a>
             <nav class="desktop-menu">
                 <a href="index.html">Home</a>
                 <a href="tools.html">Tools</a>
@@ -798,138 +186,579 @@
             </nav>
             <div class="header-right">
                 <button id="themeToggle" class="icon-btn">🌙</button>
-                <a href="#donate" class="donate-btn-header">❤️ Donate</a>
+                <a href="#donate" class="donate-btn">❤️ Donate</a>
                 <button class="menu-btn" id="menuBtn">☰</button>
             </div>
         </div>
     </header>
 
-    <!-- ===== MOBILE MENU ===== -->
     <div class="mobile-menu" id="mobileMenu">
         <button class="close-menu" id="closeMenuBtn">✕</button>
         <a href="index.html">🏠 Home</a>
         <a href="tools.html">🛠 Tools</a>
         <a href="blogs.html">📝 Blogs</a>
-        <a href="about.html">ℹ About</a>
-        <a href="disclaimer.html">⚠ Disclaimer</a>
+        <a href="about.html"> About</a>
         <a href="contact.html">📧 Contact</a>
         <a href="privacy-policy.html">🔒 Privacy Policy</a>
+        <a href="disclaimer.html">⚠ Disclaimer</a>
         <a href="terms-and-conditions.html">📜 Terms &amp; Conditions</a>
         <a href="#donate" class="mobile-donate">❤️ Donate</a>
     </div>
 
-    <!-- ===== MAIN ===== -->
     <main>
-
-        <!-- ===== AD PLACEHOLDER (TOP) ===== -->
-        <div class="ad-placeholder">
+        <!-- Page Hero -->
+        <section class="page-hero">
             <div class="container">
-                <div class="ad-box">
-                    📢 <strong>AdSense Code Here</strong> — 728x90 Banner
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== BLOG HERO ===== -->
-        <section class="blog-hero">
-            <div class="container">
-                <h1>📝 Latest Blogs</h1>
+                <h1>📝 Blogs</h1>
                 <p>Learn AI, SEO, Social Media, Image Optimization &amp; Online Productivity.</p>
+                <div class="search-box">
+                    <input type="search" id="searchInput" placeholder="Search blogs...">
+                    <button id="searchBtn">Search</button>
+                </div>
+                <div class="category-filter" id="categoryFilter">
+                    <a href="#" class="active" data-category="all">All</a>
+                    <a href="#" data-category="ai">🤖 AI Tools</a>
+                    <a href="#" data-category="guides">📚 Guides</a>
+                    <a href="#" data-category="trends">📈 Trends</a>
+                    <a href="#" data-category="image">🖼 Image Tools</a>
+                    <a href="#" data-category="seo">📊 SEO</a>
+                    <a href="#" data-category="pdf">📄 PDF</a>
+                    <a href="#" data-category="utility">⚙ Utility</a>
+                </div>
             </div>
         </section>
 
-        <!-- ===== BLOG GRID ===== -->
-        <section class="blogs-section">
+        <!-- Blog Grid -->
+        <section style="padding-top:0;">
             <div class="container">
-                <div class="blogs-grid">
+                <div class="no-results" id="noResults">
+                    <h3>🔍 No blogs found</h3>
+                    <p>Try adjusting your search or filter.</p>
+                </div>
+                <div class="blog-grid" id="blogGrid">
 
                     <!-- Blog 1 -->
-                    <article class="blog-card">
-                        <div class="blog-img">📖</div>
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🤖</div>
                         <div class="blog-content">
-                            <span class="blog-tag">AI</span>
+                            <span class="blog-tag">AI Tools</span>
                             <h3>Best Free AI Tools in 2026</h3>
                             <div class="blog-meta">
-                                <span>📅 June 15, 2026</span>
-                                <span>⏱ 5 min read</span>
+                                <span>📅 July 23, 2026</span>
+                                <span>⏱ 8 min read</span>
                             </div>
-                            <p>Discover the best AI tools for creators, developers, and businesses in 2026. From content writing to image generation.</p>
-                            <a href="blog/ai-tools-2026.html" class="read-more">Read More →</a>
+                            <p>Discover the best free AI tools in 2026. From AI Chat to AI Writer, find the perfect tool for your needs.</p>
+                            <a href="blog/best-free-ai-tools-2026.html" class="read-more">Read More →</a>
                         </div>
                     </article>
 
                     <!-- Blog 2 -->
-                    <article class="blog-card">
-                        <div class="blog-img">📈</div>
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">📊</div>
                         <div class="blog-content">
-                            <span class="blog-tag">SEO</span>
-                            <h3>Complete SEO Guide for Beginners</h3>
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Top 100 AI Tools You Should Use in 2026</h3>
                             <div class="blog-meta">
-                                <span>📅 June 10, 2026</span>
-                                <span>⏱ 8 min read</span>
+                                <span>📅 July 23, 2026</span>
+                                <span>⏱ 12 min read</span>
                             </div>
-                            <p>Learn how to rank your website with free SEO tools. Keyword research, on-page SEO, backlinks and more.</p>
-                            <a href="blog/seo-guide.html" class="read-more">Read More →</a>
+                            <p>Complete guide to the top 100 AI tools in 2026. Categories, features, and links to free tools.</p>
+                            <a href="blog/top-100-ai-tools-2026.html" class="read-more">Read More →</a>
                         </div>
                     </article>
 
                     <!-- Blog 3 -->
-                    <article class="blog-card">
-                        <div class="blog-img">📱</div>
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">💬</div>
                         <div class="blog-content">
-                            <span class="blog-tag">Social Media</span>
-                            <h3>Social Media Content Strategy 2026</h3>
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best ChatGPT Alternatives (Free &amp; Paid)</h3>
                             <div class="blog-meta">
-                                <span>📅 June 5, 2026</span>
-                                <span>⏱ 6 min read</span>
+                                <span>📅 July 22, 2026</span>
+                                <span>⏱ 7 min read</span>
                             </div>
-                            <p>Tips to create viral content for YouTube, Instagram, Facebook &amp; Twitter. Grow your audience organically.</p>
-                            <a href="blog/social-media-strategy.html" class="read-more">Read More →</a>
+                            <p>Explore the best ChatGPT alternatives in 2026. Free and paid options for every need.</p>
+                            <a href="blog/chatgpt-alternatives.html" class="read-more">Read More →</a>
                         </div>
                     </article>
 
                     <!-- Blog 4 -->
-                    <article class="blog-card">
-                        <div class="blog-img">🖼</div>
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🎨</div>
                         <div class="blog-content">
-                            <span class="blog-tag">Optimization</span>
-                            <h3>Image Optimization Tips for Web</h3>
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Image Generator Tools</h3>
                             <div class="blog-meta">
-                                <span>📅 May 28, 2026</span>
-                                <span>⏱ 4 min read</span>
+                                <span>📅 July 22, 2026</span>
+                                <span>⏱ 6 min read</span>
                             </div>
-                            <p>Boost website speed using image compression, resizing, and modern formats. Improve Core Web Vitals.</p>
-                            <a href="blog/image-optimization.html" class="read-more">Read More →</a>
+                            <p>Discover the best AI image generator tools for creating stunning visuals in 2026.</p>
+                            <a href="blog/ai-image-generator-tools.html" class="read-more">Read More →</a>
                         </div>
                     </article>
 
                     <!-- Blog 5 -->
-                    <article class="blog-card">
-                        <div class="blog-img">🔐</div>
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🎬</div>
                         <div class="blog-content">
-                            <span class="blog-tag">Productivity</span>
-                            <h3>10 Productivity Tools You Need in 2026</h3>
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Video Generator Tools</h3>
                             <div class="blog-meta">
-                                <span>📅 May 20, 2026</span>
-                                <span>⏱ 7 min read</span>
+                                <span>📅 July 21, 2026</span>
+                                <span>⏱ 6 min read</span>
                             </div>
-                            <p>Discover essential productivity tools for remote work, project management, time tracking and collaboration.</p>
-                            <a href="blog/productivity-tools.html" class="read-more">Read More →</a>
+                            <p>Explore the best AI video generator tools for creating professional videos in 2026.</p>
+                            <a href="blog/ai-video-generator-tools.html" class="read-more">Read More →</a>
                         </div>
                     </article>
 
                     <!-- Blog 6 -->
-                    <article class="blog-card">
-                        <div class="blog-img">💰</div>
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🏷️</div>
                         <div class="blog-content">
-                            <span class="blog-tag">Business</span>
-                            <h3>How to Monetize Free Tools</h3>
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Logo Maker Tools</h3>
                             <div class="blog-meta">
-                                <span>📅 May 15, 2026</span>
+                                <span>📅 July 21, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best AI logo maker tools to create professional logos in minutes.</p>
+                            <a href="blog/ai-logo-maker-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 7 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">✍️</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Writing Tools for Bloggers</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 20, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI writing tools for bloggers to create engaging content faster.</p>
+                            <a href="blog/ai-writing-tools-bloggers.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 8 -->
+                    <article class="blog-card" data-category="seo">
+                        <div class="blog-img">📈</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">SEO</span>
+                            <h3>Best AI SEO Tools to Rank Higher on Google</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 20, 2026</span>
+                                <span>⏱ 8 min read</span>
+                            </div>
+                            <p>Discover the best AI SEO tools to rank higher on Google in 2026.</p>
+                            <a href="blog/ai-seo-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 9 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🎓</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Tools for Students</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 19, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for students to boost productivity and learning.</p>
+                            <a href="blog/ai-tools-for-students.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 10 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🎨</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Tools for Content Creators</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 19, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for content creators to streamline their workflow.</p>
+                            <a href="blog/ai-tools-content-creators.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 11 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">▶️</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Tools for YouTubers</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 18, 2026</span>
                                 <span>⏱ 6 min read</span>
                             </div>
-                            <p>Learn strategies to monetize free online tools using ads, affiliates, donations and premium features.</p>
-                            <a href="blog/monetize-tools.html" class="read-more">Read More →</a>
+                            <p>Discover the best AI tools for YouTubers to grow their channel and save time.</p>
+                            <a href="blog/ai-tools-for-youtubers.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 12 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">📊</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Tools for Digital Marketing</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 18, 2026</span>
+                                <span>⏱ 8 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for digital marketing to boost your campaigns.</p>
+                            <a href="blog/ai-tools-digital-marketing.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 13 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🏢</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Tools for Small Businesses</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 17, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for small businesses to grow and compete.</p>
+                            <a href="blog/ai-tools-small-businesses.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 14 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">💼</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Tools for Freelancers</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 17, 2026</span>
+                                <span>⏱ 6 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for freelancers to boost productivity and income.</p>
+                            <a href="blog/ai-tools-freelancers.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 15 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🌐</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Website Builder Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 16, 2026</span>
+                                <span>⏱ 6 min read</span>
+                            </div>
+                            <p>Discover the best AI website builder tools to create websites in minutes.</p>
+                            <a href="blog/ai-website-builder-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 16 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">📄</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Resume Builder Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 16, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best AI resume builder tools to land your dream job.</p>
+                            <a href="blog/ai-resume-builder-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 17 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">💻</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Coding Assistants</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 15, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI coding assistants to speed up development.</p>
+                            <a href="blog/ai-coding-assistants.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 18 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">⚡</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Productivity Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 15, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI productivity tools to get more done in less time.</p>
+                            <a href="blog/ai-productivity-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 19 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🎙️</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Voice Generator Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 14, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best AI voice generator tools for professional voiceovers.</p>
+                            <a href="blog/ai-voice-generator-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 20 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">📊</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Presentation Maker Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 14, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best AI presentation maker tools for stunning presentations.</p>
+                            <a href="blog/ai-presentation-maker-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 21 -->
+                    <article class="blog-card" data-category="guides">
+                        <div class="blog-img">💰</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Guides</span>
+                            <h3>How to Use AI Tools to Make Money Online</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 13, 2026</span>
+                                <span>⏱ 10 min read</span>
+                            </div>
+                            <p>Complete guide on how to use AI tools to make money online in 2026.</p>
+                            <a href="blog/how-to-make-money-ai-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 22 -->
+                    <article class="blog-card" data-category="guides">
+                        <div class="blog-img">🚀</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Guides</span>
+                            <h3>How to Start an AI Side Hustle in 2026</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 13, 2026</span>
+                                <span>⏱ 9 min read</span>
+                            </div>
+                            <p>Complete guide on how to start an AI side hustle and earn extra income.</p>
+                            <a href="blog/ai-side-hustle-2026.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 23 -->
+                    <article class="blog-card" data-category="guides">
+                        <div class="blog-img">🎯</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Guides</span>
+                            <h3>How to Choose the Right AI Tool for Your Needs</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 12, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Learn how to choose the right AI tool for your specific needs and goals.</p>
+                            <a href="blog/choose-right-ai-tool.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 24 -->
+                    <article class="blog-card" data-category="trends">
+                        <div class="blog-img">🔮</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Trends</span>
+                            <h3>AI Trends and Future of Artificial Intelligence in 2026</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 12, 2026</span>
+                                <span>⏱ 8 min read</span>
+                            </div>
+                            <p>Explore the top AI trends and the future of artificial intelligence in 2026.</p>
+                            <a href="blog/ai-trends-2026.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 25 -->
+                    <article class="blog-card" data-category="guides">
+                        <div class="blog-img">📖</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Guides</span>
+                            <h3>Complete Beginner's Guide to AI Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 11, 2026</span>
+                                <span>⏱ 10 min read</span>
+                            </div>
+                            <p>Complete beginner's guide to AI tools. Learn what AI tools are and how to use them.</p>
+                            <a href="blog/beginners-guide-ai-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 26 -->
+                    <article class="blog-card" data-category="image">
+                        <div class="blog-img">🖼️</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Image Tools</span>
+                            <h3>Best Free Online Image Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 11, 2026</span>
+                                <span>⏱ 6 min read</span>
+                            </div>
+                            <p>Discover the best free online image tools for compression, resizing, and editing.</p>
+                            <a href="blog/free-online-image-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 27 -->
+                    <article class="blog-card" data-category="pdf">
+                        <div class="blog-img">📄</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">PDF Tools</span>
+                            <h3>Best Free PDF Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 10, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best free PDF tools for conversion, merging, and splitting.</p>
+                            <a href="blog/free-pdf-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 28 -->
+                    <article class="blog-card" data-category="seo">
+                        <div class="blog-img">📊</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">SEO</span>
+                            <h3>Best Free SEO Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 10, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best free SEO tools to rank higher on Google.</p>
+                            <a href="blog/free-seo-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 29 -->
+                    <article class="blog-card" data-category="utility">
+                        <div class="blog-img">📷</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">Utility</span>
+                            <h3>Best Free QR Code Tools</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 9, 2026</span>
+                                <span>⏱ 4 min read</span>
+                            </div>
+                            <p>Discover the best free QR code tools for generating and customizing QR codes.</p>
+                            <a href="blog/free-qr-code-tools.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 30 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">💡</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>Best AI Prompt Generators</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 9, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best AI prompt generators to get better results from AI tools.</p>
+                            <a href="blog/ai-prompt-generators.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 31 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🛒</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>AI Tools for E-commerce</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 8, 2026</span>
+                                <span>⏱ 6 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for e-commerce to boost sales and improve customer experience.</p>
+                            <a href="blog/ai-tools-ecommerce.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 32 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">📱</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>AI Tools for Social Media</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 8, 2026</span>
+                                <span>⏱ 7 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for social media to create viral content.</p>
+                            <a href="blog/ai-tools-social-media.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 33 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">📧</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>AI Tools for Email Writing</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 7, 2026</span>
+                                <span>⏱ 5 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for email writing to save time and sound professional.</p>
+                            <a href="blog/ai-tools-email-writing.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 34 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">🔬</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>AI Tools for Research</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 7, 2026</span>
+                                <span>⏱ 6 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for research to speed up your work.</p>
+                            <a href="blog/ai-tools-research.html" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog 35 -->
+                    <article class="blog-card" data-category="ai">
+                        <div class="blog-img">👨‍💻</div>
+                        <div class="blog-content">
+                            <span class="blog-tag">AI Tools</span>
+                            <h3>AI Tools for Coding Beginners</h3>
+                            <div class="blog-meta">
+                                <span>📅 July 6, 2026</span>
+                                <span>⏱ 6 min read</span>
+                            </div>
+                            <p>Discover the best AI tools for coding beginners to learn faster.</p>
+                            <a href="blog/ai-tools-coding-beginners.html" class="read-more">Read More →</a>
                         </div>
                     </article>
 
@@ -937,50 +766,28 @@
             </div>
         </section>
 
-        <!-- ===== AD PLACEHOLDER (MIDDLE) ===== -->
-        <div class="ad-placeholder">
+        <!-- Donate -->
+        <section style="background:linear-gradient(135deg,#0F172A,#1E293B);padding:50px 0;">
             <div class="container">
-                <div class="ad-box">
-                    📢 <strong>AdSense Code Here</strong> — 728x90 Banner
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== DONATE ===== -->
-        <section class="donate-section" id="donate">
-            <div class="container">
-                <div class="donate-box">
-                    <h2>❤️ Support AIToolsNova</h2>
-                    <p>Help us keep every tool free forever. Your support matters.</p>
-                    <div class="donate-buttons">
-                        <a href="https://paypal.me/YOURUSERNAME" target="_blank" class="primary-btn">Donate with PayPal</a>
-                        <a href="contact.html" class="secondary-btn">Contact Us</a>
+                <div style="max-width:780px;margin:auto;padding:40px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:24px;">
+                    <h2 style="color:#fff;font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:14px;">❤️ Support AIToolsNova</h2>
+                    <p style="color:rgba(255,255,255,.8);max-width:550px;margin:0 auto 24px;">Help us keep every tool free forever.</p>
+                    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+                        <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" class="primary-btn">Donate with PayPal</a>
+                        <a href="contact.html" class="secondary-btn" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff;">Contact Us</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ===== AD PLACEHOLDER (BOTTOM) ===== -->
-        <div class="ad-placeholder">
-            <div class="container">
-                <div class="ad-box">
-                    📢 <strong>AdSense Code Here</strong> — 728x90 Banner
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div>
                     <h3>AIToolsNova</h3>
                     <p>Free AI Tools, Image Tools, SEO Tools, PDF Tools, Social Media Tools and Smart Online Utilities.</p>
-                    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-                        <a href="#donate" style="background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:10px 20px;border-radius:50px;font-weight:700;">❤️ Donate</a>
-                    </div>
                 </div>
                 <div>
                     <h4>Quick Links</h4>
@@ -998,6 +805,7 @@
                         <li><a href="privacy-policy.html">Privacy Policy</a></li>
                         <li><a href="terms-and-conditions.html">Terms &amp; Conditions</a></li>
                         <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
                     </ul>
                 </div>
                 <div>
@@ -1010,7 +818,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 AIToolsNova. All Rights Reserved.</p>
+                <p>© 2026 AIToolsNova. All Rights Reserved.</p>
                 <div>
                     <a href="privacy-policy.html">Privacy</a> |
                     <a href="terms-and-conditions.html">Terms</a> |
@@ -1020,50 +828,108 @@
         </div>
     </footer>
 
-    <!-- ===== FLOATING BUTTONS ===== -->
-    <a href="https://paypal.me/YOURUSERNAME" target="_blank" class="floating-donate">❤️ Donate</a>
+    <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" class="floating-donate">❤️ Donate</a>
     <a href="contact.html" class="floating-support">💬 Support</a>
     <button id="backToTop" class="back-to-top">↑</button>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ---- Dark Mode ----
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark');
-            this.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        });
-
-        // ---- Mobile Menu ----
-        const menuBtn = document.getElementById('menuBtn');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        function openMenu() { mobileMenu.classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeMenu() { mobileMenu.classList.remove('active'); document.body.style.overflow = ''; }
-
-        menuBtn.addEventListener('click', openMenu);
-        closeMenuBtn.addEventListener('click', closeMenu);
-        document.addEventListener('click', function(e) {
-            if (mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
-                closeMenu();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dark mode
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark');
+                    this.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                });
             }
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) closeMenu();
-        });
 
-        // ---- Back to Top ----
-        const backToTop = document.getElementById('backToTop');
-        window.addEventListener('scroll', function() {
-            backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
-        });
-        backToTop.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+            // Mobile menu
+            const menuBtn = document.getElementById('menuBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            if (closeMenuBtn) {
+                closeMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            document.addEventListener('click', function(e) {
+                if (mobileMenu && mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
 
-        console.log('🚀 AIToolsNova Blogs page loaded.');
+            // Back to top
+            var backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', function() {
+                    backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
+                });
+                backToTop.addEventListener('click', function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const blogCards = document.querySelectorAll('.blog-card');
+            const filterLinks = document.querySelectorAll('.category-filter a');
+            const noResults = document.getElementById('noResults');
+            let currentCategory = 'all';
+
+            function filterBlogs() {
+                const query = searchInput.value.trim().toLowerCase();
+                let hasVisible = false;
+
+                blogCards.forEach(card => {
+                    const title = card.querySelector('h3')?.textContent?.toLowerCase() || '';
+                    const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                    const matches = !query || title.includes(query) || desc.includes(query);
+                    const category = card.dataset.category || '';
+                    const categoryMatch = currentCategory === 'all' || category === currentCategory;
+
+                    if (matches && categoryMatch) {
+                        card.style.display = '';
+                        hasVisible = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (hasVisible) {
+                    noResults.classList.remove('show');
+                } else {
+                    noResults.classList.add('show');
+                }
+            }
+
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', filterBlogs);
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') filterBlogs();
+                });
+            }
+
+            filterLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    filterLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    filterBlogs();
+                });
+            });
+
+            console.log('📝 Blogs page loaded with 35 blogs.');
+        });
     </script>
-
 </body>
 </html>
