@@ -43,7 +43,7 @@
     </script>
 
     <style>
-        /* ===== SAME STYLES AS AI-CHAT (copy from above) ===== */
+        /* ===== SAME STYLES AS ABOVE ===== */
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--primary:#4F46E5;--secondary:#06B6D4;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--radius:18px;--transition:.35s ease}
         html{scroll-behavior:smooth;font-size:16px}
@@ -56,6 +56,7 @@
         h3{font-size:1.2rem;font-weight:700;margin-top:20px;margin-bottom:8px}
         h4{font-size:1.05rem;font-weight:600;margin-top:16px;margin-bottom:6px}
         p{color:var(--text2);margin-bottom:16px;font-size:1rem;line-height:1.8}
+
         .header{position:sticky;top:0;width:100%;height:68px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}
         .header .container{display:flex;align-items:center;justify-content:space-between}
         .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:var(--text)}
@@ -77,12 +78,14 @@
         .mobile-menu .mobile-donate{margin-top:4px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;border-radius:50px}
         @media(max-width:992px){.desktop-menu,.donate-btn{display:none}.menu-btn{display:block}}
         @media(max-width:768px){.header{height:60px}.mobile-menu{width:260px;padding:25px 16px}}
+
         .tool-hero{padding:100px 0 30px;text-align:center;background:linear-gradient(180deg,#fff 0%,#F8FAFC 50%,#EEF2FF 100%)}
         .tool-hero h1{max-width:700px;margin:auto;margin-bottom:12px}
         .tool-hero p{max-width:600px;margin:auto;font-size:1.1rem;color:var(--text2)}
+
         .tool-area{padding:30px 0 50px}
         .tool-box{max-width:850px;margin:auto;background:#fff;border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);border:1px solid var(--border)}
-        .tool-box input,.tool-box textarea,.tool-box select{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;transition:var(--transition);background:var(--light);margin-bottom:16px}
+        .tool-box input,.tool-box textarea,.tool-box select{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;background:var(--light);margin-bottom:16px}
         .tool-box textarea{min-height:100px;resize:vertical}
         .tool-box input:focus,.tool-box textarea:focus,.tool-box select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,70,229,.1)}
         .tool-box label{font-weight:600;display:block;margin-bottom:4px;color:var(--text);font-size:.9rem}
@@ -94,6 +97,7 @@
         .output-box.show{display:block;animation:fadeIn .3s ease}
         .copy-btn{margin-top:14px;padding:8px 18px;border-radius:30px;background:var(--primary);color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;border:none}
         @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
         .tool-content{padding:40px 0 70px}
         .tool-content .container{max-width:850px}
         .tool-content h2:first-child{margin-top:0}
@@ -110,10 +114,12 @@
         .related-box ul li{display:inline-block;background:#fff;padding:6px 14px;border-radius:50px;border:1px solid var(--border);font-size:.85rem}
         .related-box ul li a{color:var(--primary);text-decoration:none}
         .related-box ul li a:hover{text-decoration:underline}
+
         .footer{background:#020617;padding:50px 0 16px;color:#CBD5E1;text-align:center}
         .footer a{color:#94A3B8;margin:0 12px;font-size:.9rem;text-decoration:none}
         .footer a:hover{color:#fff}
         .footer p{color:#64748B;margin-top:16px;font-size:.85rem}
+
         @media(max-width:768px){.tool-hero{padding:85px 0 20px}.tool-hero h1{font-size:1.8rem}.tool-box{padding:24px 18px}.tool-content{padding:30px 0 50px}}
         body.dark{--light:#020617;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}
         body.dark .header{background:rgba(15,23,42,.92)}
@@ -218,58 +224,57 @@
             <div class="container">
 
                 <h2>What is AI Writer?</h2>
-                <p><strong>AI Writer</strong> is a free, powerful AI content generator that helps you create high-quality blogs, articles, social media posts, and more in seconds. Whether you're a blogger, marketer, student, or business owner, AI Writer can help you overcome writer's block and produce engaging content quickly.</p>
+                <p><strong>AI Writer</strong> is a free, powerful AI content generator that helps you create high-quality blogs, articles, social media posts, and more in seconds.</p>
 
                 <div class="highlight-box">
-                    <p><strong>💡 Key Feature:</strong> AI Writer is completely free, requires no account, and lets you choose tone, length, and style for your content.</p>
+                    <p><strong>💡 Key Feature:</strong> Completely free, no account required, choose tone and length.</p>
                 </div>
 
                 <h2>How to Use AI Writer</h2>
                 <ol>
-                    <li><strong>Enter Your Topic:</strong> Type the subject or keywords you want to write about.</li>
-                    <li><strong>Choose Tone:</strong> Select from Professional, Casual, Persuasive, Informative, or Creative.</li>
-                    <li><strong>Set Word Count:</strong> Choose how long you want the content to be (100-2000 words).</li>
-                    <li><strong>Generate Content:</strong> Click "Generate Content" and wait a few seconds.</li>
-                    <li><strong>Review & Copy:</strong> Read the generated content and use the Copy button to save it.</li>
+                    <li><strong>Enter Topic:</strong> Type your subject.</li>
+                    <li><strong>Choose Tone:</strong> Professional, Casual, Persuasive, Informative, or Creative.</li>
+                    <li><strong>Set Word Count:</strong> 100-2000 words.</li>
+                    <li><strong>Generate:</strong> Click "Generate Content".</li>
+                    <li><strong>Copy:</strong> Use the Copy button.</li>
                 </ol>
 
                 <h2>Benefits of Using AI Writer</h2>
                 <ul>
-                    <li><strong>Save Time:</strong> Create content in seconds instead of hours.</li>
-                    <li><strong>Overcome Writer's Block:</strong> Get instant ideas and drafts to work with.</li>
-                    <li><strong>Consistent Quality:</strong> AI-generated content is grammatically correct and well-structured.</li>
-                    <li><strong>Multiple Tones:</strong> Choose the right tone for your audience.</li>
-                    <li><strong>100% Free:</strong> No limits, no signup, no hidden charges.</li>
+                    <li><strong>Save Time:</strong> Create content in seconds.</li>
+                    <li><strong>Beat Writer's Block:</strong> Get instant drafts.</li>
+                    <li><strong>Consistent Quality:</strong> Well-structured content.</li>
+                    <li><strong>Multiple Tones:</strong> Choose the right voice.</li>
+                    <li><strong>100% Free:</strong> No limits, no signup.</li>
                 </ul>
 
                 <h2>Example Use Cases</h2>
                 <ul>
                     <li><strong>Blog Posts:</strong> "Write a 500-word blog post about the benefits of meditation."</li>
                     <li><strong>Social Media:</strong> "Generate 5 Instagram captions for a travel brand."</li>
-                    <li><strong>Marketing Content:</strong> "Write a persuasive product description for a new smartphone."</li>
-                    <li><strong>Academic Content:</strong> "Write an informative article about climate change for students."</li>
+                    <li><strong>Marketing Content:</strong> "Write a persuasive product description."</li>
                 </ul>
 
                 <h2>Frequently Asked Questions</h2>
 
                 <div class="faq-box">
-                    <h4>Q1: Is AI Writer free to use?</h4>
-                    <p>Yes, AI Writer is completely free with no limits.</p>
+                    <h4>Q1: Is AI Writer free?</h4>
+                    <p>Yes, completely free with no limits.</p>
                 </div>
 
                 <div class="faq-box">
-                    <h4>Q2: Can I choose the tone of the content?</h4>
-                    <p>Yes, you can select from 5 different tones – Professional, Casual, Persuasive, Informative, and Creative.</p>
+                    <h4>Q2: Can I choose the tone?</h4>
+                    <p>Yes, 5 different tones available.</p>
                 </div>
 
                 <div class="faq-box">
-                    <h4>Q3: How long does it take to generate content?</h4>
-                    <p>Content is generated in just a few seconds.</p>
+                    <h4>Q3: How long does it take?</h4>
+                    <p>Just a few seconds.</p>
                 </div>
 
                 <div class="faq-box">
-                    <h4>Q4: Can I use AI Writer for SEO content?</h4>
-                    <p>Absolutely! AI Writer can generate SEO-friendly content that ranks well on search engines.</p>
+                    <h4>Q4: Can I use AI Writer for SEO?</h4>
+                    <p>Absolutely! It creates SEO-friendly content.</p>
                 </div>
 
                 <div class="related-box">
@@ -294,7 +299,6 @@
             </div>
         </section>
 
-        <!-- Donate Section -->
         <section style="background:linear-gradient(135deg,#0F172A,#1E293B);padding:40px 0;">
             <div class="container">
                 <div style="max-width:780px;margin:auto;padding:30px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:24px;">
@@ -368,7 +372,9 @@
                 });
             }
 
-            // AI Writer
+            // ============================================================
+            // AI WRITER - UPDATED FOR CLOUDFLARE PAGES
+            // ============================================================
             const topicInput = document.getElementById('topic');
             const toneSelect = document.getElementById('tone');
             const wordCountInput = document.getElementById('wordCount');
@@ -394,7 +400,8 @@
                 outputBox.classList.add('show');
 
                 try {
-                    const response = await fetch('/.netlify/functions/gemini', {
+                    // ✅ UPDATED: Cloudflare Pages API endpoint
+                    const response = await fetch('/api/gemini', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ message: prompt })
