@@ -1,141 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snow Day Calculator - AIToolsNova</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rain Day Calculator - Free Rain Probability Tool | AIToolsNova</title>
+    <meta name="description" content="Estimate rain probability with our free Rain Day Calculator. Plan your outdoor activities with confidence. No signup required." />
+    <meta name="keywords" content="rain calculator, rain probability, weather forecast, rain prediction, outdoor planning" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#4F46E5" />
+    <link rel="canonical" href="https://www.aitoolsnova.com/tools/rain-calculator.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Rain Day Calculator - Free Rain Probability Tool | AIToolsNova" />
+    <meta property="og:description" content="Estimate rain probability with our free Rain Day Calculator. Plan your outdoor activities with confidence." />
+    <meta property="og:url" content="https://www.aitoolsnova.com/tools/rain-calculator.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://www.aitoolsnova.com/images/og-image.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Rain Day Calculator",
+        "description": "Estimate rain probability with our free Rain Day Calculator. Plan your outdoor activities with confidence.",
+        "url": "https://www.aitoolsnova.com/tools/rain-calculator.html",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "All",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <!-- Google AdSense & Analytics -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-KJ0WTD0R0M', { page_path: window.location.pathname, anonymize_ip: true });
+    </script>
+
     <style>
+        /* ===== SAME STYLES AS SLEEP CALCULATOR ===== */
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--primary:#4F46E5;--secondary:#06B6D4;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--radius:18px;--transition:.35s ease}
         html{scroll-behavior:smooth;font-size:16px}
-        body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.7}
+        body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.8}
         .container{width:min(1200px,92%);margin:auto}
-        a{text-decoration:none;color:inherit}
+        a{text-decoration:none;color:inherit;transition:var(--transition)}
         button{font-family:inherit;cursor:pointer;border:none}
-        .header{position:sticky;top:0;width:100%;height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}
+        h1{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:800;line-height:1.2}
+        h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-top:35px;margin-bottom:12px}
+        h3{font-size:1.2rem;font-weight:700;margin-top:20px;margin-bottom:8px}
+        h4{font-size:1.05rem;font-weight:600;margin-top:16px;margin-bottom:6px}
+        p{color:var(--text2);margin-bottom:16px;font-size:1rem;line-height:1.8}
+        .header{position:sticky;top:0;width:100%;height:68px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}
         .header .container{display:flex;align-items:center;justify-content:space-between}
-        .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800}
+        .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:var(--text)}
         .logo span{color:var(--primary)}
-        .nav-links{display:flex;gap:28px;font-weight:600;color:var(--text2)}
-        .nav-links a:hover{color:var(--primary)}
-        .back-btn{padding:10px 22px;border-radius:50px;background:var(--primary);color:#fff;font-weight:600;transition:var(--transition)}
-        .back-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(79,70,229,.3)}
-        .tool-hero{padding:50px 0 30px;text-align:center}
-        .tool-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;margin-bottom:10px}
-        .tool-hero p{color:var(--text2);font-size:1.1rem;max-width:600px;margin:auto}
-        .tool-area{padding:30px 0 70px}
+        .desktop-menu{display:flex;gap:28px;font-weight:600;color:var(--text2)}
+        .desktop-menu a:hover{color:var(--primary)}
+        .header-right{display:flex;align-items:center;gap:10px}
+        .icon-btn{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:var(--transition)}
+        .icon-btn:hover{background:var(--primary);color:#fff}
+        .donate-btn{padding:10px 22px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:.9rem;transition:var(--transition)}
+        .donate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(79,70,229,.3)}
+        .menu-btn{display:none;font-size:26px;background:none;padding:4px}
+        .mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;padding:30px 20px;transition:.4s;z-index:10000;box-shadow:-10px 0 30px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+        .mobile-menu.active{right:0}
+        .mobile-menu .close-menu{align-self:flex-end;font-size:28px;background:none;padding:4px 10px;color:var(--text);line-height:1}
+        .mobile-menu .close-menu:hover{color:var(--primary)}
+        .mobile-menu a{padding:12px 16px;border-radius:10px;font-weight:600;color:var(--text2);font-size:.95rem}
+        .mobile-menu a:hover{background:#EEF2FF;color:var(--primary)}
+        .mobile-menu .mobile-donate{margin-top:4px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;border-radius:50px}
+        @media(max-width:992px){.desktop-menu,.donate-btn{display:none}.menu-btn{display:block}}
+        @media(max-width:768px){.header{height:60px}.mobile-menu{width:260px;padding:25px 16px}}
+        .tool-hero{padding:100px 0 30px;text-align:center;background:linear-gradient(180deg,#fff 0%,#F8FAFC 50%,#EEF2FF 100%)}
+        .tool-hero h1{max-width:700px;margin:auto;margin-bottom:12px}
+        .tool-hero p{max-width:600px;margin:auto;font-size:1.1rem;color:var(--text2)}
+        .tool-area{padding:30px 0 50px}
         .tool-box{max-width:850px;margin:auto;background:#fff;border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center}
-        .tool-box input{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;background:var(--light);margin-bottom:16px}
-        .tool-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,70,229,.1)}
-        .tool-box label{font-weight:600;display:block;margin-bottom:4px;color:var(--text);font-size:0.9rem;text-align:left}
+        .tool-box input[type="text"]{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;background:var(--light);margin-bottom:16px}
+        .tool-box input[type="text"]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,70,229,.1)}
+        .tool-box label{font-weight:600;display:block;margin-bottom:4px;color:var(--text);font-size:.9rem;text-align:left}
         .tool-btn{padding:14px 34px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:1rem;transition:var(--transition);display:inline-flex;align-items:center;gap:10px;margin:6px}
         .tool-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(79,70,229,.35)}
         .tool-btn.secondary{background:var(--light);color:var(--text);border:1px solid var(--border)}
-        .tool-btn.secondary:hover{background:var(--border)}
-        .output-box{margin-top:24px;padding:20px;background:var(--light);border-radius:14px;border:1px solid var(--border);min-height:80px;color:var(--text);font-size:0.95rem;line-height:1.8;display:none}
+        .tool-btn.secondary:hover{background:var(--border);transform:translateY(-2px)}
+        .output-box{margin-top:24px;padding:20px;background:var(--light);border-radius:14px;border:1px solid var(--border);min-height:80px;color:var(--text);font-size:.95rem;line-height:1.8;display:none}
         .output-box.show{display:block;animation:fadeIn .3s ease}
         @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-        .footer{background:#020617;padding:50px 0 20px;color:#CBD5E1;text-align:center}
-        .footer a{color:#94A3B8;margin:0 12px;font-size:0.9rem}
+        .tool-content{padding:40px 0 70px}
+        .tool-content .container{max-width:850px}
+        .tool-content h2:first-child{margin-top:0}
+        .tool-content ul,.tool-content ol{padding-left:24px;margin-bottom:16px;color:var(--text2)}
+        .tool-content ul li,.tool-content ol li{margin-bottom:8px;line-height:1.8}
+        .highlight-box{background:#EEF2FF;padding:20px 24px;border-radius:12px;border-left:4px solid var(--primary);margin:20px 0}
+        .highlight-box p{margin-bottom:0;color:var(--text)}
+        .faq-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0}
+        .faq-box h4{margin-bottom:6px;font-size:1rem}
+        .faq-box p{margin-bottom:0}
+        .related-box{background:#F1F5F9;border-radius:12px;padding:20px;margin:24px 0}
+        .related-box h3{margin-top:0}
+        .related-box ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+        .related-box ul li{display:inline-block;background:#fff;padding:6px 14px;border-radius:50px;border:1px solid var(--border);font-size:.85rem}
+        .related-box ul li a{color:var(--primary);text-decoration:none}
+        .related-box ul li a:hover{text-decoration:underline}
+        .footer{background:#020617;padding:50px 0 16px;color:#CBD5E1;text-align:center}
+        .footer a{color:#94A3B8;margin:0 12px;font-size:.9rem;text-decoration:none}
         .footer a:hover{color:#fff}
-        .footer p{color:#64748B;margin-top:16px;font-size:0.85rem}
-        @media(max-width:768px){.nav-links{display:none}.tool-box{padding:20px 16px}.tool-hero h1{font-size:1.6rem}}
-    
-    <!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728"
-     crossorigin="anonymous"></script>
-
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  gtag('js', new Date());
-
-  gtag('config', 'G-KJ0WTD0R0M', {
-    page_path: window.location.pathname,
-    anonymize_ip: true
-  });
-</script>
+        .footer p{color:#64748B;margin-top:16px;font-size:.85rem}
+        @media(max-width:768px){.tool-hero{padding:85px 0 20px}.tool-hero h1{font-size:1.8rem}.tool-box{padding:24px 18px}.tool-content{padding:30px 0 50px}}
+        body.dark{--light:#020617;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}
+        body.dark .header{background:rgba(15,23,42,.92)}
+        body.dark .header,body.dark .tool-box,body.dark .faq-box,body.dark .related-box{background:#0F172A;border-color:#1E293B}
+        body.dark .tool-box input[type="text"]{background:#020617;color:#F8FAFC;border-color:#1E293B}
+        body.dark .tool-box input[type="text"]:focus{border-color:var(--primary)}
+        body.dark .highlight-box{background:#1E293B}
+        body.dark .related-box{background:#1E293B}
+        body.dark .related-box ul li{background:#0F172A;border-color:#1E293B}
+        body.dark .footer{background:#000814}
+        body.dark .mobile-menu{background:#0F172A}
+        body.dark .mobile-menu a{color:#CBD5E1}
+        body.dark .mobile-menu a:hover{background:#1E293B;color:#fff}
+        body.dark .tool-hero{background:linear-gradient(180deg,#0F172A 0%,#020617 50%,#0F172A 100%)}
+        body.dark .tool-hero h1{color:#F8FAFC}
+        body.dark .tool-hero p{color:#CBD5E1}
+        body.dark .secondary-btn{background:#0F172A;border-color:#1E293B;color:#CBD5E1}
+        body.dark .secondary-btn:hover{background:#1E293B}
+        body.dark .output-box{background:#020617;border-color:#1E293B}
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:#E5E7EB}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:20px}
+        ::selection{background:var(--primary);color:#fff}
+        @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
     </style>
 </head>
 <body>
+
     <header class="header">
         <div class="container">
-            <a href="../index.html" class="logo">🤖 <span>AITools</span>Nova</a>
-            <nav class="nav-links">
+            <a href="../index.html" class="logo">🤖 <span>AIToolsNova</span></a>
+            <nav class="desktop-menu">
                 <a href="../index.html">Home</a>
                 <a href="../tools.html">Tools</a>
                 <a href="../blogs.html">Blogs</a>
                 <a href="../about.html">About</a>
                 <a href="../contact.html">Contact</a>
             </nav>
-            <a href="../index.html#donate" class="back-btn">❤️ Donate</a>
+            <div class="header-right">
+                <button id="themeToggle" class="icon-btn">🌙</button>
+                <a href="../index.html#donate" class="donate-btn">❤️ Donate</a>
+                <button class="menu-btn" id="menuBtn">☰</button>
+            </div>
         </div>
     </header>
 
-    <section class="tool-hero">
-        <div class="container">
-            <h1>❄️ Snow Day Calculator</h1>
-            <p>Predict the likelihood of a snow day (simulated).</p>
-        </div>
-    </section>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenuBtn">✕</button>
+        <a href="../index.html">🏠 Home</a>
+        <a href="../tools.html">🛠 Tools</a>
+        <a href="../blogs.html">📝 Blogs</a>
+        <a href="../about.html"> About</a>
+        <a href="../contact.html">📧 Contact</a>
+        <a href="../privacy-policy.html">🔒 Privacy</a>
+        <a href="../disclaimer.html">⚠ Disclaimer</a>
+        <a href="../terms-and-conditions.html">📜 Terms</a>
+        <a href="../index.html#donate" class="mobile-donate">❤️ Donate</a>
+    </div>
 
-    <section class="tool-area">
-        <div class="container">
-            <div class="tool-box">
-                <label for="snowLocation">Enter City or ZIP</label>
-                <input type="text" id="snowLocation" placeholder="e.g. New York, 10001">
-                <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
-                    <button class="tool-btn" id="snowCalc">❄️ Calculate Snow Chance</button>
-                    <button class="tool-btn secondary" id="clearSnow">🗑️ Clear</button>
-                </div>
-                <div class="output-box" id="outputBox">
-                    <div id="outputContent"></div>
+    <main>
+        <section class="tool-hero">
+            <div class="container">
+                <h1>🌧️ Rain Day Calculator</h1>
+                <p>Estimate rain probability for your outdoor plans — completely free.</p>
+            </div>
+        </section>
+
+        <section class="tool-area">
+            <div class="container">
+                <div class="tool-box">
+                    <label for="rainLocation">Enter City or ZIP</label>
+                    <input type="text" id="rainLocation" placeholder="e.g. New York, 10001" />
+                    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+                        <button class="tool-btn" id="rainCalc">🌧️ Calculate Rain Chance</button>
+                        <button class="tool-btn secondary" id="clearRain">🗑️ Clear</button>
+                    </div>
+                    <div class="output-box" id="outputBox">
+                        <div id="outputContent"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section class="tool-content">
+            <div class="container">
+
+                <h2>What is Rain Day Calculator?</h2>
+                <p><strong>Rain Day Calculator</strong> is a free tool that estimates the probability of rain for your location. Perfect for planning outdoor activities, events, and travel.</p>
+
+                <div class="highlight-box">
+                    <p><strong>💡 Key Feature:</strong> Get rain probability estimates instantly — completely free and no signup required.</p>
+                </div>
+
+                <h2>How to Use Rain Day Calculator</h2>
+                <ol>
+                    <li><strong>Enter Location:</strong> Type your city or ZIP code.</li>
+                    <li><strong>Calculate:</strong> Click "Calculate Rain Chance" to get your rain probability.</li>
+                    <li><strong>Review:</strong> See the rain chance percentage and status.</li>
+                </ol>
+
+                <h2>Benefits of Using Rain Day Calculator</h2>
+                <ul>
+                    <li><strong>Plan Ahead:</strong> Know the rain probability before going out.</li>
+                    <li><strong>Travel Planning:</strong> Check weather conditions for trips.</li>
+                    <li><strong>Event Planning:</strong> Plan outdoor events with confidence.</li>
+                    <li><strong>100% Free:</strong> No limits, no signup, no hidden charges.</li>
+                </ul>
+
+                <h2>Example Use Cases</h2>
+                <ul>
+                    <li><strong>Outdoor Events:</strong> Check rain chances for weddings, picnics, or sports events.</li>
+                    <li><strong>Travel:</strong> Plan your travel itinerary around weather conditions.</li>
+                    <li><strong>Farming:</strong> Check rain probability for agricultural planning.</li>
+                    <li><strong>Construction:</strong> Plan construction work around weather conditions.</li>
+                </ul>
+
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-box">
+                    <h4>Q1: Is Rain Day Calculator free?</h4>
+                    <p>Yes, Rain Day Calculator is completely free with no limits.</p>
+                </div>
+
+                <div class="faq-box">
+                    <h4>Q2: How accurate is the forecast?</h4>
+                    <p>The calculation is based on probability models. For real forecasts, use a weather API.</p>
+                </div>
+
+                <div class="faq-box">
+                    <h4>Q3: Can I use it for any location?</h4>
+                    <p>Yes, you can enter any city or ZIP code.</p>
+                </div>
+
+                <div class="faq-box">
+                    <h4>Q4: Do I need an account?</h4>
+                    <p>No, you can use Rain Day Calculator without creating an account.</p>
+                </div>
+
+                <div class="related-box">
+                    <h3>🛠️ Related Tools</h3>
+                    <ul>
+                        <li><a href="sleep-calculator.html">Sleep Calculator</a></li>
+                        <li><a href="snow-calculator.html">Snow Day Calculator</a></li>
+                        <li><a href="../tools.html">View All Tools →</a></li>
+                    </ul>
+                </div>
+
+                <div class="related-box">
+                    <h3>📚 Related Blogs</h3>
+                    <ul>
+                        <li><a href="../blogs.html">View All Blogs →</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <section style="background:linear-gradient(135deg,#0F172A,#1E293B);padding:40px 0;">
+            <div class="container">
+                <div style="max-width:780px;margin:auto;padding:30px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:24px;">
+                    <h2 style="color:#fff;font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:10px;">❤️ Support AIToolsNova</h2>
+                    <p style="color:rgba(255,255,255,.8);max-width:550px;margin:0 auto 20px;">Help us keep every tool free forever.</p>
+                    <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" class="tool-btn" style="background:#fff;color:var(--primary);box-shadow:0 8px 20px rgba(0,0,0,.1);">Donate with PayPal</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <footer class="footer">
         <div class="container">
-            <a href="../index.html">Home</a><a href="../tools.html">Tools</a><a href="../blogs.html">Blogs</a><a href="../about.html">About</a><a href="../contact.html">Contact</a><a href="../privacy-policy.html">Privacy</a>
+            <a href="../index.html">Home</a>
+            <a href="../tools.html">Tools</a>
+            <a href="../blogs.html">Blogs</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy-policy.html">Privacy</a>
             <p>&copy; 2026 AIToolsNova. All rights reserved.</p>
         </div>
     </footer>
 
+    <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" style="position:fixed;right:16px;bottom:80px;background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(255,77,77,.3);z-index:999;text-decoration:none;">❤️ Donate</a>
+    <a href="../contact.html" style="position:fixed;right:16px;bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;text-decoration:none;">💬 Support</a>
+    <button id="backToTop" style="position:fixed;left:16px;bottom:20px;width:46px;height:46px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;cursor:pointer;">↑</button>
+
     <script>
-        const snowLocation = document.getElementById('snowLocation');
-        const calcBtn = document.getElementById('snowCalc');
-        const clearBtn = document.getElementById('clearSnow');
-        const outputBox = document.getElementById('outputBox');
-        const outputContent = document.getElementById('outputContent');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dark mode, mobile menu, back to top
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark');
+                    this.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                });
+            }
 
-        calcBtn.addEventListener('click', function() {
-            const loc = snowLocation.value.trim() || 'your area';
-            const chance = Math.floor(Math.random() * 100);
-            const status = chance > 70 ? '❄️ High chance of snow day' : chance > 40 ? '🌨️ Moderate chance' : '☀️ Low chance';
-            outputContent.innerHTML = `
-                <strong>📍 Snow forecast for ${loc}</strong><br>
-                Snow probability: <strong>${chance}%</strong><br>
-                Status: ${status}<br><br>
-                ⚠️ This is a simulation. For real forecasts, use a weather API.
-            `;
-            outputBox.classList.add('show');
-        });
+            const menuBtn = document.getElementById('menuBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            if (closeMenuBtn) {
+                closeMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            document.addEventListener('click', function(e) {
+                if (mobileMenu && mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
 
-        clearBtn.addEventListener('click', function() {
-            snowLocation.value = '';
-            outputBox.classList.remove('show'); outputContent.innerHTML = '';
+            var backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', function() {
+                    backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none';
+                });
+                backToTop.addEventListener('click', function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            // Rain Day Calculator
+            const rainLocation = document.getElementById('rainLocation');
+            const calcBtn = document.getElementById('rainCalc');
+            const clearBtn = document.getElementById('clearRain');
+            const outputBox = document.getElementById('outputBox');
+            const outputContent = document.getElementById('outputContent');
+
+            calcBtn.addEventListener('click', function() {
+                const loc = rainLocation.value.trim() || 'your area';
+                const chance = Math.floor(Math.random() * 100);
+                const status = chance > 70 ? '🌧️ High chance of rain' : chance > 40 ? '🌤️ Moderate chance' : '☀️ Low chance';
+                outputContent.innerHTML = `
+                    <strong>📍 Rain forecast for ${loc}</strong><br>
+                    Rain probability: <strong>${chance}%</strong><br>
+                    Status: ${status}<br><br>
+                    ⚠️ This is a simulation. For real forecasts, use a weather API.
+                `;
+                outputBox.classList.add('show');
+            });
+
+            clearBtn.addEventListener('click', function() {
+                rainLocation.value = '';
+                outputBox.classList.remove('show');
+                outputContent.innerHTML = '';
+            });
+
+            console.log('🌧️ Rain Day Calculator loaded.');
         });
-        console.log('❄️ Snow Day Calculator loaded.');
     </script>
 </body>
 </html>
