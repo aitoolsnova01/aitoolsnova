@@ -101,3 +101,69 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+## user_problem_statement: "Fix uploaded AIToolsNova static website SEO/indexing/canonical/link errors, Cloudflare/Bing/Search Console/AdSense integration claims, broken AI tools including background remover, and autoblogger uniqueness/simple English/affiliate-image workflow."
+## backend:
+##   - task: "FastAPI health and Gemini endpoint"
+##     implemented: true
+##     working: true
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Health endpoint returns 200 after restoring uploaded source; Gemini endpoint is guarded by environment key."
+## frontend:
+##   - task: "Static pages, metadata, canonical, robots and sitemap"
+##     implemented: true
+##     working: true
+##     file: "index.html, robots.txt, sitemap.xml"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Removed missing sitemap URLs, fixed one broken blog link, added missing production canonicals/robots metadata, and removed unsupported Host directive."
+##   - task: "Background remover and core tool UI"
+##     implemented: true
+##     working: true
+##     file: "tools/background-remover.html"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Replaced unreliable UMD global loader with dynamic ESM import for @imgly/background-removal and honest error state. Browser page loads successfully."
+##   - task: "AutoBlog uniqueness and affiliate support"
+##     implemented: true
+##     working: true
+##     file: "scripts/generate-blog.mjs"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##       - working: true
+##         agent: "main"
+##         comment: "Existing history/slug safeguards retained; optional affiliate product name, URL and disclosure are now rendered as sponsored nofollow links when configured."
+## metadata:
+##   created_by: "main_agent"
+##   version: "2.0"
+##   test_sequence: 1
+##   run_ui: true
+## test_plan:
+##   current_focus:
+##     - "production static route and internal-link integrity"
+##     - "canonical, robots and sitemap validation"
+##     - "background remover loader and upload controls"
+##     - "Gemini API request/error shape"
+##     - "autoblogger duplicate and affiliate output safeguards"
+##   stuck_tasks: []
+##   test_all: true
+##   test_priority: "high_first"
+## agent_communication:
+##   - agent: "main"
+##     message: "Uploaded ZIP restored into /app and targeted SEO, sitemap, canonical, AI loader and autoblogger fixes applied. Please test the actual static site, not the old React starter."
