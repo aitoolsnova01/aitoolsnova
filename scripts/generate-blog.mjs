@@ -42,6 +42,9 @@ const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
 const AFFILIATE_PRODUCT_NAME = process.env.AFFILIATE_PRODUCT_NAME || '';
 const AFFILIATE_PRODUCT_URL = process.env.AFFILIATE_PRODUCT_URL || '';
 const AFFILIATE_DISCLOSURE = process.env.AFFILIATE_DISCLOSURE || 'This article may contain affiliate links. We may earn a small commission at no extra cost to you.';
+// Amazon India + Flipkart affiliate IDs. Amazon default is set to the confirmed AIToolsNova associate tag.
+const AMAZON_TAG = process.env.AMAZON_TAG || 'aitoolsnova-21';
+const FLIPKART_AFFID = process.env.FLIPKART_AFFID || '';
 
 // Multi-model fallback list. First one that works wins.
 // Order tuned for Groq FREE tier TPM (tokens/minute) limits (2026):

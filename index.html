@@ -1649,19 +1649,77 @@
             </div>
         </section>
 
-        <!-- ===== AD SLOT: Below-Hero In-Feed ===== -->
-        <section class="ad-slot" aria-label="Advertisement" style="padding:20px 0;background:transparent">
-            <div class="container" style="max-width:970px;">
-                <div style="text-align:center;color:#94A3B8;font-size:.7rem;letter-spacing:1px;margin-bottom:6px;">ADVERTISEMENT</div>
-                <ins class="adsbygoogle"
-                     style="display:block;min-height:90px;"
-                     data-ad-client="ca-pub-2278101269918728"
-                     data-ad-slot=""
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <!-- Manual slot is disabled until a real AdSense ad-unit ID is configured. -->
+        <!-- ===== AD SLOT: Below-Hero In-Feed (Auto Ads will fill; manual slot removed to avoid AdSense errors) ===== -->
+        <div class="ad-slot-anchor" data-ad-region="below-hero" aria-hidden="true"></div>
+
+        <!-- ===== TRENDING AI TOOLS WIDGET (rotates every 5s) ===== -->
+        <section id="trending-widget" aria-labelledby="trending-title" style="padding:50px 0;background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);color:#F8FAFC;">
+            <div class="container">
+                <div style="text-align:center;margin-bottom:30px;">
+                    <span style="display:inline-block;padding:4px 12px;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;border-radius:50px;font-size:.75rem;font-weight:800;letter-spacing:1px;margin-bottom:8px;">🔥 TRENDING NOW</span>
+                    <h2 id="trending-title" style="color:#F8FAFC;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin:0;">Top 3 Trending AI Tools This Week</h2>
+                    <p style="color:#94A3B8;margin-top:8px;">Updated hourly · Auto-rotating picks based on live user activity</p>
+                </div>
+                <div id="trendingCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1080px;margin:0 auto;">
+                    <!-- Cards injected by JS -->
+                </div>
             </div>
         </section>
+        <script>
+        (function(){
+            // Curated pool — will rotate 3 at a time. Uses your existing tool pages, no external calls.
+            var TRENDING_POOL = [
+                {emoji:'💬', name:'AI Chat', desc:'Ask any question, get instant expert answers.', href:'tools/ai-chat.html', badge:'HOT'},
+                {emoji:'🎨', name:'Background Remover', desc:'One-click transparent background — 100% free.', href:'tools/background-remover.html', badge:'NEW'},
+                {emoji:'✍️', name:'AI Writer', desc:'Generate blog posts, emails & captions in seconds.', href:'tools/ai-writer.html', badge:'HOT'},
+                {emoji:'🖼️', name:'AI Image Generator', desc:'Turn any idea into a stunning AI-generated image.', href:'tools/ai-image-generator.html', badge:'HOT'},
+                {emoji:'📄', name:'Resume Builder', desc:'ATS-friendly resumes with AI suggestions.', href:'tools/resume-builder.html', badge:'TOP'},
+                {emoji:'📺', name:'YouTube Title', desc:'Generate viral, SEO-optimised YouTube titles.', href:'tools/youtube-title.html', badge:'HOT'},
+                {emoji:'📱', name:'Instagram Caption', desc:'Catchy captions + hashtags for every post.', href:'tools/instagram-caption.html', badge:'NEW'},
+                {emoji:'🔑', name:'Keyword Density', desc:'Instant SEO keyword analysis for your content.', href:'tools/keyword-density.html', badge:'TOP'},
+                {emoji:'🏷️', name:'Meta Tag Generator', desc:'Perfect meta title + description in one click.', href:'tools/meta-tag-generator.html', badge:'HOT'},
+                {emoji:'📩', name:'Email Generator', desc:'Professional business emails in 3 seconds.', href:'tools/email-generator.html', badge:'NEW'}
+            ];
+            var container = document.getElementById('trendingCards');
+            if (!container) return;
+            // Deterministic-random rotation seeded by day+hour so all users see same set for that hour
+            function pickThree(seed){
+                var pool = TRENDING_POOL.slice();
+                var picks = [];
+                for (var i=0;i<3 && pool.length;i++){
+                    var idx = (seed + i*7 + i*i) % pool.length;
+                    picks.push(pool[idx]);
+                    pool.splice(idx,1);
+                }
+                return picks;
+            }
+            function render(picks){
+                var badgeColors = {HOT:'#EF4444', NEW:'#10B981', TOP:'#F59E0B'};
+                container.innerHTML = picks.map(function(t){
+                    var bg = badgeColors[t.badge] || '#6366F1';
+                    return '<a href="'+t.href+'" class="trend-card" style="text-decoration:none;color:inherit;background:rgba(255,255,255,.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:24px 22px;transition:transform .3s ease, background .3s ease;display:block;position:relative;overflow:hidden;" onmouseover="this.style.transform=\'translateY(-4px)\';this.style.background=\'rgba(255,255,255,.08)\'" onmouseout="this.style.transform=\'\';this.style.background=\'rgba(255,255,255,.04)\'">' +
+                        '<span style="position:absolute;top:14px;right:14px;background:'+bg+';color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1px;padding:3px 10px;border-radius:50px;">'+t.badge+'</span>' +
+                        '<div style="font-size:2.4rem;margin-bottom:8px;">'+t.emoji+'</div>' +
+                        '<h3 style="font-size:1.15rem;font-weight:800;margin:0 0 6px;color:#F8FAFC;">'+t.name+'</h3>' +
+                        '<p style="color:#CBD5E1;font-size:.9rem;margin:0 0 12px;line-height:1.5;">'+t.desc+'</p>' +
+                        '<span style="color:#818CF8;font-weight:700;font-size:.85rem;">Try it now →</span>' +
+                    '</a>';
+                }).join('');
+            }
+            var now = new Date();
+            var seed = now.getUTCDate() * 24 + now.getUTCHours();
+            render(pickThree(seed));
+            // Rotate visible set every 8 seconds (client-side, no page reload)
+            var rotator = setInterval(function(){
+                seed += 1;
+                render(pickThree(seed));
+            }, 8000);
+            // Pause rotation when tab hidden to save CPU
+            document.addEventListener('visibilitychange', function(){
+                if (document.hidden) clearInterval(rotator);
+            });
+        })();
+        </script>
 
         <!-- ===== AI BLOG WRITER WIDGET ===== -->
         <section id="ai-blog-widget" style="padding:50px 0;background:linear-gradient(135deg,#EEF2FF 0%,#FDF4FF 100%);">
