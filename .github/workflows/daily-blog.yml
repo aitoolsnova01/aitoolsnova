@@ -48,9 +48,13 @@ jobs:
           git commit -m "chore(blog): auto-publish ${TITLE_SLUG}"
           git push
 
-      - name: 🔔 Ping search engines (Google + Bing sitemap)
+      - name: 🔔 Ping search engines (Google + Bing sitemap + IndexNow)
         continue-on-error: true
         run: |
           curl -s -o /dev/null -w "Google ping: %{http_code}\n" "https://www.google.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
           curl -s -o /dev/null -w "Bing ping:   %{http_code}\n" "https://www.bing.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
+          # IndexNow bulk-submit sitemap URL (Bing + Yandex + Naver + Seznam)
+          curl -s -o /dev/null -w "IndexNow:    %{http_code}\n" -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d '{"host":"aitoolsnova.com","key":"9c0cbdcf9ab349f5afe1f1d2c91a2db9","keyLocation":"https://aitoolsnova.com/9c0cbdcf9ab349f5afe1f1d2c91a2db9.txt","urlList":["https://aitoolsnova.com/sitemap.xml"]}' || true
           echo "✅ Search engines pinged"

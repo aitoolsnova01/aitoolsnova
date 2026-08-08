@@ -21,6 +21,7 @@
  */
 
 import fs from 'node:fs/promises';
+import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
 
@@ -30,7 +31,14 @@ const BLOGS_HTML = path.join(ROOT, 'blogs.html');
 const SITEMAP_XML = path.join(ROOT, 'sitemap.xml');
 const HISTORY_FILE = path.join(ROOT, 'scripts', 'topic-history.json');
 const GROQ_KEY = process.env.GROQ_API_KEY;
-const INDEXNOW_KEY = process.env.INDEXNOW_KEY || '';
+// IndexNow key: use env var OR auto-detect the .txt key file at repo root
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
+    try {
+        const keyFile = readdirSync(ROOT).find(f => /^[a-f0-9]{32}\.txt$/i.test(f));
+        if (keyFile) return keyFile.replace('.txt', '');
+    } catch { /* silent */ }
+    return '';
+})();
 const AFFILIATE_PRODUCT_NAME = process.env.AFFILIATE_PRODUCT_NAME || '';
 const AFFILIATE_PRODUCT_URL = process.env.AFFILIATE_PRODUCT_URL || '';
 const AFFILIATE_DISCLOSURE = process.env.AFFILIATE_DISCLOSURE || 'This article may contain affiliate links. We may earn a small commission at no extra cost to you.';
