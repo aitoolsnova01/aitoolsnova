@@ -393,10 +393,14 @@ function esc(s = '') { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&q
 
 function buildHtml(topic, content, todayISO, todayHuman) {
     const canonicalUrl = `https://aitoolsnova.com/blog/${topic.slug}.html`;
-    const heroPromptEnc = encodeURIComponent(topic.hero_prompt || topic.title);
-    // Pollinations free image (no key). We link a specific seed derived from slug for stability.
+    // Enrich the raw hero prompt with quality-boosting keywords so Pollinations returns sharp, professional images.
+    const enrichedPrompt = `${topic.hero_prompt || topic.title}, high quality, sharp focus, 8k, professional photography, cinematic lighting, ultra detailed, modern tech aesthetic, vibrant colors`;
+    const heroPromptEnc = encodeURIComponent(enrichedPrompt);
+    // Pollinations Flux model produces MUCH sharper output than the default.
+    // width/height at 1600x900 (16:9) → downscaled by browsers cleanly, no pixelation.
+    // model=flux + enhance=true + nologo=true + nofeed=true (private) + seed for stability
     const seed = Array.from(topic.slug).reduce((a, c) => a + c.charCodeAt(0), 0);
-    const heroImg = `https://image.pollinations.ai/prompt/${heroPromptEnc}?width=1200&height=630&seed=${seed}&nologo=true`;
+    const heroImg = `https://image.pollinations.ai/prompt/${heroPromptEnc}?width=1600&height=900&seed=${seed}&model=flux&enhance=true&nologo=true&nofeed=true`;
     const sectionsHtml = content.sections.map(s =>
         `<h2>${esc(s.h2)}</h2>\n${s.body_html}`
     ).join('\n\n');
@@ -498,7 +502,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
         .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:#0F172A;text-decoration:none}
         .back-btn{padding:8px 20px;border-radius:50px;background:#4F46E5;color:#fff;text-decoration:none;font-weight:600;font-size:.9rem;transition:.3s}
         .back-btn:hover{background:#6366F1;transform:translateY(-2px)}
-        .hero-image{width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:16px;margin:16px 0 8px;background:#EEF2FF;box-shadow:0 10px 30px rgba(15,23,42,.08)}
+        .hero-image{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:16px;margin:16px 0 8px;background:#EEF2FF;box-shadow:0 10px 30px rgba(15,23,42,.08);image-rendering:auto;image-rendering:high-quality;image-rendering:-webkit-optimize-contrast}
         .blog-header{margin:8px 0 24px}
         .blog-header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:12px}
         .blog-meta{color:#94A3B8;font-size:.9rem;display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #E2E8F0}
@@ -548,7 +552,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
 
     <div class="container">
         <article>
-            <img class="hero-image" src="${heroImg}" alt="${esc(topic.title)}" loading="eager" fetchpriority="high" width="1200" height="630">
+            <img class="hero-image" src="${heroImg}" alt="${esc(topic.title)}" loading="eager" fetchpriority="high" decoding="async" width="1600" height="900">
             <div class="blog-header">
                 <h1>${esc(topic.title)}</h1>
                 <div class="blog-meta">
