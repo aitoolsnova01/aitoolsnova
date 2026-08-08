@@ -167,3 +167,5 @@
 ## agent_communication:
 ##   - agent: "main"
 ##     message: "Uploaded ZIP restored into /app and targeted SEO, sitemap, canonical, AI loader and autoblogger fixes applied. Please test the actual static site, not the old React starter."
+##   - agent: "testing"
+##     message: "39/40 passed; valid Gemini request failed only because EMERGENT_LLM_KEY was absent. Main configured the existing server key, restarted backend, and verified /api/gemini HTTP 200 plus homepage AI draft output."

@@ -277,6 +277,14 @@ async function generateContent(topic) {
 Topic: "${topic.title}"
 Category: ${topic.category}
 
+LANGUAGE & TONE (very important):
+- Write in SIMPLE, EASY English suitable for a 10th-grade reader.
+- Use SHORT sentences (avg 12-18 words). Use everyday words.
+- No jargon. If a technical term is unavoidable, explain it in one line.
+- Friendly, conversational tone. Speak to the reader as "you".
+- Do NOT copy or paraphrase any existing content on the internet. Write fresh.
+- Do NOT repeat sentences or phrases inside the article.
+
 ABSOLUTE RULES:
 - Only include VERIFIED, well-established facts. If mentioning a prediction, market forecast, or emerging trend, clearly label it (e.g. "According to industry analysts...", "This is speculation, not confirmed...").
 - Do NOT invent statistics. Only use ballpark ranges you are highly confident about (e.g. "millions of users"), never specific fake numbers.
@@ -285,6 +293,11 @@ ABSOLUTE RULES:
 - Do NOT promote any illegal, unethical or misleading activity.
 - Never write about specific individuals in a defamatory way.
 - Focus on genuinely helpful, evergreen information.
+
+AFFILIATE RECOMMENDATIONS (required):
+- Include a JSON array "affiliate_picks" with 2 relevant product/tool recommendations related to the topic.
+- Each pick: { "name": "short product name", "why": "one-line reason", "amazon_query": "search terms for Amazon India", "flipkart_query": "search terms for Flipkart" }
+- Pick real, well-known products (e.g. "Logitech M240 Wireless Mouse", "Wacom One Pen Tablet"). No made-up names.
 
 STRUCTURE (return ONLY valid JSON — no markdown code fences, no explanation outside JSON):
 
@@ -303,6 +316,9 @@ STRUCTURE (return ONLY valid JSON — no markdown code fences, no explanation ou
     {"q": "Question 1?", "a": "Clear, concise answer paragraph."}
   ],
   "conclusion_html": "<p>Closing 2 short paragraphs with a friendly CTA to explore related tools on AIToolsNova.</p>",
+  "affiliate_picks": [
+    {"name": "Product Name", "why": "one-line benefit", "amazon_query": "search terms", "flipkart_query": "search terms"}
+  ],
   "related_tools": ["ai-chat.html","ai-writer.html","ai-image-generator.html","youtube-kit.html"],
   "related_blogs": ["best-free-ai-tools-2026.html","top-100-ai-tools-2026.html","ai-productivity-tools.html"]
 }
@@ -333,8 +349,32 @@ Return ONLY the JSON object.`;
     parsed.conclusion_html = parsed.conclusion_html || '<p>Thanks for reading! Explore more free AI tools on AIToolsNova.</p>';
     parsed.related_tools = parsed.related_tools || ['ai-chat.html','ai-writer.html','ai-image-generator.html','youtube-kit.html'];
     parsed.related_blogs = parsed.related_blogs || ['best-free-ai-tools-2026.html','top-100-ai-tools-2026.html','ai-productivity-tools.html'];
+    parsed.affiliate_picks = Array.isArray(parsed.affiliate_picks) ? parsed.affiliate_picks.slice(0, 3) : [];
     if (parsed.sections.length < 3) throw new Error('Content too short (needs >=3 sections). Got: ' + parsed.sections.length);
     return parsed;
+}
+
+// ---------- 6a. Build affiliate section HTML ----------
+function buildAffiliateSection(picks) {
+    if (!Array.isArray(picks) || picks.length === 0) return '';
+    const items = picks.map(p => {
+        const aQ = encodeURIComponent(p.amazon_query || p.name || '');
+        const fQ = encodeURIComponent(p.flipkart_query || p.name || '');
+        // Amazon India affiliate link (auto-tagged when AMAZON_TAG is set)
+        const amazonUrl = AMAZON_TAG
+            ? `https://www.amazon.in/s?k=${aQ}&tag=${encodeURIComponent(AMAZON_TAG)}`
+            : `https://www.amazon.in/s?k=${aQ}`;
+        // Flipkart affiliate link (auto-tagged when FLIPKART_AFFID is set)
+        const flipkartUrl = FLIPKART_AFFID
+            ? `https://www.flipkart.com/search?q=${fQ}&affid=${encodeURIComponent(FLIPKART_AFFID)}`
+            : `https://www.flipkart.com/search?q=${fQ}`;
+        return `<div class="pick"><h4>${esc(p.name || '')}</h4><p>${esc(p.why || '')}</p><p><a href="${amazonUrl}" rel="sponsored nofollow noopener" target="_blank">🛒 Buy on Amazon</a> &nbsp;·&nbsp; <a href="${flipkartUrl}" rel="sponsored nofollow noopener" target="_blank">🛍️ Buy on Flipkart</a></p></div>`;
+    }).join('');
+    return `<aside class="affiliate-box">
+        <strong>🎯 Recommended products</strong>
+        <p style="font-size:.85rem;color:#94A3B8;">${esc(AFFILIATE_DISCLOSURE)}</p>
+        ${items}
+    </aside>`;
 }
 
 // ---------- 6. Build HTML from template ----------
@@ -365,6 +405,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
     const affiliateHtml = AFFILIATE_PRODUCT_NAME && /^https?:\/\//i.test(AFFILIATE_PRODUCT_URL)
         ? `<aside class="affiliate-box"><strong>Recommended resource: ${esc(AFFILIATE_PRODUCT_NAME)}</strong><p>${esc(AFFILIATE_DISCLOSURE)}</p><a href="${esc(AFFILIATE_PRODUCT_URL)}" rel="sponsored nofollow noopener" target="_blank">View product</a></aside>`
         : '';
+    const affiliatePicksHtml = buildAffiliateSection(content.affiliate_picks);
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -465,6 +506,9 @@ function buildHtml(topic, content, todayISO, todayHuman) {
         .affiliate-box strong{display:block;margin-bottom:6px;color:#0F172A}
         .affiliate-box p{margin-bottom:10px;font-size:.9rem}
         .affiliate-box a{color:#4F46E5;font-weight:700}
+        .affiliate-box .pick{background:#fff;border:1px solid #E9C46A;border-radius:10px;padding:14px;margin-top:12px}
+        .affiliate-box .pick h4{color:#0F172A;font-size:1.05rem;margin:0 0 6px}
+        .affiliate-box .pick p{margin-bottom:6px;color:#475569}
         .faq-box{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px 20px;margin:12px 0}
         .faq-box h4{margin-bottom:6px;font-size:1rem;color:#0F172A}
         .faq-box p{color:#475569;margin-bottom:0}
@@ -516,6 +560,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
                 ${content.conclusion_html}
 
                 ${affiliateHtml}
+                ${affiliatePicksHtml}
 
                 <div class="related-box">
                     <h3>🛠️ Related Tools</h3>

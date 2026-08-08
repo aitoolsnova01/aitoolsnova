@@ -385,57 +385,59 @@
                 statusMsg.style.display = 'block';
             }
 
-            // ----- Load the library with retry -----
+            // ----- Load the library (ESM from CDN) -----
+            // We use @imgly/background-removal v1.4.5 (stable, well-tested).
+            // The library ships as ESM; the default export is the removeBackground function.
+            const LIB_VERSION = '1.4.5';
+            const LIB_CDN = `https://cdn.jsdelivr.net/npm/@imgly/background-removal@${LIB_VERSION}`;
+
             function loadBackgroundRemovalLibrary() {
                 return new Promise((resolve, reject) => {
-                    // Check for WebAssembly support (critical for this library)
                     if (!('WebAssembly' in window)) {
-                        reject(new Error('Your browser does not support WebAssembly, which is required for this tool. Please use a modern browser.'));
+                        reject(new Error('Your browser does not support WebAssembly. Please use a modern browser (Chrome, Firefox, Edge, Safari).'));
                         return;
                     }
-
-                    // The package is ESM; the old UMD global was not exposed reliably.
-                    import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm')
-                        .then(module => module.default ? resolve(module.default) : reject(new Error('Background model module loaded without a processor.')))
-                        .catch(() => reject(new Error('Could not load the AI model. Please check your connection and retry.')));
+                    import(`${LIB_CDN}/+esm`)
+                        .then(module => {
+                            // v1.4.5 exposes `removeBackground` as both named and default export
+                            const fn = module.removeBackground || module.default;
+                            if (typeof fn === 'function') resolve(fn);
+                            else reject(new Error('Background removal function not found in loaded module.'));
+                        })
+                        .catch(err => {
+                            console.error('Library load error:', err);
+                            reject(new Error('Could not load the AI model. Please check your internet connection and try again.'));
+                        });
                 });
-            }
-
-            // ----- Fallback: simple canvas removal (just for demonstration, not AI) -----
-            // We'll only use this if AI fails
-            function fallbackRemoveBackground(imageData) {
-                // For now, just return the original image with a note
-                // In a real fallback, we could implement a simple color threshold
-                // But we'll just inform the user
-                throw new Error('AI processing failed. Please try a different image or use a desktop browser.');
             }
 
             // ----- Main remove function -----
             async function removeBackgroundFromImage(file) {
-                try {
-                    setStatus('⏳ Loading the private browser AI model... (first run may take a while)');
+                setStatus('⏳ Loading AI model (first run downloads ~40MB, cached after)...');
+                const removeBg = await loadBackgroundRemovalLibrary();
 
-                    // Load the library
-                    const removeBg = await loadBackgroundRemovalLibrary();
+                setStatus('⏳ Processing image with AI (10-30 seconds)...');
 
-                    setStatus('⏳ Processing image with AI...');
+                // publicPath is REQUIRED so the library can fetch the ONNX model files from the CDN
+                // (not from the same origin). Without this, the model 404s and background removal fails.
+                const config = {
+                    publicPath: `${LIB_CDN}/dist/`,
+                    output: {
+                        format: 'image/png',
+                        quality: 0.9
+                    },
+                    model: 'medium',
+                    progress: (key, current, total) => {
+                        if (key.includes('fetch')) {
+                            const pct = total ? Math.round((current / total) * 100) : 0;
+                            setStatus(`⏳ Downloading AI model... ${pct}%`);
+                        }
+                    }
+                };
 
-                    // Call the library
-                    const resultBlob = await removeBg(file, {
-                        output: 'image/png',
-                        model: 'isnet_fp16',
-                        device: 'cpu',
-                        // You can add other options like quality, model, etc.
-                        // For better performance on mobile, you can use a smaller model:
-                        // model: 'small',
-                    });
-
-                    return resultBlob;
-                } catch (error) {
-                    console.error('Background removal error:', error);
-                    // Try fallback (if any)
-                    throw new Error(`AI removal failed: ${error.message}`);
-                }
+                const resultBlob = await removeBg(file, config);
+                if (!resultBlob) throw new Error('The AI returned no output. Try a smaller or clearer image.');
+                return resultBlob;
             }
 
             // ----- UI Event Handlers -----
