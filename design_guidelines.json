@@ -1,0 +1,105 @@
+{
+  "project": "SEO operations dashboard for a non-technical website owner",
+  "context": "Hybrid fullstack React JavaScript + Tailwind + shadcn/ui + FastAPI",
+  "theme": "Light-first operational workspace with an optional dark mode toggle; warm paper base and ink-blue functional accents.",
+  "design_concepts": [
+    {"name": "Searchlight Desk", "probability": 0.34, "direction": "Editorial newspaper hierarchy fused with an air-traffic control dashboard and archival index cards. Best balance of trust, clarity, and personality."},
+    {"name": "Crawl Room", "probability": 0.24, "direction": "Swiss information design fused with transit maps and utility control panels. Dense but calm technical diagnosis."},
+    {"name": "Site Clinic", "probability": 0.18, "direction": "Warm clinic wayfinding fused with botanical field notes and structured SEO checks. Friendly for a non-technical owner."},
+    {"name": "Signal Ledger", "probability": 0.14, "direction": "Financial ledger rhythm fused with newsroom alerts and monochrome data visualization. Strong for prioritization and audit history."},
+    {"name": "Workshop Console", "probability": 0.10, "direction": "Maker-workbench labels fused with browser devtools and simple step-by-step repair flows. Most playful, but still practical."}
+  ],
+  "chosen_direction": "Searchlight Desk",
+  "research_notes": [
+    {"reference": "Semrush technical SEO dashboard pattern", "descriptor": "Put site health, indexation, crawl errors, and backlinks in a visible operational hierarchy rather than hiding them in charts."},
+    {"reference": "Google Search Console query dashboard pattern", "descriptor": "Use compact KPI strips for clicks, impressions, CTR, and position, followed by query and landing-page tables."},
+    {"reference": "Looker Studio SEO templates", "descriptor": "Combine multi-source metrics in a single overview, but label the source and freshness of every integration."},
+    {"reference": "Google Search Central canonical guidance", "descriptor": "Explain canonical, robots.txt, and noindex as different controls; never imply robots.txt prevents indexing or sets a canonical."},
+    {"reference": "Cloudflare/Bing IndexNow guidance", "descriptor": "Show connection state as verified, needs action, or not connected; never claim a third-party integration without a backend verification response."}
+  ],
+  "typography": {
+    "heading": "IBM Plex Sans, 700/500, tracking-tight; distinctive but highly readable for an operations tool.",
+    "body": "IBM Plex Sans, 400/500, leading-relaxed.",
+    "mono": "IBM Plex Mono for URLs, status codes, timestamps, and technical snippets.",
+    "rules": ["H1 text-4xl sm:text-5xl lg:text-6xl maximum", "H2 text-2xl sm:text-3xl lg:text-4xl", "Labels text-xs uppercase tracking-[0.2em]", "Do not use Inter, Roboto, or generic system fonts for headings"]
+  },
+  "colors": {
+    "archetype": "Swiss and high-contrast with a warm paper twist",
+    "background": "#F5F2EA",
+    "surface": "#FFFDF8",
+    "ink": "#18232D",
+    "muted_ink": "#53616B",
+    "border": "#D8D4CB",
+    "primary": "#174A63",
+    "primary_hover": "#10384B",
+    "success": "#236B4B",
+    "warning": "#A86516",
+    "error": "#A33D35",
+    "signal_yellow": "#E9C46A",
+    "rules": ["Use primary sparingly for actions and selected navigation", "Use status colors only for status meaning", "No teal dashboard palette, no forbidden #7351B7, no full-screen gradients", "All normal text must meet 4.5:1 contrast; large text and controls at least 3:1", "Use tinted neutrals rather than pure black or gray"]
+  },
+  "visual_enhancers": [
+    "Subtle paper grain via CSS pseudo-element with low opacity and aria-hidden=true",
+    "Thin ruled dividers and offset index-card borders; avoid excessive rounded cards",
+    "One small animated signal line in the active audit header, not decorative motion everywhere",
+    "Custom scrollbar with warm tinted thumb and no gutter",
+    "Use layered shadows only on elevated drawers and menus; dashboard widgets are flat with 1px borders"
+  ],
+  "navigation": {
+    "desktop": "Solid or opaque glass header with brand mark 'Searchlight', links Audit, Indexing, Tools, AutoBlog, and primary Run audit button.",
+    "mobile": "Visible brand plus menu button; mobile menu must expose all links and the CTA.",
+    "requirements": ["Header has z-50 and non-transparent background", "All nav links have data-testid", "Active route has both color and underline/border cue"]
+  },
+  "layouts": {
+    "app_shell": "Desktop: left rail 248px plus main content; mobile: stacked content with collapsible nav.",
+    "overview": "12-column desktop grid with a large priority panel spanning 8 columns, a tall integration health panel spanning 4, then metric tiles and issue queue. Mobile becomes one column.",
+    "audit": "High-density grid: summary metrics, issue table, backlink/page-link review, and GEO keyword table. Keep tables left aligned and use row-level repair actions.",
+    "indexing": "Two-column desktop layout: URL check form and explanation on left; results timeline and status breakdown on right. Include canonical, robots, noindex, sitemap, response code, and rendered HTML checks.",
+    "tools": "Tetris-like workspace: background remover as dominant panel, image quality inspector as tall side panel, small utility actions below.",
+    "autoblog": "Step flow: topic and simple-English brief, affiliate product fields, image upload validation, duplicate-content warning, preview, save/draft/publish. Never auto-publish without explicit confirmation.",
+    "empty_space": "Leave breathing room around primary issue and do not fill every grid cell with cards."
+  },
+  "component_name": {
+    "shell": "SeoWorkspaceShell",
+    "overview": "AuditOverview",
+    "status_card": "IntegrationStatusCard",
+    "issue_queue": "PriorityIssueTable",
+    "url_check": "IndexabilityCheckForm",
+    "canonical_panel": "CanonicalRobotsPanel",
+    "backlink_table": "BacklinkReviewTable",
+    "keyword_table": "GeoKeywordTable",
+    "background_tool": "BackgroundRemoverWorkspace",
+    "image_validator": "ImageQualityValidator",
+    "autoblog": "AutoBlogComposer",
+    "component_path": "/app/frontend/src/components/"
+  },
+  "functional_blueprint": {
+    "seo_audit": ["health score with plain-language explanation", "broken internal links and backlinks with source URL, target URL, anchor, and status", "GEO keyword clusters with location, intent, impressions, clicks, and opportunity", "prioritized repair queue with severity and one next action"],
+    "indexing": ["URL input using shadcn Input", "server-verified HTTP status, canonical, robots meta, X-Robots-Tag, sitemap presence, mobile/render check", "show Google/Bing submission status only when API response confirms it", "explain rejected vs failed in simple English"],
+    "connections": ["Cloudflare", "Bing Webmaster", "Google Search Console", "Google AdSense"],
+    "tool_reliability": ["background remover shows processing, success, retry, and provider error states", "image validation checks file type, dimensions, aspect ratio, file size, compression, and quality", "autoblogger duplicate scan and affiliate disclosure field are mandatory before publish"]
+  },
+  "interaction_and_motion": {
+    "entrance": "Stagger issue rows and metric groups by 40ms; use opacity and translateY only.",
+    "hover": "Buttons darken and lift 1px; rows reveal a repair action; explicit hover text colors required.",
+    "press": "Scale 0.98 on buttons with 120ms transform transition.",
+    "loading": "Use skeleton blocks and a determinate audit progress bar with text, never motion alone.",
+    "toast": "Use Sonner at /app/frontend/src/components/ui/sonner.jsx for connection, save, and retry feedback.",
+    "reduced_motion": "Disable stagger, signal animation, and transforms under prefers-reduced-motion.",
+    "avoid": ["transition: all", "large parallax in data views", "auto-playing or indefinite spinners without status text"]
+  },
+  "accessibility": {
+    "requirements": ["Every button, link, input, menu, status, balance, result, and confirmation includes a stable kebab-case data-testid", "Use semantic landmarks, table captions, labels, and aria-live for audit completion", "Keyboard accessible tabs, drawers, dropdowns, and dialogs via shadcn primitives", "Do not communicate status by color alone; pair color with text and icon", "Focus ring must be higher contrast than default", "Use descriptive error messages with a fix suggestion"]
+  },
+  "media": {
+    "image_needed": false,
+    "guidance": "This is an operational dashboard; do not add stock photography or placeholder image URLs. Use CSS texture and inline accessible SVG diagrams only.",
+    "upload_rules": ["accept jpg, png, webp", "show max file size and recommended dimensions before upload", "preserve aspect ratio and provide a crop/fit choice", "show original and optimized byte size", "never silently replace a user image"]
+  },
+  "3d_libraries": {"use": false, "reason": "Clarity and trust matter more than immersion for SEO diagnostics; prefer CSS/SVG and Recharts for charts."},
+  "charts": {"library": "Recharts or shadcn chart primitives", "rules": ["Use accessible labels and table alternative", "Use color-blind-friendly primary, warning, error, and neutral series", "Prefer sparklines and simple lines/bars; avoid 3D charts and gauges without numeric values"]},
+  "implementation_notes_for_js": ["Use .js/.jsx files, not .tsx files", "Use pure HTML/Tailwind for shell layout and shadcn primitives for inputs, dialogs, selects, tabs, tables, and toasts", "Do not use native select/datepicker for advanced interactions", "Keep grid items as direct children of grid containers", "Add data-testid to every interactive and key informational element", "Use real API response states; CONNECTION STATES MUST NOT BE MOCKED in production", "If a provider is unavailable, label the state 'Not verified' and give a manual setup path instead of claiming success"],
+  "api_truthfulness": {"required_backend_checks": ["Cloudflare token/account verification", "Bing Webmaster site and sitemap response", "Google Search Console property and inspection response", "AdSense publisher/site status", "background-removal provider health and job result"], "ui_states": ["verified", "needs action", "not connected", "checking", "provider error", "stale data"], "mocked": "Any demo fixtures used during development must be visibly labeled MOCKED and removed or gated before production."},
+  "general_ui_ux_design_guidelines": ["Design for a non-technical owner: plain English, one clear next action, progressive disclosure", "Never use a generic centered landing layout; use an asymmetric operational grid", "Use generous p-6/p-8 spacing and internal padding in every bordered container", "Use opaque header and menu surfaces; never place readable content on a fully transparent surface", "Use micro-interactions for hover, focus, press, loading, and success", "Maintain visible desktop navigation with 3-5 links and a primary CTA", "Make mobile responsive from one column upward", "No emoji icons; use lucide or existing shadcn-compatible icons", "Do not promise SEO traffic or indexing outcomes; show evidence, timestamps, and limitations", "Customize scrollbar and honor reduced motion"],
+  "acceptance_checklist": ["A user can see the top three SEO problems within five seconds", "Each problem explains why it matters and has a repair action", "Canonical, robots, and noindex are clearly distinguished", "Indexing and integration statuses identify verified vs unverified", "Background remover and AutoBlog expose loading/error/retry states", "Autoblog supports affiliate product name, URL, price, disclosure, and CTA fields", "Image uploads show dimensions, size, quality, and optimization result", "All tests can target stable data-testid attributes", "No placeholder image URLs or unsupported integration claims"]
+}
