@@ -1,0 +1,29 @@
+name: IndexNow - Submit All URLs
+
+# Pushes EVERY sitemap URL to IndexNow (Bing, Yandex, Naver, Seznam) so the
+# whole site keeps getting re-discovered. Runs weekly + on manual trigger.
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # every Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  indexnow-all:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 🔔 Submit all URLs to IndexNow
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: node scripts/indexnow-submit-all.mjs
