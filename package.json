@@ -1,0 +1,12 @@
+{
+  "name": "aitoolsnova",
+  "version": "3.0.0",
+  "private": true,
+  "description": "AIToolsNova - 100+ Free AI, SEO & Online Tools",
+  "scripts": {
+    "build": "echo Build completed"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

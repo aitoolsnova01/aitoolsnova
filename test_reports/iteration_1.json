@@ -1,0 +1,34 @@
+{
+  "summary": "Static-site backend testing for web-stories + SEO changes. Started python http.server on :8888 and ran 17 pytest cases covering robots.txt, sitemap.xml, web-stories.html landing, generated AMP story, GitHub Actions workflow, node script (syntax/smoke/exports), blog preservation, and SEO_HEALTH doc. 16/17 passed. Only failure: canonical URL in generated AMP story points to the file itself instead of /web-stories/ as required by the spec.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {
+        "endpoint": "/web-stories/5-free-ai-tools-2026-hd.html",
+        "issue": "Canonical link points to https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd.html but spec requires https://aitoolsnova.com/web-stories/ (directory). Source: /app/scripts/generate-webstory.mjs line ~194-232 uses `${SITE}/web-stories/${slug}.html` for the canonical. Change to `${SITE}/web-stories/` if spec is authoritative, or clarify with user (self-canonical is generally better SEO practice)."
+      }
+    ]
+  },
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/tests/test_webstories_static.py",
+    "/app/test_reports/pytest/webstories_results.xml"
+  ],
+  "action_items": [
+    "Decide canonical policy for AMP story: spec says https://aitoolsnova.com/web-stories/ but implementation uses self-URL. If spec must be honored, update canonical in scripts/generate-webstory.mjs (buildStoryHtml).",
+    "Consider hardening main() guard in generate-webstory.mjs so importing the module with the file as argv[1] does not auto-run main(). Currently `import.meta.url === new URL('file://'+process.argv[1]).href` returns true for such invocations. Not blocking for normal CI usage."
+  ],
+  "critical_code_review_comments": [
+    "generate-webstory.mjs main-guard is fragile: any dynamic import invocation that happens to have argv[1] set to the script path will re-trigger main() (observed in ad-hoc export tests). Consider checking process.env or a CLI flag instead.",
+    "AMP story canonical is self-referential; spec expected directory URL. Confirm intent.",
+    "All other checks (7 amp-story-page ids, slide captions, pollinations images, Google Fonts, JSON-LD Article, sitemap append preserving blog entries, robots.txt clean of risky patterns, workflow YAML with cron 30 15 * * *, indexnow ping) pass."
+  ],
+  "updated_files": ["/app/tests/test_webstories_static.py"],
+  "success_rate": {"backend": "94% (16/17)", "frontend": "n/a - static site not browser-tested per request"},
+  "test_credentials": "N/A - no auth. GROQ_API_KEY='test' used for smoke test only.",
+  "seed_data_creation": "None. Tests read existing static files only.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "python3 -m http.server 8888 --directory /app must be running. Pytest file: /app/tests/test_webstories_static.py. Only 1 open issue: canonical URL on generated AMP story. Existing /app/blog/*.html (77 files) and /app/blogs.html (>50KB) untouched. Node smoke test relies on presence of /app/blog/*.html for pickSourceBlog.",
+  "rca of the issue": "buildStoryHtml() in /app/scripts/generate-webstory.mjs computes `const canonical = `${SITE}/web-stories/${slug}.html`` and inlines it into <link rel='canonical'>. Spec requires the directory URL https://aitoolsnova.com/web-stories/. Fix: change canonical construction to `${SITE}/web-stories/` (or update spec)."
+}

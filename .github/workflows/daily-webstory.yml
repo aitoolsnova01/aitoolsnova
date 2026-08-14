@@ -1,0 +1,54 @@
+name: Daily Web Story Auto-Publish
+
+# Runs daily at 15:30 UTC (~09:00 EST / 21:00 IST) - 90 min AFTER the daily blog
+# so that the newest blog exists before this job picks it up.
+on:
+  schedule:
+    - cron: '30 15 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-webstory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 🎬 Generate today's web story
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ vars.GROQ_MODEL }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: node scripts/generate-webstory.mjs
+
+      - name: 🚀 Commit and push new web story
+        run: |
+          git config user.name "AIToolsNova Bot"
+          git config user.email "bot@aitoolsnova.com"
+          git add web-stories/ web-stories.html sitemap.xml
+          if git diff --staged --quiet; then
+            echo "No web-story changes to commit."
+            exit 0
+          fi
+          NEW_FILE=$(git diff --staged --name-only --diff-filter=A -- 'web-stories/*.html' | head -1)
+          SLUG=$(basename "$NEW_FILE" .html || echo "story")
+          git commit -m "feat(web-stories): auto-publish ${SLUG}"
+          git push
+
+      - name: 🔔 Ping search engines (Google + Bing sitemap + IndexNow)
+        continue-on-error: true
+        run: |
+          curl -s -o /dev/null -w "Google ping: %{http_code}\n" "https://www.google.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
+          curl -s -o /dev/null -w "Bing ping:   %{http_code}\n" "https://www.bing.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
+          echo "✅ Search engines pinged"

@@ -1,0 +1,19 @@
+# Redirects for AIToolsNova - Cloudflare Pages
+# Canonicalize URL variants to prevent Google Search Console
+# "Duplicate without user-selected canonical" errors.
+
+# Force single canonical entry-point
+/home       /                  301
+/index      /                  301
+/index.html /                  301!
+
+# Trailing-slash normalization for known folders
+/tools/     /tools.html        301
+/blogs/     /blogs.html        301
+/blog/      /blogs.html        301
+
+# Common typo redirects (avoid soft-404s)
+/tool       /tools.html        301
+/blog-list  /blogs.html        301
+/contact-us /contact.html      301
+/about-us   /about.html        301

@@ -1,0 +1,60 @@
+name: Daily Blog Auto-Publish
+
+# Runs once daily at 14:00 UTC = 09:00 EST (US morning) = 15:00 CET (Europe afternoon) = 19:30 IST (India evening)
+# This overlaps the highest worldwide English readership window.
+on:
+  schedule:
+    - cron: '0 14 * * *'
+  # Also allow manual trigger from Actions tab
+  workflow_dispatch:
+
+# Required permissions to commit + push
+permissions:
+  contents: write
+
+jobs:
+  generate-blog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 📝 Generate today's blog post
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ vars.GROQ_MODEL }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: node scripts/generate-blog.mjs
+
+      - name: 🚀 Commit and push new blog
+        run: |
+          git config user.name "AIToolsNova Bot"
+          git config user.email "bot@aitoolsnova.com"
+          git add blog/ blogs.html sitemap.xml scripts/topic-history.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          NEW_FILE=$(git diff --staged --name-only --diff-filter=A -- 'blog/*.html' | head -1)
+          TITLE_SLUG=$(basename "$NEW_FILE" .html || echo "post")
+          git commit -m "chore(blog): auto-publish ${TITLE_SLUG}"
+          git push
+
+      - name: 🔔 Ping search engines (Google + Bing sitemap + IndexNow)
+        continue-on-error: true
+        run: |
+          curl -s -o /dev/null -w "Google ping: %{http_code}\n" "https://www.google.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
+          curl -s -o /dev/null -w "Bing ping:   %{http_code}\n" "https://www.bing.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
+          # IndexNow bulk-submit sitemap URL (Bing + Yandex + Naver + Seznam)
+          curl -s -o /dev/null -w "IndexNow:    %{http_code}\n" -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d '{"host":"aitoolsnova.com","key":"9c0cbdcf9ab349f5afe1f1d2c91a2db9","keyLocation":"https://aitoolsnova.com/9c0cbdcf9ab349f5afe1f1d2c91a2db9.txt","urlList":["https://aitoolsnova.com/sitemap.xml"]}' || true
+          echo "✅ Search engines pinged"

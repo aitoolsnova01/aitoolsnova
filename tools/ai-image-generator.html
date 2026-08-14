@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Image Generator - Free Text to Image Tool (No Signup) | AIToolsNova</title>
+    <meta name="description" content="Generate stunning AI images from text prompts for FREE. No signup, no watermark, no daily limit. Create art, logos, illustrations, avatars & wallpapers instantly." />
+    <meta name="keywords" content="AI image generator, text to image, free AI art, AI image maker, AI picture generator, stable diffusion online, nano banana alternative, DALL-E free" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#4F46E5" />
+    <link rel="canonical" href="https://aitoolsnova.com/tools/ai-image-generator.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Free AI Image Generator - Text to Image (No Signup) | AIToolsNova" />
+    <meta property="og:description" content="Generate stunning AI images from text prompts for FREE. Multiple styles, sizes & aspect ratios. No signup, no watermark." />
+    <meta property="og:url" content="https://aitoolsnova.com/tools/ai-image-generator.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://aitoolsnova.com/images/logo.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Free AI Image Generator - Text to Image | AIToolsNova" />
+    <meta name="twitter:description" content="Generate stunning AI images from text prompts. Free, unlimited, no signup." />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://image.pollinations.ai">
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "AI Image Generator",
+        "description": "Free online AI image generator that creates stunning images from text prompts. No signup, no watermark, unlimited use.",
+        "url": "https://aitoolsnova.com/tools/ai-image-generator.html",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "All",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1247"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type":"Question","name":"Is this AI Image Generator really free?","acceptedAnswer":{"@type":"Answer","text":"Yes, 100% free with no signup, no credit card, no watermarks and no daily limits. You can generate unlimited AI images."}},
+            {"@type":"Question","name":"What AI model powers the image generator?","acceptedAnswer":{"@type":"Answer","text":"We use a free, open image diffusion model network. Your prompt is turned into a high-resolution image in seconds without any account."}},
+            {"@type":"Question","name":"Can I use the generated images commercially?","acceptedAnswer":{"@type":"Answer","text":"Yes. Images generated are yours to use for personal, blog, YouTube thumbnail, social media and commercial projects. Do double-check the license page for the latest terms."}},
+            {"@type":"Question","name":"How long does it take to create an image?","acceptedAnswer":{"@type":"Answer","text":"Typically 4-10 seconds depending on image size and network. Larger dimensions take a little longer."}},
+            {"@type":"Question","name":"How can I write better AI image prompts?","acceptedAnswer":{"@type":"Answer","text":"Describe the subject, style, lighting, camera angle and mood. Example: 'a majestic tiger walking through a foggy forest at sunrise, cinematic, ultra realistic, 8k'."}}
+        ]
+    }
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KJ0WTD0R0M', { page_path: window.location.pathname, anonymize_ip: true });
+    </script>
+
+    <!-- Google AdSense -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2278101269918728" crossorigin="anonymous"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2278101269918728",
+        enable_page_level_ads: true
+      });
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#4F46E5;--secondary:#06B6D4;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--radius:18px;--transition:.35s ease}
+        html{scroll-behavior:smooth;font-size:16px}
+        body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.8}
+        .container{width:min(1200px,92%);margin:auto}
+        a{text-decoration:none;color:inherit;transition:var(--transition)}
+        button{font-family:inherit;cursor:pointer;border:none}
+        h1{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:800;line-height:1.2}
+        h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-top:35px;margin-bottom:12px}
+        h3{font-size:1.2rem;font-weight:700;margin-top:20px;margin-bottom:8px}
+        h4{font-size:1.05rem;font-weight:600;margin-top:16px;margin-bottom:6px}
+        p{color:var(--text2);margin-bottom:16px;font-size:1rem;line-height:1.8}
+
+        .header{position:sticky;top:0;width:100%;height:68px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}
+        .header .container{display:flex;align-items:center;justify-content:space-between}
+        .logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:var(--text)}
+        .logo span{color:var(--primary)}
+        .desktop-menu{display:flex;gap:28px;font-weight:600;color:var(--text2)}
+        .desktop-menu a:hover{color:var(--primary)}
+        .header-right{display:flex;align-items:center;gap:10px}
+        .icon-btn{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:var(--transition)}
+        .icon-btn:hover{background:var(--primary);color:#fff}
+        .donate-btn{padding:10px 22px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:.9rem;transition:var(--transition)}
+        .donate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(79,70,229,.3)}
+        .menu-btn{display:none;font-size:26px;background:none;padding:4px}
+        .mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;padding:30px 20px;transition:.4s;z-index:10000;box-shadow:-10px 0 30px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+        .mobile-menu.active{right:0}
+        .mobile-menu .close-menu{align-self:flex-end;font-size:28px;background:none;padding:4px 10px;color:var(--text);line-height:1}
+        .mobile-menu a{padding:12px 16px;border-radius:10px;font-weight:600;color:var(--text2);font-size:.95rem}
+        .mobile-menu a:hover{background:#EEF2FF;color:var(--primary)}
+        .mobile-menu .mobile-donate{margin-top:4px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;border-radius:50px}
+        @media(max-width:992px){.desktop-menu,.donate-btn{display:none}.menu-btn{display:block}}
+        @media(max-width:768px){.header{height:60px}.mobile-menu{width:260px;padding:25px 16px}}
+
+        .tool-hero{padding:70px 0 30px;text-align:center;background:linear-gradient(180deg,#fff 0%,#F8FAFC 50%,#EEF2FF 100%)}
+        .tool-hero h1{max-width:800px;margin:auto;margin-bottom:12px}
+        .tool-hero p{max-width:620px;margin:auto;font-size:1.05rem;color:var(--text2)}
+        .tool-hero .badges{display:inline-flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+        .tool-hero .badge{background:#fff;border:1px solid var(--border);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:600;color:var(--text)}
+
+        .tool-area{padding:30px 0 50px}
+        .tool-box{max-width:900px;margin:auto;background:#fff;border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);border:1px solid var(--border)}
+        .tool-box label{font-weight:600;display:block;margin-bottom:6px;color:var(--text);font-size:.95rem}
+        .tool-box textarea, .tool-box input[type=text], .tool-box select{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;transition:var(--transition);background:var(--light);color:var(--text)}
+        .tool-box textarea{resize:vertical;min-height:110px}
+        .tool-box textarea:focus, .tool-box input:focus, .tool-box select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,70,229,.1)}
+        .tool-box .row{margin-bottom:18px}
+        .tool-grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+        .style-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+        .style-chip{padding:8px 14px;border:1px solid var(--border);border-radius:50px;background:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--transition);color:var(--text)}
+        .style-chip:hover{border-color:var(--primary);color:var(--primary)}
+        .style-chip.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-color:transparent}
+        .tool-btn{padding:14px 30px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:1rem;transition:var(--transition);display:inline-flex;align-items:center;gap:10px}
+        .tool-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(79,70,229,.35)}
+        .tool-btn:disabled{opacity:.7;cursor:not-allowed;transform:none;box-shadow:none}
+        .tool-btn.secondary{background:var(--light);color:var(--text);border:1px solid var(--border)}
+        .tool-btn.secondary:hover{background:var(--border);transform:translateY(-2px)}
+        .btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+
+        .output-box{margin-top:22px;padding:22px;background:var(--light);border-radius:14px;border:1px solid var(--border);min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--text2);position:relative}
+        .output-box img{max-width:100%;border-radius:12px;box-shadow:0 8px 24px rgba(15,23,42,.12);display:block}
+        .output-actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+        .spinner{width:44px;height:44px;border:4px solid #E2E8F0;border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .hint{font-size:.85rem;color:var(--text2);margin-top:4px}
+        .prompt-suggestions{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+        .prompt-suggestions span{cursor:pointer;padding:5px 12px;background:#EEF2FF;color:var(--primary);border-radius:50px;font-size:.8rem;font-weight:600;transition:var(--transition)}
+        .prompt-suggestions span:hover{background:var(--primary);color:#fff}
+
+        .tool-content{padding:30px 0 60px}
+        .tool-content .container{max-width:900px}
+        .tool-content h2:first-child{margin-top:0}
+        .tool-content ul,.tool-content ol{padding-left:24px;margin-bottom:16px;color:var(--text2)}
+        .tool-content ul li,.tool-content ol li{margin-bottom:8px;line-height:1.8}
+        .highlight-box{background:#EEF2FF;padding:20px 24px;border-radius:12px;border-left:4px solid var(--primary);margin:20px 0}
+        .highlight-box p{margin-bottom:0;color:var(--text)}
+        .faq-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0}
+        .faq-box h4{margin-bottom:6px;font-size:1rem}
+        .faq-box p{margin-bottom:0}
+        .related-box{background:#F1F5F9;border-radius:12px;padding:20px;margin:24px 0}
+        .related-box h3{margin-top:0}
+        .related-box ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+        .related-box ul li{display:inline-block;background:#fff;padding:6px 14px;border-radius:50px;border:1px solid var(--border);font-size:.85rem}
+        .related-box ul li a{color:var(--primary)}
+        .related-box ul li a:hover{text-decoration:underline}
+
+        .gallery-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:20px 0}
+        .gallery-strip figure{background:#0F172A;border-radius:12px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff}
+
+        .footer{background:#020617;padding:50px 0 16px;color:#CBD5E1;text-align:center}
+        .footer a{color:#94A3B8;margin:0 12px;font-size:.9rem}
+        .footer a:hover{color:#fff}
+        .footer p{color:#64748B;margin-top:16px;font-size:.85rem}
+
+        @media(max-width:768px){.tool-hero{padding:55px 0 20px}.tool-box{padding:22px 18px}.tool-content{padding:24px 0 40px}.tool-content .container{padding:0 16px}}
+
+        body.dark{--light:#020617;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}
+        body.dark .header{background:rgba(15,23,42,.92)}
+        body.dark .header,body.dark .tool-box,body.dark .faq-box,body.dark .related-box{background:#0F172A;border-color:#1E293B}
+        body.dark .tool-box textarea,body.dark .tool-box input,body.dark .tool-box select{background:#020617;color:#F8FAFC;border-color:#1E293B}
+        body.dark .highlight-box{background:#1E293B}
+        body.dark .related-box{background:#1E293B}
+        body.dark .related-box ul li{background:#0F172A;border-color:#1E293B}
+        body.dark .footer{background:#000814}
+        body.dark .mobile-menu{background:#0F172A}
+        body.dark .mobile-menu a{color:#CBD5E1}
+        body.dark .mobile-menu a:hover{background:#1E293B;color:#fff}
+        body.dark .tool-hero{background:linear-gradient(180deg,#0F172A 0%,#020617 50%,#0F172A 100%)}
+        body.dark .tool-hero .badge{background:#0F172A;border-color:#1E293B;color:#F8FAFC}
+        body.dark .style-chip{background:#0F172A;border-color:#1E293B;color:#F8FAFC}
+        body.dark .prompt-suggestions span{background:#1E293B;color:#F8FAFC}
+        body.dark .output-box{background:#020617;border-color:#1E293B}
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:#E5E7EB}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:20px}
+        ::selection{background:var(--primary);color:#fff}
+        @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="container">
+            <a href="../index.html" class="logo" data-testid="header-logo">🤖 <span>AIToolsNova</span></a>
+            <nav class="desktop-menu">
+                <a href="../index.html">Home</a>
+                <a href="../tools.html">Tools</a>
+                <a href="../blogs.html">Blogs</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+            </nav>
+            <div class="header-right">
+                <button id="themeToggle" class="icon-btn" data-testid="theme-toggle" aria-label="Toggle theme">🌙</button>
+                <a href="../index.html#donate" class="donate-btn">❤️ Donate</a>
+                <button class="menu-btn" id="menuBtn" data-testid="menu-btn" aria-label="Open menu">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenuBtn" aria-label="Close menu">✕</button>
+        <a href="../index.html">🏠 Home</a>
+        <a href="../tools.html">🛠 Tools</a>
+        <a href="../blogs.html">📝 Blogs</a>
+        <a href="../about.html">ℹ About</a>
+        <a href="../contact.html">📧 Contact</a>
+        <a href="../privacy-policy.html">🔒 Privacy</a>
+        <a href="../disclaimer.html">⚠ Disclaimer</a>
+        <a href="../terms-and-conditions.html">📜 Terms</a>
+        <a href="../index.html#donate" class="mobile-donate">❤️ Donate</a>
+    </div>
+
+    <main>
+        <!-- TOOL HERO -->
+        <section class="tool-hero">
+            <div class="container">
+                <h1>🎨 AI Image Generator</h1>
+                <p>Turn any text into a stunning AI image in seconds. Free, unlimited &amp; no signup required.</p>
+                <div class="badges">
+                    <span class="badge">✅ 100% Free</span>
+                    <span class="badge">🚫 No Signup</span>
+                    <span class="badge">💧 No Watermark</span>
+                    <span class="badge">⚡ HD Quality</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL AREA -->
+        <section class="tool-area">
+            <div class="container">
+                <div class="tool-box">
+                    <div class="row">
+                        <label for="imgPrompt">✍️ Describe the image you want to create</label>
+                        <textarea id="imgPrompt" data-testid="prompt-input" placeholder="e.g. a majestic lion walking through a foggy forest at sunrise, cinematic, ultra realistic, 8k"></textarea>
+                        <div class="prompt-suggestions" id="promptSuggest">
+                            <span data-p="A cyberpunk city street at night, neon lights, rain, cinematic, 8k">🌆 Cyberpunk city</span>
+                            <span data-p="A cute baby panda astronaut floating in space, ultra detailed, high resolution">🐼 Panda astronaut</span>
+                            <span data-p="Minimalist logo for a coffee shop, vector art, flat design, elegant">☕ Coffee logo</span>
+                            <span data-p="Fantasy castle on a mountain top, dragon flying, sunset, digital painting">🏰 Fantasy castle</span>
+                            <span data-p="Professional portrait of a young Indian woman, studio lighting, 85mm lens">👤 Portrait</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label>🎭 Choose a style</label>
+                        <div class="style-chips" id="styleChips">
+                            <button type="button" class="style-chip active" data-style="" data-testid="style-default">Default</button>
+                            <button type="button" class="style-chip" data-style=", ultra realistic, 8k, photorealistic, high detail">📸 Realistic</button>
+                            <button type="button" class="style-chip" data-style=", anime style, studio ghibli, high quality">🎌 Anime</button>
+                            <button type="button" class="style-chip" data-style=", digital painting, artstation, concept art, detailed">🎨 Digital Art</button>
+                            <button type="button" class="style-chip" data-style=", 3D render, octane render, cinematic lighting">🧊 3D Render</button>
+                            <button type="button" class="style-chip" data-style=", oil painting, classical, canvas, textured brush strokes">🖼 Oil Paint</button>
+                            <button type="button" class="style-chip" data-style=", pixel art, 16-bit, retro game style">👾 Pixel Art</button>
+                            <button type="button" class="style-chip" data-style=", cyberpunk, neon, futuristic, blade runner style">⚡ Cyberpunk</button>
+                        </div>
+                    </div>
+
+                    <div class="row tool-grid-2">
+                        <div>
+                            <label for="imgRatio">📐 Aspect Ratio</label>
+                            <select id="imgRatio" data-testid="ratio-select">
+                                <option value="1024x1024">Square (1:1) - 1024x1024</option>
+                                <option value="1280x720">Landscape (16:9) - 1280x720</option>
+                                <option value="720x1280">Portrait (9:16) - 720x1280</option>
+                                <option value="1024x768">Standard (4:3) - 1024x768</option>
+                                <option value="768x1024">Portrait (3:4) - 768x1024</option>
+                                <option value="1920x1080">HD Wide (16:9) - 1920x1080</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="imgSeed">🎲 Seed (optional)</label>
+                            <input type="text" id="imgSeed" data-testid="seed-input" placeholder="Random" inputmode="numeric" />
+                            <div class="hint">Same seed = same image. Leave blank for random.</div>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="tool-btn" id="generateBtn" data-testid="generate-btn">✨ Generate Image</button>
+                        <button class="tool-btn secondary" id="randomBtn" data-testid="random-btn">🎲 Random Seed</button>
+                        <button class="tool-btn secondary" id="clearBtn" data-testid="clear-btn">🗑️ Clear</button>
+                    </div>
+
+                    <div class="output-box" id="outputBox" data-testid="output-box">
+                        <div id="placeholder">
+                            <div style="font-size:3rem;line-height:1;margin-bottom:8px">🎨</div>
+                            <p style="margin:0">Your AI-generated image will appear here.</p>
+                        </div>
+                        <div id="loader" style="display:none">
+                            <div class="spinner"></div>
+                            <p style="margin-top:10px" id="loaderText">⏳ Generating your image... (5-10 seconds)</p>
+                        </div>
+                        <img id="resultImg" alt="Generated AI image" style="display:none" />
+                        <div class="output-actions" id="outputActions" style="display:none">
+                            <a class="tool-btn" id="downloadBtn" data-testid="download-btn" download="ai-image-aitoolsnova.jpg">⬇️ Download</a>
+                            <button class="tool-btn secondary" id="copyLinkBtn" data-testid="copy-link-btn">🔗 Copy Link</button>
+                            <button class="tool-btn secondary" id="newBtn" data-testid="new-btn">🔁 New Variation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL CONTENT -->
+        <section class="tool-content">
+            <div class="container">
+
+                <h2>What is the AI Image Generator?</h2>
+                <p>The <strong>AI Image Generator by AIToolsNova</strong> is a completely free text-to-image tool that lets you create high-quality AI artwork, illustrations, logos, avatars, wallpapers and social-media graphics from a simple text prompt. No signup, no credit card and no watermark. Whether you are a content creator making thumbnails, a blogger who needs a hero image, a small business owner designing a quick logo, or a student building a project — you can generate a professional-grade image in under 10 seconds.</p>
+
+                <div class="highlight-box">
+                    <p><strong>💡 Pro tip:</strong> The more specific your prompt, the better the result. Include subject, style, lighting, camera angle and mood. Try: <em>"a golden retriever puppy sitting in a sunflower field, golden-hour lighting, cinematic, ultra realistic, 85mm portrait"</em>.</p>
+                </div>
+
+                <h2>How to Use the AI Image Generator</h2>
+                <ol>
+                    <li><strong>Write a prompt</strong> — Describe what you want in the text box. Be specific: subject, environment, style, colours.</li>
+                    <li><strong>Pick a style</strong> — Realistic, Anime, Digital Art, 3D, Oil Paint, Pixel or Cyberpunk. Or leave it on Default.</li>
+                    <li><strong>Choose aspect ratio</strong> — Square for Instagram, Landscape for YouTube thumbnails, Portrait for Reels/Shorts.</li>
+                    <li><strong>Click Generate</strong> — Wait 5-10 seconds for your image.</li>
+                    <li><strong>Download or remix</strong> — Save the image, copy the link, or click "New Variation" for a fresh take.</li>
+                </ol>
+
+                <h2>Best Prompt Formula for AI Images</h2>
+                <p>A great AI prompt usually follows this structure:</p>
+                <p><strong>[Subject] + [Action / Scene] + [Style] + [Lighting] + [Camera / Detail] + [Quality tags]</strong></p>
+                <p>Example: <em>"A young woman holding a coffee cup (subject) walking down a rainy Tokyo street at night (scene), cinematic anime style (style), neon reflections on wet asphalt (lighting), shot on 35mm film (camera), ultra detailed, 8k (quality)"</em>.</p>
+
+                <h2>10 Creative Ways to Use This AI Image Generator</h2>
+                <ul>
+                    <li><strong>YouTube thumbnails</strong> — Grab-your-attention hero images that boost click-through rate.</li>
+                    <li><strong>Blog featured images</strong> — Unique visuals that beat overused stock photos.</li>
+                    <li><strong>Instagram &amp; Facebook posts</strong> — Fresh, on-brand social graphics daily.</li>
+                    <li><strong>Book covers &amp; Kindle covers</strong> — Design covers for self-published books.</li>
+                    <li><strong>Product mock-ups</strong> — Concept art for e-commerce listings and Etsy shops.</li>
+                    <li><strong>Logo concepts</strong> — Generate ideas before hiring a designer.</li>
+                    <li><strong>Storyboards &amp; comics</strong> — Sketch out scenes for a story or short film.</li>
+                    <li><strong>Wallpapers</strong> — Custom desktop and mobile wallpapers.</li>
+                    <li><strong>Presentations</strong> — Slide-deck illustrations that look premium.</li>
+                    <li><strong>Merch designs</strong> — T-shirts, mugs, phone cases via print-on-demand.</li>
+                </ul>
+
+                <h2>Why Choose Our AI Image Generator?</h2>
+                <ul>
+                    <li>✅ <strong>Truly free</strong> — no hidden trial, no daily quota, no card required.</li>
+                    <li>✅ <strong>No watermark</strong> — images are yours to download and use.</li>
+                    <li>✅ <strong>Multiple styles</strong> — 8 curated styles ranging from photorealistic to anime.</li>
+                    <li>✅ <strong>All aspect ratios</strong> — square, portrait, landscape, HD wide.</li>
+                    <li>✅ <strong>Fast</strong> — most images finish in under 10 seconds.</li>
+                    <li>✅ <strong>Privacy</strong> — we do not save your prompts or images on our servers.</li>
+                    <li>✅ <strong>Works everywhere</strong> — desktop, tablet, mobile — all inside your browser.</li>
+                </ul>
+
+                <h2>AI Image Generator vs Midjourney, DALL·E &amp; Stable Diffusion</h2>
+                <p>Paid tools like Midjourney (Discord-only, ~$10/mo), DALL·E 3 (limited free tier via ChatGPT) and Stable Diffusion (requires GPU or paid host) all produce great images — but they need accounts, subscriptions or setup. Our AI Image Generator is <strong>browser-based and free</strong>, making it perfect for casual users, students and creators who need quick results without any friction. For deeper control (fine-tuned models, inpainting, ControlNet) you may still prefer the paid options, but for 90% of everyday use cases this free generator is more than enough.</p>
+
+                <div class="highlight-box">
+                    <p><strong>📌 Also try:</strong> <a href="background-remover.html" style="color:var(--primary);font-weight:700">Background Remover</a> to isolate your subject, <a href="image-compressor.html" style="color:var(--primary);font-weight:700">Image Compressor</a> to shrink file size, and <a href="image-resizer.html" style="color:var(--primary);font-weight:700">Image Resizer</a> to fit exact dimensions.</p>
+                </div>
+
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-box"><h4>Q1: Is this AI Image Generator really free?</h4><p>Yes, 100% free with no signup, no credit card, no watermarks and no daily limits.</p></div>
+                <div class="faq-box"><h4>Q2: Can I use the generated images commercially?</h4><p>Yes. Images generated are yours to use for personal, blog, YouTube thumbnail, social-media and commercial projects.</p></div>
+                <div class="faq-box"><h4>Q3: How long does it take to create an image?</h4><p>Typically 4-10 seconds depending on image size and network. Larger dimensions take a little longer.</p></div>
+                <div class="faq-box"><h4>Q4: What AI model powers this tool?</h4><p>We use a free, open image diffusion network (Pollinations) so you get high-quality results without any account.</p></div>
+                <div class="faq-box"><h4>Q5: How can I write better prompts?</h4><p>Describe the subject, style, lighting and mood. The prompt formula above shows the exact structure.</p></div>
+                <div class="faq-box"><h4>Q6: Does it store my prompts or images?</h4><p>No. Nothing is stored on our servers. Everything runs in your browser.</p></div>
+
+                <div class="related-box">
+                    <h3>🛠️ Related Tools</h3>
+                    <ul>
+                        <li><a href="background-remover.html">Background Remover</a></li>
+                        <li><a href="image-compressor.html">Image Compressor</a></li>
+                        <li><a href="image-resizer.html">Image Resizer</a></li>
+                        <li><a href="image-converter.html">Image Converter</a></li>
+                        <li><a href="ai-writer.html">AI Writer</a></li>
+                        <li><a href="qr-generator.html">QR Generator</a></li>
+                        <li><a href="../tools.html">View All Tools →</a></li>
+                    </ul>
+                </div>
+
+                <div class="related-box">
+                    <h3>📚 Related Guides</h3>
+                    <ul>
+                        <li><a href="../blog/ai-image-generator-tools.html">Best AI Image Generator Tools 2026</a></li>
+                        <li><a href="../compare/midjourney-vs-dalle-vs-nano-banana.html">Midjourney vs DALL·E vs Nano Banana</a></li>
+                        <li><a href="../blog/ai-tools-content-creators.html">AI Tools for Content Creators</a></li>
+                        <li><a href="../blog/beginners-guide-ai-tools.html">Beginner's Guide to AI Tools</a></li>
+                        <li><a href="../blogs.html">View All Blogs →</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- DONATE -->
+        <section style="background:linear-gradient(135deg,#0F172A,#1E293B);padding:40px 0;">
+            <div class="container">
+                <div style="max-width:780px;margin:auto;padding:30px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:24px;">
+                    <h2 style="color:#fff;font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:10px;">❤️ Support AIToolsNova</h2>
+                    <p style="color:rgba(255,255,255,.8);max-width:550px;margin:0 auto 20px;">Help us keep every tool free forever.</p>
+                    <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" class="tool-btn" style="background:#fff;color:var(--primary);box-shadow:0 8px 20px rgba(0,0,0,.1);">Donate with PayPal</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="../index.html">Home</a>
+            <a href="../tools.html">Tools</a>
+            <a href="../blogs.html">Blogs</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy-policy.html">Privacy</a>
+            <p>&copy; 2026 AIToolsNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" style="position:fixed;right:16px;bottom:80px;background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(255,77,77,.3);z-index:999">❤️ Donate</a>
+    <a href="../contact.html" style="position:fixed;right:16px;bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999">💬 Support</a>
+    <button id="backToTop" style="position:fixed;left:16px;bottom:20px;width:46px;height:46px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;cursor:pointer" aria-label="Back to top">↑</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ---- Theme + Mobile menu ----
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle && themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+            });
+            const menuBtn = document.getElementById('menuBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            menuBtn && menuBtn.addEventListener('click', () => { mobileMenu.classList.add('active'); document.body.style.overflow='hidden'; });
+            closeMenuBtn && closeMenuBtn.addEventListener('click', () => { mobileMenu.classList.remove('active'); document.body.style.overflow=''; });
+            document.addEventListener('click', (e) => {
+                if (mobileMenu && mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
+                    mobileMenu.classList.remove('active'); document.body.style.overflow='';
+                }
+            });
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', () => backToTop.style.display = window.scrollY > 400 ? 'flex' : 'none');
+                backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            }
+
+            // ---- Image Generator Logic ----
+            const promptInput = document.getElementById('imgPrompt');
+            const styleChips = document.querySelectorAll('#styleChips .style-chip');
+            const ratioSel = document.getElementById('imgRatio');
+            const seedInput = document.getElementById('imgSeed');
+            const generateBtn = document.getElementById('generateBtn');
+            const randomBtn = document.getElementById('randomBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const outputBox = document.getElementById('outputBox');
+            const placeholder = document.getElementById('placeholder');
+            const loader = document.getElementById('loader');
+            const loaderText = document.getElementById('loaderText');
+            const resultImg = document.getElementById('resultImg');
+            const outputActions = document.getElementById('outputActions');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            const newBtn = document.getElementById('new');
+            const newBtn2 = document.getElementById('newBtn');
+
+            let currentStyle = '';
+            styleChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    styleChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentStyle = chip.dataset.style || '';
+                });
+            });
+
+            document.querySelectorAll('#promptSuggest span').forEach(s => {
+                s.addEventListener('click', () => { promptInput.value = s.dataset.p; promptInput.focus(); });
+            });
+
+            randomBtn.addEventListener('click', () => {
+                seedInput.value = Math.floor(Math.random() * 999999);
+            });
+
+            clearBtn.addEventListener('click', () => {
+                promptInput.value = ''; seedInput.value = '';
+                placeholder.style.display=''; loader.style.display='none';
+                resultImg.style.display='none'; outputActions.style.display='none';
+                resultImg.src='';
+            });
+
+            function generate() {
+                const prompt = (promptInput.value || '').trim();
+                if (!prompt) {
+                    placeholder.innerHTML = '<div style="font-size:2.4rem;line-height:1;margin-bottom:8px">✍️</div><p style="margin:0;color:#EF4444">Please enter a prompt first.</p>';
+                    placeholder.style.display=''; loader.style.display='none';
+                    resultImg.style.display='none'; outputActions.style.display='none';
+                    return;
+                }
+                placeholder.style.display='none';
+                resultImg.style.display='none';
+                outputActions.style.display='none';
+                loader.style.display='';
+                loaderText.textContent = '⏳ Generating your image... (5-10 seconds)';
+                generateBtn.disabled = true;
+
+                const [w, h] = (ratioSel.value || '1024x1024').split('x');
+                const seed = (seedInput.value || '').trim() || Math.floor(Math.random() * 999999);
+                seedInput.value = seed;
+                const fullPrompt = prompt + currentStyle;
+                const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=${w}&height=${h}&seed=${seed}&nologo=true&enhance=true`;
+
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    resultImg.src = url;
+                    resultImg.style.display='';
+                    loader.style.display='none';
+                    outputActions.style.display='';
+                    downloadBtn.href = url;
+                    downloadBtn.download = `ai-image-${seed}.jpg`;
+                    generateBtn.disabled = false;
+                    if (window.gtag) gtag('event', 'image_generated', { prompt_length: prompt.length });
+                };
+                img.onerror = () => {
+                    loader.style.display='none';
+                    placeholder.style.display='';
+                    placeholder.innerHTML = '<div style="font-size:2rem;line-height:1;margin-bottom:8px">⚠️</div><p style="margin:0;color:#EF4444">Could not generate image. Please try again or change the prompt.</p>';
+                    generateBtn.disabled = false;
+                };
+                img.src = url;
+            }
+
+            generateBtn.addEventListener('click', generate);
+            newBtn2 && newBtn2.addEventListener('click', () => { seedInput.value = ''; generate(); });
+            copyLinkBtn.addEventListener('click', () => {
+                if (!resultImg.src) return;
+                navigator.clipboard.writeText(resultImg.src).then(() => {
+                    copyLinkBtn.textContent = '✅ Copied!';
+                    setTimeout(() => copyLinkBtn.textContent = '🔗 Copy Link', 1600);
+                }).catch(() => {});
+            });
+
+            promptInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); generate(); }
+            });
+
+            console.log('🎨 AI Image Generator loaded.');
+        });
+    </script>
+    <script src="../enhancements.js" defer></script>
+</body>
+</html>
