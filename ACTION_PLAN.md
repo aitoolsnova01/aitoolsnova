@@ -1,38 +1,32 @@
-# AIToolsNova — Sab Kuch Fix (Aug 14, 2026)
+# AIToolsNova — 404 Fix + Full Audit (Aug 14, 2026)
 
-Maine khud decide karke saare code-level kaam kar diye (kam credit me). Neeche list.
+## ⚠️ SECURITY: apne Google + Cloudflare ke password TURANT badlo
+Aapne password chat me public bhej diya. Main kabhi aapke account me login nahi karta.
+Password abhi change karo.
 
-## ✅ JO MAINE FIX KAR DIYA (Save to GitHub karte hi live)
+## 🔎 1.83k 404 ka ASLI kaaran (code scan se mila)
 
-1. **Favicon** — `favicon.ico` missing tha (har page 404). Ab bana diya. Standard decide kiya:
-   `favicon.ico` (primary) + `favicon.svg` (modern) + `apple-touch-icon.png` (mobile). Confusion khatam.
-2. **Har page pe icon + SEO tags** — 93 pages me favicon link hi nahi tha. Ab SABHI 95 pages pe
-   favicon + canonical + Open Graph + Twitter card add kar diye (social share + SEO + AdSense ready).
-3. **Web-stories HD images** — 6 stories ki 39 images LIVE hot-link se hata ke LOCAL kar di
-   (`web-stories/img/`). Ab fast + reliable + HD + indexable. Koi remote image nahi bachi.
-4. **Web-stories Google indexing** — invalid `.ico` publisher logo hata ke valid square PNG
-   (512x512) lagaya. Ab Google Web Stories requirement pass.
-5. **Discoverability** — "Web Stories" link homepage desktop menu + mobile menu + quick-links + footer me.
-6. **IndexNow — poori site abhi submit kar di** — sabhi 98 URLs Bing/Yandex/Naver/Seznam ko push kar diye
-   (HTTP 200). Ye maine ABHI run kar diya, aapko kuch nahi karna. Weekly auto-resubmit workflow bhi add kiya.
-7. **Auto-blog upgrade** — naye blogs ab: scroll-stopping hook, unique angle, power words,
-   "Quick Takeaways", benefit-driven H2, 1600+ words, worldwide/2026 trending tone.
-8. **Auto web-story upgrade** — aage se har story automatically LOCAL HD images + PNG logo ke saath banegi.
+Maine poori site ke saare internal links/assets scan kiye (`scripts/audit-broken-links.py`):
+- **Internal links = SAAF hain** (0 real broken link). Sitemap ke 98 URLs bhi sahi.
+- 404 ki wajah = **missing icon files** jo har browser/crawler AUTOMATICALLY maangta hai:
+  - `/favicon.ico` — HAR page load pe request hota hai (DeepSeekBot ne akela 985 request kiye). Ye missing tha = har request 404. **Yahi 404 ka sabse bada hissa tha.**
+  - `/apple-touch-icon.png` + `/apple-touch-icon-precomposed.png` — iPhone/Safari root se maangta hai. Missing the = 404.
 
-Site health: 0 broken pages, sitemap valid (98 URLs), sab assets present. ✅
+## ✅ Fix kar diya
+- `favicon.ico` root pe bana diya.
+- `apple-touch-icon.png` + `apple-touch-icon-precomposed.png` root pe bana diye.
+- Saare 95 pages pe favicon + canonical + Open Graph + Twitter tags (pichhle round me).
+- Web-stories ki 39 images local + valid PNG logo (pichhle round me).
 
-## 🔴 SIRF 1 KAAM AAP KO KARNA HAI (ye code se possible nahi — DNS/login chahiye)
+Deploy hote hi 404 drastically girega. Bache-khuche 404 = bots (wp-login jaise) + purane
+Google/Bing index me pade removed URLs — ye normal hai aur recrawl pe khud khatam ho jaate hain.
 
-Google me "no data" ka asli reason = property mismatch. 3 min ka kaam:
-1. Google Search Console → Add property → **Domain** → `aitoolsnova.com`
-2. Jo TXT record de → Cloudflare → DNS → Add record (Type: TXT, Name: `@`, Value: paste) → Save → 5 min baad **Verify**
-3. GSC → Sitemaps → `sitemap.xml` add karo
-4. (Optional) Bing Webmaster → "Import from Google Search Console" (1-click)
-
-Bas itna. Baaki indexing IndexNow + sitemap se automatic ho rahi hai.
+## 🔴 Sirf aapka kaam (login wala)
+GSC me **Domain property** `aitoolsnova.com` add karke Cloudflare DNS TXT se verify + sitemap submit.
 
 ## Deploy
-Chat input me **"Save to GitHub"** dabao → Cloudflare auto-deploy → ho gaya.
+Chat input me **"Save to GitHub"** dabao → Cloudflare auto-deploy.
 
-Note: Purane 52 blogs ka text jaisa tha waisa hi hai (dobara likhwana = zyada AI cost).
-Bolo to top 5 purane blogs high-quality rewrite kar dunga.
+## Agar phir bhi specific 404 dikhe
+Cloudflare → Investigate (ya GSC → Pages/Indexing report) me EXACT 404 URL dekho.
+Wo URL mujhe bhejo, main uske liye `_redirects` me redirect add kar dunga.
