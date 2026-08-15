@@ -17,3 +17,35 @@
 /blog-list  /blogs.html        301
 /contact-us /contact.html      301
 /about-us   /about.html        301
+
+# ============================================
+# Legacy / old-WordPress URLs (from GSC "Not found 404" report - Aug 2026)
+# ============================================
+
+# Legacy policy + tool that moved
+/privacy.html                          /privacy-policy.html            301
+/privacy                               /privacy-policy.html            301
+/sitemap-generator                     /tools/sitemap-generator.html   301
+/sitemap-generator.html                /tools/sitemap-generator.html   301
+
+# Old calculator/converter URLs that no longer exist -> tools hub (kills hard 404)
+/unit-converter.html                   /tools.html                     301
+/unit-converter                        /tools.html                     301
+/fuel-cost-calculator.html             /tools.html                     301
+/fuel-cost-calculator                  /tools.html                     301
+/loan-emi-calculator.html              /tools.html                     301
+/loan-emi-calculator                   /tools.html                     301
+/body-fat-calculator.html              /tools.html                     301
+/body-fat-calculator                   /tools.html                     301
+/calculators/*                         /tools.html                     301
+
+# Old WordPress artifacts -> home (clears GSC 404s for the previous WP site)
+/hello-world/                          /                               301
+/hello-world                           /                               301
+/wp-content/*                          /                               301
+/wp-includes/*                         /                               301
+/wp-admin/*                            /                               301
+/feed/*                                /                               301
+/search/*                              /                               301
+/?feed=*                               /                               301
+
