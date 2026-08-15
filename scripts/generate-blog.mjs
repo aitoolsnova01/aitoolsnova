@@ -24,12 +24,44 @@ import fs from 'node:fs/promises';
 import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
+import crypto from 'node:crypto';
 
 const ROOT = path.resolve(process.cwd());
 const BLOG_DIR = path.join(ROOT, 'blog');
 const BLOGS_HTML = path.join(ROOT, 'blogs.html');
 const SITEMAP_XML = path.join(ROOT, 'sitemap.xml');
 const HISTORY_FILE = path.join(ROOT, 'scripts', 'topic-history.json');
+
+// Download the hero image locally so blog pages load fast (no slow live
+// hot-linking). Visible <img> uses a root-relative path (works in preview +
+// production); social/schema tags get the absolute URL (required by FB/Twitter).
+const SITE_URL = 'https://aitoolsnova.com';
+async function localizeBlogHero(html) {
+    const re = /https?:\/\/image\.pollinations\.ai\/prompt\/[^"'\\\s)]+/g;
+    const urls = [...new Set(html.match(re) || [])];
+    if (!urls.length) return html;
+    const IMG = path.join(BLOG_DIR, 'img');
+    await fs.mkdir(IMG, { recursive: true });
+    for (const u of urls) {
+        const name = crypto.createHash('md5').update(u).digest('hex').slice(0, 16) + '.jpg';
+        const dest = path.join(IMG, name);
+        let ok = existsSync(dest);
+        if (!ok) {
+            try {
+                const res = await fetch(u);
+                if (res.ok) {
+                    const b = Buffer.from(await res.arrayBuffer());
+                    if (b.length > 1500) { await fs.writeFile(dest, b); ok = true; }
+                }
+            } catch { /* keep remote on failure */ }
+        }
+        if (ok) {
+            html = html.split(`src="${u}"`).join(`src="/blog/img/${name}"`);
+            html = html.split(u).join(`${SITE_URL}/blog/img/${name}`);
+        }
+    }
+    return html;
+}
 const GROQ_KEY = process.env.GROQ_API_KEY;
 // IndexNow key: use env var OR auto-detect the .txt key file at repo root
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
@@ -232,7 +264,25 @@ async function generateTopic(existingTitles, history) {
         'AI for graphic design and branding',
         'AI for language learning and translation',
         'AI for data analysis and spreadsheets',
-        'AI for customer support and chatbots'
+        'AI for customer support and chatbots',
+        'AI tools that actually make money online',
+        'Best AI tools for digital marketing agencies',
+        'AI automation for busy entrepreneurs',
+        'High-income AI side hustles for 2026',
+        'AI tools for real estate marketing',
+        'AI tools for Amazon & Shopify sellers',
+        'AI video editing and faceless YouTube channels',
+        'AI resume, cover letter and job-hunt tools',
+        'No-code AI apps anyone can build',
+        'AI agents and autonomous workflows explained',
+        'Best AI tools compared: free vs paid (worth it?)',
+        'AI for finance, budgeting and investing helpers',
+        'AI productivity hacks that save 10+ hours a week',
+        'AI tools for teachers and online course creators',
+        'AI social media growth and viral content tools',
+        'AI writing tools for authors and newsletter creators',
+        'AI photo editing and product photography tools',
+        'Underrated AI tools nobody is talking about yet'
     ];
     const niche = NICHES[Math.floor(Math.random() * NICHES.length)];
 
@@ -248,6 +298,7 @@ ${avoidList.map(t => '- ' + t).join('\n')}
    - Be 55-70 chars
    - Include a number, power word, or curiosity gap that makes people NEED to click
    - Feel fresh and on-trend for a worldwide audience (a "2026 / latest" angle is a plus)
+   - Lean towards high-interest, high-value angles (money-making, saving time, "best/free tools", comparisons) that people actively search for
    - Be genuinely useful, not empty clickbait
    - NOT reference specific unverified news/rumors as facts
    - NOT mention any specific individual person's private life
@@ -728,7 +779,9 @@ async function main() {
     console.log(`   ➤ ${content.sections?.length || 0} sections, ${content.faqs?.length || 0} FAQs, ~${content.read_time_min || '?'} min read`);
 
     console.log('\n📄 Building HTML file...');
-    const finalHtml = buildHtml(topic, content, todayISO, todayHuman);
+    let finalHtml = buildHtml(topic, content, todayISO, todayHuman);
+    console.log('   🖼️  Localizing hero image (fast + reliable)...');
+    finalHtml = await localizeBlogHero(finalHtml);
     const finalPath = path.join(BLOG_DIR, `${topic.slug}.html`);
     await fs.writeFile(finalPath, finalHtml);
     console.log(`   ✅ Written: blog/${topic.slug}.html (${(finalHtml.length/1024).toFixed(1)} KB)`);
