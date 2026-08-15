@@ -223,7 +223,7 @@ async function localizeHtmlImages(html) {
         const dest = path.join(IMG_DIR, name);
         const ok = existsSync(dest) || await downloadImage(u, dest);
         if (ok) {
-            html = html.split(u).join(`${SITE}/web-stories/img/${name}`);
+            html = html.split(u).join(`/web-stories/img/${name}`);
             console.log(`  🖼️  localized ${name}`);
         } else {
             console.warn(`  ⚠️  keeping remote (download failed): ${u.slice(0, 60)}...`);
@@ -236,7 +236,7 @@ async function localizeHtmlImages(html) {
 // ---------- Build AMP Story HTML ----------
 function buildStoryHtml({ slug, story }) {
     const canonical = `${SITE}/web-stories/${slug}.html`;
-    const publisherLogo = `${SITE}/images/publisher-logo.png`;
+    const publisherLogo = `/images/publisher-logo.png`;
     const coverImg = imgUrl(story.cover_image_prompt, 1000);
     const posterUrl = coverImg;
     const today = new Date().toISOString().split('T')[0];

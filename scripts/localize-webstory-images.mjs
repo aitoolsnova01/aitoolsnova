@@ -91,12 +91,12 @@ async function main() {
         for (const u of perFile[f]) {
             const name = urlMap.get(u);
             if (!existsSync(path.join(IMG_DIR, name))) continue; // keep remote if dl failed
-            const local = `${SITE}/web-stories/img/${name}`;
+            const local = `/web-stories/img/${name}`;
             if (html.includes(u)) { html = html.split(u).join(local); changed = true; }
         }
         // Fix invalid .ico publisher logo -> square PNG required by Web Stories
         if (html.includes('/fevicon.ico')) {
-            html = html.split(`${SITE}/fevicon.ico`).join(`${SITE}/images/publisher-logo.png`);
+            html = html.split(`${SITE}/fevicon.ico`).join(`/images/publisher-logo.png`);
             html = html.split('/fevicon.ico').join('/images/publisher-logo.png');
             changed = true;
         }
