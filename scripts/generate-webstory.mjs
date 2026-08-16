@@ -42,8 +42,8 @@ const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
 })();
 
 const MODELS = process.env.GROQ_MODEL
-    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b']
-    : ['openai/gpt-oss-20b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b'];
+    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-20b']
+    : ['openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-20b'];
 
 if (!GROQ_KEY) {
     console.error('❌ GROQ_API_KEY env var missing. Get free key at https://console.groq.com/keys');

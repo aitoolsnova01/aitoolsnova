@@ -84,8 +84,8 @@ const FLIPKART_AFFID = process.env.FLIPKART_AFFID || '';
 //   - llama-3.3-70b-versatile: ~12000 TPM (retiring Aug 2026)
 //   - openai/gpt-oss-120b : ~8000 TPM  ← best quality but easily hits TPM on long content
 const MODELS = process.env.GROQ_MODEL
-    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b']
-    : ['openai/gpt-oss-20b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b'];
+    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-20b']
+    : ['openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-20b'];
 
 if (!GROQ_KEY) {
     console.error('❌ GROQ_API_KEY env var missing. Get free key at https://console.groq.com/keys');

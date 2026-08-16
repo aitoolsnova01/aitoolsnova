@@ -92,7 +92,10 @@ export async function onRequest(context) {
     const cfModel = env.CLOUDFLARE_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
     // Upgraded: the old default (llama-3.1-8b-instant) is a tiny model and was
     // the main source of poor spelling and shallow answers.
-    const groqModel = env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+    // Best model first, then progressively smaller fallbacks.
+    const groqChain = env.GROQ_MODEL
+        ? [env.GROQ_MODEL, 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant']
+        : ['openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 
     async function callCloudflare() {
       if (!cfToken || !cfAccountId) return { ok: false, error: 'Cloudflare env vars missing' };
@@ -137,23 +140,22 @@ export async function onRequest(context) {
       return { ok: true, reply: reply.trim() };
     }
 
-    // 1) Cloudflare Workers AI
+    // 1) Groq first - the large models here give the most accurate output.
+    const errors = [];
+    for (const model of groqChain) {
+      const r = await callGroq(model);
+      if (r.ok) return json({ reply: r.reply, provider: `groq:${model}` });
+      errors.push(`${model}: ${r.error}`);
+      // Auth/quota problems will fail for every model, so stop early.
+      if (/api key|unauthorized|invalid|quota|billing/i.test(r.error || '')) break;
+    }
+
+    // 2) Cloudflare Workers AI as a second provider
     const cloudflare = await callCloudflare();
     if (cloudflare.ok) return json({ reply: cloudflare.reply, provider: 'cloudflare' });
+    errors.push(`cloudflare: ${cloudflare.error}`);
 
-    // 2) Groq 70B
-    const groq = await callGroq(groqModel);
-    if (groq.ok) return json({ reply: groq.reply, provider: 'groq' });
-
-    // 3) Last resort: smaller Groq model so the tool still answers
-    const groqSmall = await callGroq('llama-3.1-8b-instant');
-    if (groqSmall.ok) return json({ reply: groqSmall.reply, provider: 'groq-fallback' });
-
-    return json({
-      error: 'All AI providers failed',
-      cloudflareError: cloudflare.error,
-      groqError: groq.error,
-    }, 500);
+    return json({ error: 'All AI providers failed', details: errors }, 500);
 
   } catch (error) {
     return json({ error: error.message || 'Internal server error' }, 500);

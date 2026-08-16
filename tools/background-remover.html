@@ -289,62 +289,133 @@
                 statusMsg.style.display = 'block';
             }
 
-            // ----- Load the library (ESM from CDN) -----
-            // We use @imgly/background-removal v1.4.5 (stable, well-tested).
-            // The library ships as ESM; the default export is the removeBackground function.
+            // ----- Load the library with multi-CDN fallback -----
+            // Mobile browsers and strict networks often fail on a single CDN, so we
+            // try three sources before giving up, then fall back to a second engine.
             const LIB_VERSION = '1.5.8';
-            const LIB_CDN = `https://cdn.jsdelivr.net/npm/@imgly/background-removal@${LIB_VERSION}`;
+            const LIB_SOURCES = [
+                `https://cdn.jsdelivr.net/npm/@imgly/background-removal@${LIB_VERSION}/+esm`,
+                `https://unpkg.com/@imgly/background-removal@${LIB_VERSION}/dist/index.mjs`,
+                `https://esm.sh/@imgly/background-removal@${LIB_VERSION}`,
+            ];
 
-            function loadBackgroundRemovalLibrary() {
-                return new Promise((resolve, reject) => {
-                    if (!('WebAssembly' in window)) {
-                        reject(new Error('Your browser does not support WebAssembly. Please use a modern browser (Chrome, Firefox, Edge, Safari).'));
-                        return;
+            async function loadImgly() {
+                if (!('WebAssembly' in window)) {
+                    throw new Error('Your browser does not support WebAssembly. Please use Chrome, Firefox, Edge or Safari.');
+                }
+                let lastErr;
+                for (let i = 0; i < LIB_SOURCES.length; i++) {
+                    try {
+                        setStatus(`⏳ Loading AI engine (source ${i + 1}/${LIB_SOURCES.length})...`);
+                        const mod = await import(/* webpackIgnore: true */ LIB_SOURCES[i]);
+                        const fn = mod.removeBackground || mod.default?.removeBackground || mod.default;
+                        if (typeof fn === 'function') return fn;
+                        lastErr = new Error('removeBackground not exported');
+                    } catch (e) {
+                        console.warn('CDN failed:', LIB_SOURCES[i], e);
+                        lastErr = e;
                     }
-                    import(`${LIB_CDN}/+esm`)
-                        .then(module => {
-                            // v1.4.5 exposes `removeBackground` as both named and default export
-                            const fn = module.removeBackground || module.default;
-                            if (typeof fn === 'function') resolve(fn);
-                            else reject(new Error('Background removal function not found in loaded module.'));
-                        })
-                        .catch(err => {
-                            console.error('Library load error:', err);
-                            reject(new Error('Could not load the AI model. Please check your internet connection and try again.'));
-                        });
+                }
+                throw lastErr || new Error('All CDN sources failed');
+            }
+
+            // ----- Fallback engine: transformers.js + RMBG-1.4 -----
+            // Runs entirely in the browser too, but uses a different runtime and
+            // model host, so it usually succeeds when the first engine cannot load.
+            async function removeWithTransformers(file) {
+                setStatus('⏳ Loading backup AI engine...');
+                const { AutoModel, AutoProcessor, RawImage, env } =
+                    await import(/* webpackIgnore: true */ 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2/+esm');
+
+                env.allowLocalModels = false;
+                if (env.backends?.onnx?.wasm) env.backends.onnx.wasm.proxy = false;
+
+                setStatus('⏳ Downloading backup model (first run only)...');
+                const model = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
+                    config: { model_type: 'custom' },
+                    quantized: true,
+                    progress_callback: (p) => {
+                        if (p.status === 'progress' && p.total) {
+                            setStatus(`⏳ Downloading model... ${Math.round((p.loaded / p.total) * 100)}%`);
+                        }
+                    },
                 });
+                const processor = await AutoProcessor.from_pretrained('briaai/RMBG-1.4', {
+                    config: {
+                        do_normalize: true,
+                        do_pad: false,
+                        do_rescale: true,
+                        do_resize: true,
+                        image_mean: [0.5, 0.5, 0.5],
+                        image_std: [1, 1, 1],
+                        resample: 2,
+                        rescale_factor: 0.00392156862745098,
+                        size: { width: 1024, height: 1024 },
+                    },
+                });
+
+                setStatus('⏳ Processing image...');
+                const url = URL.createObjectURL(file);
+                const image = await RawImage.fromURL(url);
+                const { pixel_values } = await processor(image);
+                const { output } = await model({ input: pixel_values });
+
+                const maskData = (
+                    await RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(image.width, image.height)
+                ).data;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image.toCanvas(), 0, 0);
+                const pixels = ctx.getImageData(0, 0, image.width, image.height);
+                for (let i = 0; i < maskData.length; i++) pixels.data[4 * i + 3] = maskData[i];
+                ctx.putImageData(pixels, 0, 0);
+                URL.revokeObjectURL(url);
+
+                return await new Promise(res => canvas.toBlob(res, 'image/png'));
             }
 
             // ----- Main remove function -----
             async function removeBackgroundFromImage(file) {
-                setStatus('⏳ Loading AI model (first run downloads ~40MB, cached after)...');
-                const removeBg = await loadBackgroundRemovalLibrary();
+                // Engine 1: @imgly (best quality)
+                try {
+                    const removeBg = await loadImgly();
+                    setStatus('⏳ Processing with AI (first run downloads the model)...');
 
-                setStatus('⏳ Processing image with AI (10-30 seconds)...');
+                    // Model weights live on IMG.LY's data CDN, NOT inside the npm
+                    // package - pointing this at jsdelivr makes every chunk 404.
+                    const config = {
+                        publicPath: `https://staticimgly.com/@imgly/background-removal-data/${LIB_VERSION}/dist/`,
+                        output: { format: 'image/png', quality: 0.9 },
+                        model: 'isnet',
+                        progress: (key, current, total) => {
+                            if (String(key).includes('fetch') && total) {
+                                setStatus(`⏳ Downloading AI model... ${Math.round((current / total) * 100)}%`);
+                            }
+                        },
+                    };
 
-                // publicPath is REQUIRED so the library can fetch the ONNX model files from the CDN
-                // (not from the same origin). Without this, the model 404s and background removal fails.
-                // The model weights do NOT ship inside the npm package - they live on
-                // IMG.LY's data CDN. Pointing publicPath at jsdelivr made every model
-                // chunk 404, which is why removal silently produced no result.
-                const config = {
-                    publicPath: `https://staticimgly.com/@imgly/background-removal-data/${LIB_VERSION}/dist/`,
-                    output: {
-                        format: 'image/png',
-                        quality: 0.9
-                    },
-                    model: 'isnet',
-                    progress: (key, current, total) => {
-                        if (key.includes('fetch')) {
-                            const pct = total ? Math.round((current / total) * 100) : 0;
-                            setStatus(`⏳ Downloading AI model... ${pct}%`);
-                        }
-                    }
-                };
+                    const blob = await removeBg(file, config);
+                    if (blob && blob.size > 0) return blob;
+                    throw new Error('Empty result from primary engine');
+                } catch (err) {
+                    console.warn('Primary engine failed, switching to backup:', err);
+                }
 
-                const resultBlob = await removeBg(file, config);
-                if (!resultBlob) throw new Error('The AI returned no output. Try a smaller or clearer image.');
-                return resultBlob;
+                // Engine 2: transformers.js + RMBG-1.4
+                try {
+                    const blob = await removeWithTransformers(file);
+                    if (blob && blob.size > 0) return blob;
+                    throw new Error('Empty result from backup engine');
+                } catch (err2) {
+                    console.error('Backup engine failed:', err2);
+                    throw new Error(
+                        'Both AI engines failed to load. This is usually a slow or restricted network. ' +
+                        'Please try again on Wi-Fi, or use a desktop browser.'
+                    );
+                }
             }
 
             // ----- UI Event Handlers -----
