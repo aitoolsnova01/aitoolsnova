@@ -4,6 +4,12 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# HTML pages (incl. extensionless /tools, /blogs). Edge TTL is driven by the
+# Cloudflare Cache Rule; this controls the browser side.
+/*.html
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+/
   Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
 
 # ---- Static assets override the catch-all above (1 year immutable) ----
