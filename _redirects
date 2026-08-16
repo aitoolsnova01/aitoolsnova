@@ -3,41 +3,38 @@
 # "Duplicate without user-selected canonical" errors.
 
 # Force single canonical entry-point
-/home       /                  301
-/index      /                  301
-/index.html /                  301!
 
 # Trailing-slash normalization for known folders
-/tools/     /tools.html        301
-/blogs/     /blogs.html        301
-/blog/      /blogs.html        301
+/tools/                                /tools                           301
+/blogs/                                /blogs                           301
+/blog/                                 /blogs                           301
 
 # Common typo redirects (avoid soft-404s)
-/tool       /tools.html        301
-/blog-list  /blogs.html        301
-/contact-us /contact.html      301
-/about-us   /about.html        301
+/tool                                  /tools                           301
+/blog-list                             /blogs                           301
+/contact-us                            /contact                         301
+/about-us                              /about                           301
 
 # ============================================
 # Legacy / old-WordPress URLs (from GSC "Not found 404" report - Aug 2026)
 # ============================================
 
 # Legacy policy + tool that moved
-/privacy.html                          /privacy-policy.html            301
-/privacy                               /privacy-policy.html            301
-/sitemap-generator                     /tools/sitemap-generator.html   301
-/sitemap-generator.html                /tools/sitemap-generator.html   301
+/privacy.html                          /privacy-policy                  301
+/privacy                               /privacy-policy                  301
+/sitemap-generator                     /tools/sitemap-generator         301
+/sitemap-generator.html                /tools/sitemap-generator         301
 
 # Old calculator/converter URLs that no longer exist -> tools hub (kills hard 404)
-/unit-converter.html                   /tools.html                     301
-/unit-converter                        /tools.html                     301
-/fuel-cost-calculator.html             /tools.html                     301
-/fuel-cost-calculator                  /tools.html                     301
-/loan-emi-calculator.html              /tools.html                     301
-/loan-emi-calculator                   /tools.html                     301
-/body-fat-calculator.html              /tools.html                     301
-/body-fat-calculator                   /tools.html                     301
-/calculators/*                         /tools.html                     301
+/unit-converter.html                   /tools                           301
+/unit-converter                        /tools                           301
+/fuel-cost-calculator.html             /tools                           301
+/fuel-cost-calculator                  /tools                           301
+/loan-emi-calculator.html              /tools                           301
+/loan-emi-calculator                   /tools                           301
+/body-fat-calculator.html              /tools                           301
+/body-fat-calculator                   /tools                           301
+/calculators/*                         /tools                           301
 
 # Old WordPress artifacts -> home (clears GSC 404s for the previous WP site)
 /hello-world/                          /                               301

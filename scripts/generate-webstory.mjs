@@ -144,6 +144,7 @@ Schema:
   "story_title": "Catchy 60-char max headline",
   "meta_description": "160-char SEO description",
   "cover_caption": "Short punchy hook, 8-14 words",
+  "geo_keywords": "6 comma-separated location-flavoured SEO keywords, mix India/USA/UK e.g. best free ai tools in india, ai tools for us freelancers",
   "cover_image_prompt": "cinematic HD photorealistic image prompt for cover, portrait 9:16, no text",
   "slides": [
     {
@@ -270,8 +271,11 @@ function buildStoryHtml({ slug, story }) {
   <meta charset="utf-8">
   <script async src="https://cdn.ampproject.org/v0.js"></script>
   <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+  <script async custom-element="amp-story-auto-ads" src="https://cdn.ampproject.org/v0/amp-story-auto-ads-0.1.js"></script>
+  <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
   <title>${esc(story.story_title)}</title>
   <meta name="description" content="${esc(story.meta_description)}">
+  <meta name="keywords" content="${esc(story.geo_keywords || 'free ai tools, ai tools 2026')}">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <link rel="canonical" href="${canonical}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -363,7 +367,9 @@ ${slidesHtml}
       </amp-story-page-outlink>
     </amp-story-page>
 
-  </amp-story>
+  <amp-story-auto-ads><script type="application/json">{"ad-attributes":{"type":"adsense","data-ad-client":"ca-pub-2278101269918728","data-ad-slot":"1700790558"}}</script></amp-story-auto-ads>
+<amp-analytics type="gtag" data-credentials="include"><script type="application/json">{"vars":{"gtag_id":"G-KJ0WTD0R0M","config":{"G-KJ0WTD0R0M":{"groups":"default"}}}}</script></amp-analytics>
+</amp-story>
 </body>
 </html>`;
 }

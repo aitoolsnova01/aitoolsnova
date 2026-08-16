@@ -1,40 +1,34 @@
-# ============================================
-# ROBOTS.TXT - AIToolsNova.com
-# Version: 5.0 - Aug 13, 2026 (Fixed paths)
-# ============================================
+# ROBOTS.TXT - AIToolsNova.com  |  v6.0
 
 User-agent: *
 Allow: /
-
-Allow: /tools/
-Allow: /blogs.html
-Allow: /web-stories/
-Allow: /images/
-Allow: /compare/
-
 Disallow: /admin/
 Disallow: /temp/
 Disallow: /backup/
 Disallow: /logs/
 Disallow: /config/
-Disallow: /*?ref=
-Disallow: /*?utm_source=
-Disallow: /*?utm_medium=
-Disallow: /*?utm_campaign=
-Disallow: /*?fbclid=
-Disallow: /*?gclid=
 
-# ============================================
+# ---- Google AdSense (MUST be explicit - AdsBot ignores User-agent: *) ----
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+User-agent: AdsBot-Google-Mobile-Apps
+Allow: /
+
+User-agent: Google-AdSense
+Allow: /
+
+# ---- Search engines ----
 User-agent: Googlebot
 Allow: /
 
 User-agent: Googlebot-Image
-Allow: /
-
-User-agent: Googlebot-Video
-Allow: /
-
-User-agent: Googlebot-News
 Allow: /
 
 User-agent: Bingbot
@@ -43,10 +37,14 @@ Allow: /
 User-agent: DuckDuckBot
 Allow: /
 
-User-agent: Facebookbot
+User-agent: Slurp
 Allow: /
 
+# ---- Social ----
 User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
 Allow: /
 
 User-agent: LinkedInBot
@@ -58,10 +56,7 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-User-agent: Slurp
-Allow: /
-
-# Block spam bots
+# ---- Block scrapers ----
 User-agent: SemrushBot
 Disallow: /
 
@@ -77,10 +72,4 @@ Disallow: /
 User-agent: BLEXBot
 Disallow: /
 
-User-agent: rogerbot
-Disallow: /
-
-# ============================================
-# SITEMAPS
-# ============================================
 Sitemap: https://aitoolsnova.com/sitemap.xml
