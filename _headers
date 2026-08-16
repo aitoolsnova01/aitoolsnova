@@ -46,10 +46,6 @@
 # ---- Background Remover needs cross-origin isolation for multithreaded WASM ----
 # 'credentialless' keeps third-party scripts (AdSense, GA) working, unlike
 # 'require-corp' which would break them.
-/tools/background-remover
-  Cross-Origin-Embedder-Policy: credentialless
-  Cross-Origin-Opener-Policy: same-origin
-
-/tools/background-remover.html
+/tools/background-remover*
   Cross-Origin-Embedder-Policy: credentialless
   Cross-Origin-Opener-Policy: same-origin
