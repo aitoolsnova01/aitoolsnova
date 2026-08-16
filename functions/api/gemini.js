@@ -88,7 +88,11 @@ export async function onRequest(context) {
     const cfToken = env.CLOUDFLARE_API_TOKEN;
     const cfAccountId = env.CLOUDFLARE_ACCOUNT_ID;
     const groqKey = env.GROQ_API_KEY;
-    const deepseekKey = env.DEEPSEEK_API_KEY;
+    // Env var names are case-sensitive. Accept the common spellings so a
+    // dashboard typo cannot silently disable the provider.
+    const deepseekKey = env.DEEPSEEK_API_KEY || env.Deepseek_API_key
+        || env.DEEPSEEK_API_key || env.deepseek_api_key || env.DeepSeek_API_Key;
+    const geminiKey = env.GEMINI_API_KEY || env.Gemini_API_key;
 
     const cfModel = env.CLOUDFLARE_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
     // Upgraded: the old default (llama-3.1-8b-instant) is a tiny model and was
@@ -146,6 +150,39 @@ export async function onRequest(context) {
       return { ok: true, reply: reply.trim() };
     }
 
+    // Google Gemini - another independent quota. The key was already bound to
+    // this project but nothing read it.
+    async function callGemini() {
+      if (!geminiKey) return { ok: false, error: 'Gemini env var missing' };
+
+      const sys = messages.find(m => m.role === 'system');
+      const turns = messages.filter(m => m.role !== 'system');
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: sys ? { parts: [{ text: sys.content }] } : undefined,
+            contents: turns.map(m => ({
+              role: m.role === 'assistant' ? 'model' : 'user',
+              parts: [{ text: m.content }],
+            })),
+            generationConfig: { temperature: 0.4, maxOutputTokens: 1600, topP: 0.9 },
+          }),
+        }
+      );
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        return { ok: false, error: data?.error?.message || `Gemini error (${res.status})` };
+      }
+      const reply = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('').trim();
+      if (!reply) return { ok: false, error: 'Empty response from Gemini' };
+      return { ok: true, reply };
+    }
+
     async function callGroq(model) {
       if (!groqKey) return { ok: false, error: 'Groq env var missing' };
 
@@ -198,7 +235,12 @@ export async function onRequest(context) {
     if (deepseek.ok) return json({ reply: deepseek.reply, provider: 'deepseek' });
     errors.push(`deepseek: ${deepseek.error}`);
 
-    // 3) Cloudflare Workers AI as a final provider
+    // 3) Gemini - independent quota
+    const gemini = await callGemini();
+    if (gemini.ok) return json({ reply: gemini.reply, provider: 'gemini' });
+    errors.push(`gemini: ${gemini.error}`);
+
+    // 4) Cloudflare Workers AI as a final provider
     const cloudflare = await callCloudflare();
     if (cloudflare.ok) return json({ reply: cloudflare.reply, provider: 'cloudflare' });
     errors.push(`cloudflare: ${cloudflare.error}`);

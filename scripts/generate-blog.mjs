@@ -63,7 +63,9 @@ async function localizeBlogHero(html) {
     return html;
 }
 const GROQ_KEY = process.env.GROQ_API_KEY;
-const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY;
+// Accept common name variants so a differently-cased secret still works.
+const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || process.env.Deepseek_API_key
+    || process.env.DEEPSEEK_API_key || process.env.deepseek_api_key;
 // IndexNow key: use env var OR auto-detect the .txt key file at repo root
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
     try {
