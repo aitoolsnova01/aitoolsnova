@@ -36,6 +36,7 @@ jobs:
         run: |
           git config user.name "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
+          git pull --rebase origin main || true
           git add web-stories/ web-stories.html sitemap.xml
           if git diff --staged --quiet; then
             echo "No web-story changes to commit."
