@@ -100,7 +100,10 @@ export async function onRequest(context) {
     async function callCloudflare() {
       if (!cfToken || !cfAccountId) return { ok: false, error: 'Cloudflare env vars missing' };
 
-      const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/ai/run/${encodeURIComponent(cfModel)}`;
+      // NOTE: the model id must NOT be URL-encoded. encodeURIComponent turns
+      // "@cf/meta/..." into "%40cf%2Fmeta%2F...", which Cloudflare answers with
+      // "No route for that URI".
+      const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/ai/run/${cfModel}`;
       const res = await fetch(url, {
         method: 'POST',
         headers: { Authorization: `Bearer ${cfToken}`, 'Content-Type': 'application/json' },
@@ -126,7 +129,7 @@ export async function onRequest(context) {
           model,
           messages,
           temperature: 0.4,
-          max_tokens: 2048,
+          max_tokens: 1600,
           top_p: 0.9,
         }),
       });
@@ -143,11 +146,24 @@ export async function onRequest(context) {
     // 1) Groq first - the large models here give the most accurate output.
     const errors = [];
     for (const model of groqChain) {
-      const r = await callGroq(model);
+      let r = await callGroq(model);
+
+      // Groq returns a short "try again in Xs" window on TPM limits. One brief
+      // wait usually clears it, which is much better than dropping to a weaker
+      // model for no reason.
+      if (!r.ok && /rate limit|429/i.test(r.error || '')) {
+        const m = /try again in ([\d.]+)s/i.exec(r.error || '');
+        const waitMs = Math.min(m ? Math.ceil(parseFloat(m[1]) * 1000) + 400 : 2500, 6000);
+        await new Promise(res => setTimeout(res, waitMs));
+        r = await callGroq(model);
+      }
+
       if (r.ok) return json({ reply: r.reply, provider: `groq:${model}` });
       errors.push(`${model}: ${r.error}`);
-      // Auth/quota problems will fail for every model, so stop early.
-      if (/api key|unauthorized|invalid|quota|billing/i.test(r.error || '')) break;
+      // Only a genuinely bad/missing key fails for every model. Rate limits are
+      // per-model, so we MUST keep going - Groq's 429 text contains an upgrade
+      // link with the word "billing", which used to abort the chain wrongly.
+      if (/invalid api key|no api key|unauthorized|authentication/i.test(r.error || '')) break;
     }
 
     // 2) Cloudflare Workers AI as a second provider
