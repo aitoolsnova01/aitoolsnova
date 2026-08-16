@@ -5,9 +5,14 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
+# HTML: browser 5 min, Cloudflare edge 1 din (stale serve karte hue background revalidate)
 /*.html
-  Cache-Control: public, max-age=0, s-maxage=3600, must-revalidate
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
 
+/
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+
+# Hashed/static assets: 1 saal immutable
 /*.css
   Cache-Control: public, max-age=31536000, immutable
 /*.js
@@ -22,15 +27,18 @@
   Cache-Control: public, max-age=31536000, immutable
 /*.jpg
   Cache-Control: public, max-age=31536000, immutable
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+/*.ico
+  Cache-Control: public, max-age=604800
 
+# Crawler files: short cache so updates propagate fast
 /ads.txt
   Content-Type: text/plain; charset=utf-8
-  Cache-Control: public, max-age=3600
-
+  Cache-Control: public, max-age=600, s-maxage=600
 /robots.txt
   Content-Type: text/plain; charset=utf-8
-  Cache-Control: public, max-age=3600
-
+  Cache-Control: public, max-age=600, s-maxage=600
 /sitemap.xml
   Content-Type: application/xml; charset=utf-8
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=600, s-maxage=1800

@@ -5,6 +5,12 @@
 # Force single canonical entry-point
 
 # Trailing-slash normalization for known folders
+# ============================================
+# CANONICAL HOST - www -> non-www (GSC duplicate content fix)
+# Both www and apex were serving 200, splitting ranking signals.
+# ============================================
+https://www.aitoolsnova.com/*   https://aitoolsnova.com/:splat   301!
+
 /tools/                                /tools                           301
 /blogs/                                /blogs                           301
 /blog/                                 /blogs                           301
