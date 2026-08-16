@@ -44,5 +44,5 @@
 /wp-admin/*                            /                               301
 /feed/*                                /                               301
 /search/*                              /                               301
-/?feed=*                               /                               301
+# REMOVED: /?feed=* -> / matched the bare "/" path and caused a homepage redirect loop
 
