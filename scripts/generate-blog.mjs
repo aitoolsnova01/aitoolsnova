@@ -305,7 +305,7 @@ STRICT RULES:
 ${avoidList.map(t => '- ' + t).join('\n')}
 
 2. Title must:
-   - Be 55-70 chars
+   - MUST be 45-58 characters INCLUDING spaces (Google truncates past ~60; the site appends no brand suffix)
    - Include a number, power word, or curiosity gap that makes people NEED to click
    - Feel fresh and on-trend for a worldwide audience (a "2026 / latest" angle is a plus)
    - Lean towards high-interest, high-value angles (money-making, saving time, "best/free tools", comparisons) that people actively search for
@@ -420,7 +420,7 @@ AFFILIATE RECOMMENDATIONS (required):
 STRUCTURE (return ONLY valid JSON — no markdown code fences, no explanation outside JSON):
 
 {
-  "meta_description": "150-160 char SEO meta description with primary keyword and clear benefit",
+  "meta_description": "140-158 characters MAX including spaces, with the primary keyword and a clear benefit. Never exceed 158.",
   "faqs": [{"q":"natural question a real searcher would type","a":"60-90 word helpful answer"}] (exactly 5 FAQs, question-style long-tail keywords),
   "internal_links": [{"anchor":"...","slug":"..."}],
   "meta_keywords": "12 comma-separated SEO keywords - MUST include the primary keyword and at least 4 of the geo keywords",
