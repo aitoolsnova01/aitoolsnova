@@ -25,6 +25,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: 🖼️ Install sharp (image upscaling for Web Stories)
+        run: npm install --no-save sharp
+
       - name: 🎬 Generate today's web story
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

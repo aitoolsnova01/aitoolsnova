@@ -222,6 +222,24 @@ const imgUrl = (prompt, seed) => {
 const IMG_DIR = path.join(STORIES_DIR, 'img');
 const REMOTE_RE = /https?:\/\/image\.pollinations\.ai\/prompt\/[^"'\\\s)]+/g;
 
+// Google Web Stories require at least 640x853. Pollinations returns 576x1024
+// no matter what we ask for, so every image needs upscaling to pass validation.
+async function upscaleForWebStories(file) {
+    try {
+        const sharp = (await import('sharp')).default;
+        const meta = await sharp(file).metadata();
+        if ((meta.width || 0) >= 640 && (meta.height || 0) >= 853) return;
+        const out = await sharp(file)
+            .resize(720, 1280, { fit: 'cover', kernel: 'lanczos3' })
+            .jpeg({ quality: 88, progressive: true, mozjpeg: true })
+            .toBuffer();
+        await fs.writeFile(file, out);
+        console.log(`   ↑ upscaled ${path.basename(file)} to 720x1280`);
+    } catch {
+        // sharp not installed - image still works, just below the ideal size.
+    }
+}
+
 async function downloadImage(url, dest, tries = 3) {
     for (let i = 1; i <= tries; i++) {
         try {
@@ -233,6 +251,7 @@ async function downloadImage(url, dest, tries = 3) {
             const buf = Buffer.from(await res.arrayBuffer());
             if (buf.length < 1500) throw new Error('tiny image');
             await fs.writeFile(dest, buf);
+            await upscaleForWebStories(dest);
             return true;
         } catch (e) {
             await sleep(6000 * i);

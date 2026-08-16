@@ -158,8 +158,11 @@ export async function onRequest(context) {
       const sys = messages.find(m => m.role === 'system');
       const turns = messages.filter(m => m.role !== 'system');
 
+      // gemini-2.0-flash was retired; gemini-flash-latest always points at the
+      // current fast model, verified working against this key.
+      const gmModel = env.GEMINI_MODEL || 'gemini-flash-latest';
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${gmModel}:generateContent?key=${geminiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -230,15 +233,15 @@ export async function onRequest(context) {
       if (/invalid api key|no api key|unauthorized|authentication/i.test(r.error || '')) break;
     }
 
-    // 2) DeepSeek - independent quota, so it survives a Groq rate limit
-    const deepseek = await callDeepSeek();
-    if (deepseek.ok) return json({ reply: deepseek.reply, provider: 'deepseek' });
-    errors.push(`deepseek: ${deepseek.error}`);
-
-    // 3) Gemini - independent quota
+    // 2) Gemini - independent quota and currently the healthiest fallback
     const gemini = await callGemini();
     if (gemini.ok) return json({ reply: gemini.reply, provider: 'gemini' });
     errors.push(`gemini: ${gemini.error}`);
+
+    // 3) DeepSeek - only reachable once the account has credit
+    const deepseek = await callDeepSeek();
+    if (deepseek.ok) return json({ reply: deepseek.reply, provider: 'deepseek' });
+    errors.push(`deepseek: ${deepseek.error}`);
 
     // 4) Cloudflare Workers AI as a final provider
     const cloudflare = await callCloudflare();
