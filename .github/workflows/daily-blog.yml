@@ -27,6 +27,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: 🖼️ Install sharp (image upscaling for Discover)
+        run: npm install --no-save sharp
+
       - name: 📝 Generate today's blog post
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

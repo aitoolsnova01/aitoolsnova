@@ -235,8 +235,10 @@ async function upscaleForWebStories(file) {
             .toBuffer();
         await fs.writeFile(file, out);
         console.log(`   ↑ upscaled ${path.basename(file)} to 720x1280`);
-    } catch {
-        // sharp not installed - image still works, just below the ideal size.
+    } catch (e) {
+        console.warn(`   ⚠️  UPSCALE SKIPPED for ${path.basename(file)} - ${e.message}`);
+        console.warn('   ⚠️  Image stays below Google\'s 640x853 minimum for Web Stories.');
+        console.warn('   ⚠️  Check that the "Install sharp" workflow step succeeded.');
     }
 }
 

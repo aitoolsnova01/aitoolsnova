@@ -42,6 +42,24 @@ async function localizeBlogHero(html) {
     if (!urls.length) return html;
     const IMG = path.join(BLOG_DIR, 'img');
     await fs.mkdir(IMG, { recursive: true });
+    // Google Discover only surfaces images at least 1200px wide. Pollinations
+    // returns 1024px, so every hero image needs a lift.
+    async function upscaleForDiscover(file) {
+        try {
+            const sharp = (await import('sharp')).default;
+            const meta = await sharp(file).metadata();
+            if ((meta.width || 0) >= 1200) return;
+            const out = await sharp(file)
+                .resize(1600, 900, { fit: 'cover', kernel: 'lanczos3' })
+                .jpeg({ quality: 86, progressive: true, mozjpeg: true })
+                .toBuffer();
+            await fs.writeFile(file, out);
+            console.log(`   \u2191 upscaled ${path.basename(file)} to 1600x900 for Discover`);
+        } catch (e) {
+            console.warn(`   \u26a0\ufe0f  Discover upscale skipped for ${path.basename(file)} - ${e.message}`);
+        }
+    }
+
     for (const u of urls) {
         const name = crypto.createHash('md5').update(u).digest('hex').slice(0, 16) + '.jpg';
         const dest = path.join(IMG, name);
@@ -51,7 +69,11 @@ async function localizeBlogHero(html) {
                 const res = await fetch(u);
                 if (res.ok) {
                     const b = Buffer.from(await res.arrayBuffer());
-                    if (b.length > 1500) { await fs.writeFile(dest, b); ok = true; }
+                    if (b.length > 1500) {
+                        await fs.writeFile(dest, b);
+                        await upscaleForDiscover(dest);
+                        ok = true;
+                    }
                 }
             } catch { /* keep remote on failure */ }
         }
