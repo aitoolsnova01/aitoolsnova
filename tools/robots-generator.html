@@ -300,7 +300,7 @@
                 const sitemap = sitemapUrl.value.trim();
                 const prompt = `You are an SEO and web security expert. Generate a production-ready robots.txt file for a "${t}" website${sitemap ? ' with sitemap URL: '+sitemap : ''}. Follow best practices:\n- Allow all major search engines to index public content\n- Block sensitive paths typical for this platform (admin, private, cart, checkout, wp-admin, etc — whatever fits)\n- Block AI training crawlers (GPTBot, CCBot, ClaudeBot, Google-Extended, anthropic-ai) if it's a content site\n- Include Sitemap line if provided\nReturn ONLY the robots.txt file content, no explanation, no markdown fences.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'seo' }) });
                     const data = await res.json().catch(()=>({}));
                     if (res.ok && data.reply) {
                         outputContent.textContent = data.reply.replace(/^```[a-z]*\n?/i, '').replace(/```$/,'').trim();

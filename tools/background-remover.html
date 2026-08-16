@@ -292,7 +292,7 @@
             // ----- Load the library (ESM from CDN) -----
             // We use @imgly/background-removal v1.4.5 (stable, well-tested).
             // The library ships as ESM; the default export is the removeBackground function.
-            const LIB_VERSION = '1.4.5';
+            const LIB_VERSION = '1.5.8';
             const LIB_CDN = `https://cdn.jsdelivr.net/npm/@imgly/background-removal@${LIB_VERSION}`;
 
             function loadBackgroundRemovalLibrary() {
@@ -324,13 +324,16 @@
 
                 // publicPath is REQUIRED so the library can fetch the ONNX model files from the CDN
                 // (not from the same origin). Without this, the model 404s and background removal fails.
+                // The model weights do NOT ship inside the npm package - they live on
+                // IMG.LY's data CDN. Pointing publicPath at jsdelivr made every model
+                // chunk 404, which is why removal silently produced no result.
                 const config = {
-                    publicPath: `${LIB_CDN}/dist/`,
+                    publicPath: `https://staticimgly.com/@imgly/background-removal-data/${LIB_VERSION}/dist/`,
                     output: {
                         format: 'image/png',
                         quality: 0.9
                     },
-                    model: 'medium',
+                    model: 'isnet',
                     progress: (key, current, total) => {
                         if (key.includes('fetch')) {
                             const pct = total ? Math.round((current / total) * 100) : 0;

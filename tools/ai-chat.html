@@ -377,6 +377,9 @@
             const outputContent = document.getElementById('outputContent');
             const copyBtn = document.getElementById('copyBtn');
 
+            // Conversation memory so follow-up questions keep their context.
+            let chatHistory = [];
+
             generateBtn.addEventListener('click', async function() {
                 const message = promptInput.value.trim();
                 if (!message) {
@@ -385,6 +388,7 @@
                     return;
                 }
 
+                generateBtn.disabled = true;
                 outputContent.textContent = '⏳ Thinking...';
                 outputBox.classList.add('show');
 
@@ -392,7 +396,7 @@
                     const response = await fetch('/api/gemini', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: message })
+                        body: JSON.stringify({ message: message, tool: 'chat', history: chatHistory })
                     });
 
                     const data = await response.json();
@@ -400,14 +404,20 @@
                     if (data.error) {
                         outputContent.textContent = '❌ Error: ' + data.error;
                     } else {
-                        outputContent.textContent = '🤖 ' + data.reply;
+                        outputContent.textContent = data.reply;
+                        chatHistory.push({ role: 'user', content: message });
+                        chatHistory.push({ role: 'assistant', content: data.reply });
+                        if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
                     }
                 } catch (error) {
                     outputContent.textContent = '❌ Network error: ' + error.message;
+                } finally {
+                    generateBtn.disabled = false;
                 }
             });
 
             clearBtn.addEventListener('click', function() {
+                chatHistory = [];
                 promptInput.value = '';
                 outputBox.classList.remove('show');
                 outputContent.textContent = 'Your AI response will appear here...';

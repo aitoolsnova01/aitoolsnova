@@ -281,7 +281,7 @@
                 generateBtn.disabled = true; generateBtn.textContent = '⏳ Generating...';
                 const prompt = `You are an Instagram and TikTok hashtag research expert. Generate 30 highly relevant hashtags for the niche/keyword: "${keyword}". Rules:\n- Mix of 10 HIGH volume popular hashtags, 10 MEDIUM volume niche hashtags, 10 LOW volume long-tail hashtags\n- All lowercase, no spaces, no numbers unless meaningful\n- Group them under 3 headers: HIGH VOLUME:, MEDIUM VOLUME:, LOW VOLUME:\n- Each hashtag starts with # and separated by spaces within its group\nReturn only the grouped hashtags, no explanation.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'social' }) });
                     const data = await res.json().catch(()=>({}));
                     if (res.ok && data.reply) {
                         outputContent.textContent = data.reply;

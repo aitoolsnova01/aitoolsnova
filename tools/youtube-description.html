@@ -286,7 +286,7 @@
                 generateBtn.disabled = true; generateBtn.textContent = '⏳ Generating...';
                 const prompt = `You are a YouTube SEO expert. Write a compelling, SEO-optimized YouTube video description for a video titled: "${title}". Keywords to include naturally: ${keywords}. Structure:\n1) Hook (2-3 lines that grab attention)\n2) What viewers will learn (bullet list of 4-5 points)\n3) Timestamps (5-6 realistic timestamps like 0:00 Intro, 1:30 ...)\n4) Call-to-action (like, subscribe, comment)\n5) Relevant hashtags (10-15) at the end\nKeep it engaging, natural, under 300 words. Return only the description text, no meta commentary.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'youtube' }) });
                     const data = await res.json().catch(()=>({}));
                     if (res.ok && data.reply) {
                         outputContent.textContent = data.reply;

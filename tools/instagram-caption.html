@@ -412,7 +412,7 @@
                 generateBtn.disabled = true; generateBtn.textContent = '⏳ Generating...';
                 const prompt = `You are an Instagram growth expert. Write a highly engaging Instagram caption about: "${topic}". Rules:\n- Start with an attention-grabbing first line (Instagram truncates after ~125 chars, so hook must be strong)\n- Use line breaks and emojis to make it scannable\n- Include an authentic call-to-action (question, save, share)\n- Length: 80-150 words\n- End with 20-25 relevant hashtags (mix of high-volume and niche) grouped in a separate paragraph\nReturn only the caption + hashtags, ready to paste.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'social' }) });
                     const data = await res.json().catch(()=>({}));
                     if (res.ok && data.reply) {
                         outputContent.textContent = data.reply;

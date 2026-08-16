@@ -427,7 +427,7 @@
                 // AI-powered related keyword suggestions + SEO tips
                 const prompt = `You are an SEO expert. A user wrote content about "${keyword}" with keyword density of ${density}%. Give practical SEO advice in 3 short sections (use plain text with bullets):\n1) 8 LSI/related keywords they should add (comma-separated list)\n2) 3 quick tips to improve on-page SEO for this content\n3) 3 questions users search for related to "${keyword}" (for FAQ ideas)\nBe concrete and concise. Total under 180 words.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'seo' }) });
                     const data = await res.json().catch(()=>({}));
                     const suggestEl = document.getElementById('aiSuggestText');
                     if (suggestEl) {

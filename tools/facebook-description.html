@@ -281,7 +281,7 @@
                 generateBtn.disabled = true; generateBtn.textContent = '⏳ Generating...';
                 const prompt = `You are a Facebook marketing expert. Write a highly engaging Facebook post about: "${topic}". Rules:\n- Start with a scroll-stopping hook (emoji + strong opening line)\n- 3-5 short paragraphs, easy to read on mobile\n- Include a genuine call-to-action asking a question or inviting comments\n- Use 3-5 relevant emojis naturally\n- End with 5-8 relevant hashtags\n- Total length: 120-180 words\nReturn only the post text, ready to paste on Facebook.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'social' }) });
                     const data = await res.json().catch(()=>({}));
                     if (res.ok && data.reply) {
                         outputContent.textContent = data.reply;

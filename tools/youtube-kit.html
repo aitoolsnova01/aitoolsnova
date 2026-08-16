@@ -338,7 +338,7 @@ Call-to-action (like, subscribe, comment).
 Return only the sections above. No intro, no summary.`;
 
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'youtube' }) });
                     const data = await res.json().catch(()=>({}));
                     if (!res.ok || !data.reply) {
                         showError('❌ AI service unavailable: ' + (data.error || 'Please try again in a moment.'));

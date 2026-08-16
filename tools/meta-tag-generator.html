@@ -318,7 +318,7 @@
                     generateBtn.disabled = true; generateBtn.textContent = '⏳ AI Generating...';
                     const prompt = `You are an SEO expert. For a webpage titled "${title}", generate SEO-optimized meta tags. Return ONLY valid JSON (no markdown, no explanation), with exactly these 3 keys:\n{\n  "title": "improved SEO title, 55-60 chars, includes primary keyword",\n  "description": "compelling meta description, 150-160 chars, CTR-focused, includes keyword",\n  "keywords": "10 comma-separated SEO keywords, most important first"\n}`;
                     try {
-                        const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                        const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'seo' }) });
                         const data = await res.json().catch(()=>({}));
                         if (res.ok && data.reply) {
                             const m = data.reply.match(/\{[\s\S]*\}/);

@@ -297,7 +297,7 @@
                 aiSuggestBtn.disabled = true; aiSuggestBtn.textContent = '⏳ AI Suggesting...';
                 const prompt = `You are an SEO expert. Given the homepage URL "${seed}", suggest a complete list of 15 essential URLs that any modern website should have in its sitemap for maximum SEO coverage. Base the domain on the given URL. Include: home, about, contact, blog, services/products, privacy, terms, sitemap, popular tool/category pages typical for such a site. Return ONLY the 15 full URLs, one per line, no numbers, no explanation.`;
                 try {
-                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
+                    const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'seo' }) });
                     const data = await res.json().catch(()=>({}));
                     if (res.ok && data.reply) {
                         urlsInput.value = data.reply.replace(/^\d+[\.\)]\s*/gm, '').trim();
