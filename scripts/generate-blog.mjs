@@ -539,7 +539,9 @@ function buildAffiliateSection(picks) {
 function esc(s = '') { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
 function buildHtml(topic, content, todayISO, todayHuman) {
-    const canonicalUrl = `https://aitoolsnova.com/blog/${topic.slug}.html`;
+    // Cloudflare Pages serves these without the extension - a .html URL 308s,
+    // and Google drops redirecting URLs from the index.
+    const canonicalUrl = `https://aitoolsnova.com/blog/${topic.slug}`;
     // Enrich the raw hero prompt with quality-boosting keywords so Pollinations returns sharp, professional images.
     const enrichedPrompt = `${topic.hero_prompt || topic.title}, high quality, sharp focus, 8k, professional photography, cinematic lighting, ultra detailed, modern tech aesthetic, vibrant colors`;
     const heroPromptEnc = encodeURIComponent(enrichedPrompt);
@@ -823,7 +825,7 @@ async function updateSitemap(topic, todayISO) {
     }
     const entry = `
     <url>
-        <loc>https://aitoolsnova.com/blog/${topic.slug}.html</loc>
+        <loc>https://aitoolsnova.com/blog/${topic.slug}</loc>
         <lastmod>${todayISO}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -837,7 +839,7 @@ async function updateSitemap(topic, todayISO) {
 // ---------- 9. Ping IndexNow (Bing + Yandex + Naver + others) ----------
 async function pingIndexNow(topic) {
     if (!INDEXNOW_KEY) { console.log('   ℹ️  INDEXNOW_KEY not set — skipping IndexNow ping (Google/Bing sitemap ping still runs in workflow).'); return; }
-    const url = `https://aitoolsnova.com/blog/${topic.slug}.html`;
+    const url = `https://aitoolsnova.com/blog/${topic.slug}`;
     try {
         const res = await fetch('https://api.indexnow.org/indexnow', {
             method: 'POST',

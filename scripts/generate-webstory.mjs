@@ -261,7 +261,8 @@ async function localizeHtmlImages(html) {
 
 // ---------- Build AMP Story HTML ----------
 function buildStoryHtml({ slug, story }) {
-    const canonical = `${SITE}/web-stories/${slug}.html`;
+    // Extensionless - the .html form 308-redirects on Cloudflare Pages.
+    const canonical = `${SITE}/web-stories/${slug}`;
     const publisherLogo = `/images/publisher-logo.png`;
     const coverImg = imgUrl(story.cover_image_prompt, 1000);
     const posterUrl = coverImg;
@@ -402,7 +403,7 @@ ${slidesHtml}
 // ---------- Update sitemap.xml ----------
 async function updateSitemap({ slug, title }) {
     let xml = await fs.readFile(SITEMAP_XML, 'utf-8');
-    const url = `${SITE}/web-stories/${slug}.html`;
+    const url = `${SITE}/web-stories/${slug}`;
     if (xml.includes(url)) return false;
 
     const today = new Date().toISOString().split('T')[0];
@@ -449,7 +450,7 @@ async function rebuildStoriesIndex() {
 <title>AI Web Stories | AIToolsNova - Daily Visual AI Tool Tips</title>
 <meta name="description" content="Bite-sized visual web stories about the latest AI tools, tips, and hacks. Updated daily on AIToolsNova.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="canonical" href="${SITE}/web-stories.html">
+<link rel="canonical" href="${SITE}/web-stories">
 <link rel="icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -464,7 +465,7 @@ ${JSON.stringify({
         "@type": "CollectionPage",
         "name": "AI Web Stories",
         "description": "Daily visual web stories on AI tools and tips",
-        "url": `${SITE}/web-stories.html`,
+        "url": `${SITE}/web-stories`,
         "publisher": { "@type": "Organization", "name": "AIToolsNova" }
     })}
 </script>
@@ -570,8 +571,8 @@ async function main() {
     console.log('📑 web-stories.html rebuilt');
 
     await pingIndexNow([
-        `${SITE}/web-stories/${src.slug}.html`,
-        `${SITE}/web-stories.html`,
+        `${SITE}/web-stories/${src.slug}`,
+        `${SITE}/web-stories`,
         `${SITE}/sitemap.xml`,
     ]);
 

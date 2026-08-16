@@ -107,7 +107,9 @@ if (mockFile) {
     const newBlogsHtml = await fs.readFile(BLOGS_HTML, 'utf-8');
     mockChecks.push(['blogs.html card injected', newBlogsHtml.includes(mockFile.replace('.html',''))]);
     const newSitemap = await fs.readFile(SITEMAP_XML, 'utf-8');
-    mockChecks.push(['sitemap.xml URL injected', newSitemap.includes('/blog/' + mockFile)]);
+    // Sitemap now uses extensionless URLs (the .html form 308-redirects).
+    const mockSlug = mockFile.replace(/\.html$/, '');
+    mockChecks.push(['sitemap.xml URL injected', newSitemap.includes('/blog/' + mockSlug)]);
 } else {
     mockChecks = [['Generated blog file NOT found — pipeline broken!', false]];
 }
