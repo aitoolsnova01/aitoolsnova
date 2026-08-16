@@ -38,6 +38,7 @@ jobs:
         run: |
           git config user.name "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
+          git pull --rebase origin main || true
           git add blog/ blogs.html sitemap.xml scripts/topic-history.json
           if git diff --staged --quiet; then
             echo "No changes to commit."
