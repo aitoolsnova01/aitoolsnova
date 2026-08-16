@@ -88,6 +88,7 @@ export async function onRequest(context) {
     const cfToken = env.CLOUDFLARE_API_TOKEN;
     const cfAccountId = env.CLOUDFLARE_ACCOUNT_ID;
     const groqKey = env.GROQ_API_KEY;
+    const deepseekKey = env.DEEPSEEK_API_KEY;
 
     const cfModel = env.CLOUDFLARE_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
     // Upgraded: the old default (llama-3.1-8b-instant) is a tiny model and was
@@ -116,6 +117,32 @@ export async function onRequest(context) {
       }
       const reply = data?.result?.response || data?.result?.text || data?.response || data?.text;
       if (!reply || !reply.trim()) return { ok: false, error: 'Empty response from Cloudflare AI' };
+      return { ok: true, reply: reply.trim() };
+    }
+
+    // DeepSeek is a separate provider with its own quota, so it keeps the tools
+    // working when Groq's 8000 TPM free-tier budget is exhausted.
+    async function callDeepSeek() {
+      if (!deepseekKey) return { ok: false, error: 'DeepSeek env var missing' };
+
+      const res = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${deepseekKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages,
+          temperature: 0.4,
+          max_tokens: 1600,
+          top_p: 0.9,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        return { ok: false, error: data?.error?.message || `DeepSeek error (${res.status})` };
+      }
+      const reply = data?.choices?.[0]?.message?.content;
+      if (!reply || !reply.trim()) return { ok: false, error: 'Empty response from DeepSeek' };
       return { ok: true, reply: reply.trim() };
     }
 
@@ -166,7 +193,12 @@ export async function onRequest(context) {
       if (/invalid api key|no api key|unauthorized|authentication/i.test(r.error || '')) break;
     }
 
-    // 2) Cloudflare Workers AI as a second provider
+    // 2) DeepSeek - independent quota, so it survives a Groq rate limit
+    const deepseek = await callDeepSeek();
+    if (deepseek.ok) return json({ reply: deepseek.reply, provider: 'deepseek' });
+    errors.push(`deepseek: ${deepseek.error}`);
+
+    // 3) Cloudflare Workers AI as a final provider
     const cloudflare = await callCloudflare();
     if (cloudflare.ok) return json({ reply: cloudflare.reply, provider: 'cloudflare' });
     errors.push(`cloudflare: ${cloudflare.error}`);

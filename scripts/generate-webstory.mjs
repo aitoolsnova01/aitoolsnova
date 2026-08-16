@@ -124,6 +124,31 @@ async function callGroq(messages) {
             }
         }
     }
+    if (DEEPSEEK_KEY) {
+        try {
+            console.warn('   ⚠️  All Groq models failed — falling back to DeepSeek');
+            const body = {
+                model: 'deepseek-chat',
+                messages,
+                temperature: opts.temperature ?? 0.7,
+                max_tokens: opts.max_tokens ?? 4000,
+            };
+            if (opts.json === true) body.response_format = { type: 'json_object' };
+            const res = await fetch('https://api.deepseek.com/chat/completions', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const content = data.choices?.[0]?.message?.content?.trim() || '';
+                if (content) { console.log('   ✔ Using model: deepseek-chat'); return content; }
+            }
+        } catch (e) {
+            console.warn(`   ⚠️  DeepSeek error: ${e.message}`);
+        }
+    }
+
     throw lastErr || new Error('All models failed');
 }
 
