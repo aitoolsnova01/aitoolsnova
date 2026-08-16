@@ -1,0 +1,33 @@
+name: Site Health Check
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # har 6 ghante
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🩺 Homepage must return 200 (not a redirect loop)
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" -A "Mozilla/5.0" https://aitoolsnova.com/)
+          echo "Homepage: $CODE"
+          if [ "$CODE" != "200" ]; then echo "::error::Homepage returned $CODE (expected 200)"; exit 1; fi
+      - name: 🩺 ads.txt must be reachable and correct
+        run: |
+          BODY=$(curl -s -A "Mozilla/5.0" https://aitoolsnova.com/ads.txt)
+          echo "$BODY"
+          echo "$BODY" | grep -q "pub-2278101269918728" || { echo "::error::ads.txt missing publisher ID"; exit 1; }
+      - name: 🩺 Every sitemap URL must return 200
+        run: |
+          curl -s https://aitoolsnova.com/sitemap.xml -o s.xml
+          grep -o '<loc>[^<]*</loc>' s.xml | sed 's|<loc>||;s|</loc>||' > urls.txt
+          FAIL=0
+          while read u; do
+            C=$(curl -s -o /dev/null -w "%{http_code}" -A "Mozilla/5.0" "$u")
+            if [ "$C" != "200" ]; then echo "::warning::$C $u"; FAIL=$((FAIL+1)); fi
+          done < urls.txt
+          echo "Non-200 URLs: $FAIL"
+          if [ "$FAIL" -gt 0 ]; then echo "::error::$FAIL sitemap URLs are not 200"; exit 1; fi
