@@ -8,9 +8,9 @@
 # HTML pages (incl. extensionless /tools, /blogs). Edge TTL is driven by the
 # Cloudflare Cache Rule; this controls the browser side.
 /*.html
-  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=60, s-maxage=300, stale-while-revalidate=600
 /
-  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=60, s-maxage=300, stale-while-revalidate=600
 
 # ---- Static assets override the catch-all above (1 year immutable) ----
 /*.css
