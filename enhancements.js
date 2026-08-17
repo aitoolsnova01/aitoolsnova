@@ -114,7 +114,36 @@
     body.dark .atn-trending-title h2 { color:#F1F5F9 }
     body.dark .atn-related h3 { color:#F1F5F9 }
     body.dark .atn-share-bar a { background:#0F172A; color:#F1F5F9; border-color:#1E293B }
-  `;
+  
+
+    /* Floating buttons: smaller + soft on mobile (desktop stays larger) */
+    @media (max-width: 768px) {
+      a.floating-donate, a.floating-support,
+      .floating-donate, .floating-support {
+        padding: 7px 11px !important;
+        font-size: 0.68rem !important;
+        font-weight: 700 !important;
+        opacity: 0.78 !important;
+        box-shadow: 0 4px 14px rgba(15,23,42,.18) !important;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        right: 10px !important;
+        line-height: 1.2 !important;
+      }
+      a.floating-donate, .floating-donate {
+        bottom: 62px !important;
+        background: linear-gradient(135deg, rgba(255,77,77,.82), rgba(255,123,0,.82)) !important;
+      }
+      a.floating-support, .floating-support {
+        bottom: 14px !important;
+        background: linear-gradient(135deg, rgba(79,70,229,.82), rgba(6,182,212,.82)) !important;
+      }
+      a.floating-donate:active, a.floating-support:active,
+      .floating-donate:active, .floating-support:active {
+        opacity: 1 !important;
+      }
+    }
+`;
   document.head.appendChild(style);
 
   // ---------- Helper: Insert HTML at footer or end of article ----------
