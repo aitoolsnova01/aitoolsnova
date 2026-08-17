@@ -409,8 +409,15 @@
                 if(!text || !keyword) { alert('Please enter both content and keyword.'); return; }
                 const words = text.split(/\s+/);
                 const totalWords = words.length;
-                const keywordCount = words.filter(w => w.toLowerCase().includes(keyword)).length;
-                const density = totalWords > 0 ? ((keywordCount / totalWords) * 100).toFixed(2) : 0;
+                // Count the phrase in the full text, not word-by-word: splitting on
+                // whitespace first made any multi-word keyword impossible to match.
+                const esc = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+                const phraseWords = keyword.split(/\s+/).filter(Boolean).length;
+                const matches = text.toLowerCase().match(new RegExp('(?<![\\p{L}\\p{N}])' + esc + '(?![\\p{L}\\p{N}])', 'giu')) || [];
+                const keywordCount = matches.length;
+                // Density is share of words occupied by the phrase, so a two-word
+                // keyword appearing 4 times covers 8 words, not 4.
+                const density = totalWords > 0 ? (((keywordCount * phraseWords) / totalWords) * 100).toFixed(2) : 0;
                 const status = density > 2 && density < 8 ? '✅ Optimal density (2-8%)' : density >= 8 ? '⚠️ Over-optimized (>8%)' : '⚠️ Below 2%, consider adding more.';
                 outputContent.innerHTML = `
                     <strong>Analysis Result</strong><br>
