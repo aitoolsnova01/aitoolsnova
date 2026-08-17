@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild canonical sitemap.xml (no redirect-alias stubs)."""
+"""Rebuild sitemap.xml from all public HTML pages (extensionless URLs)."""
 from pathlib import Path
 import re
 from datetime import date
@@ -8,33 +8,25 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = 'https://aitoolsnova.com'
 TODAY = date.today().isoformat()
 SKIP = {'.git', 'frontend', 'node_modules', 'test_reports', 'backend', 'memory', 'data', 'functions', 'scripts', 'tests', '.emergent', '.github'}
-EXCLUDE_NAMES = {'404.html', 'blog.html', 'search.html', 'home.html', 'terms.html'}
-EXCLUDE_TOOL_ALIASES = {
-    'bg-remover.html', 'remove-bg.html', 'compressor.html', 'qr.html', 'pdf.html',
-    'chat.html', 'writer.html', 'resume.html',
-}
-
-def excluded(p: Path) -> bool:
-    if p.name in EXCLUDE_NAMES: return True
-    if p.name.startswith('google') and p.name.endswith('.html'): return True
-    if p.parent.name == 'tools' and p.name in EXCLUDE_TOOL_ALIASES: return True
-    try:
-        head = p.read_text(encoding='utf-8', errors='replace')[:600]
-        if 'location.replace' in head and 'noindex' in head:
-            return True
-    except Exception:
-        pass
-    return False
+EXCLUDE_NAMES = {'404.html'}
 
 def main():
     pages = []
     for p in ROOT.rglob('*.html'):
-        if set(p.parts) & SKIP: continue
-        if any(part.startswith('.') for part in p.relative_to(ROOT).parts[:-1]): continue
-        if excluded(p): continue
+        if set(p.parts) & SKIP:
+            continue
+        if p.name in EXCLUDE_NAMES or (p.name.startswith('google') and p.name.endswith('.html')):
+            continue
+        if any(part.startswith('.') for part in p.parts if part not in (str(ROOT),) and part != p.name and part not in p.relative_to(ROOT).parts[:0]):
+            # skip hidden dirs
+            if any(part.startswith('.') for part in p.relative_to(ROOT).parts[:-1]):
+                continue
         rel = p.relative_to(ROOT).as_posix()
+        if any(part.startswith('.') for part in Path(rel).parts[:-1]):
+            continue
         if rel == 'index.html':
-            url, pr, cf = f'{SITE}/', '1.0', 'daily'
+            url = f'{SITE}/'
+            pr, cf = '1.0', 'daily'
         else:
             slug = rel[:-5] if rel.endswith('.html') else rel
             url = f'{SITE}/{slug}'
@@ -56,11 +48,15 @@ def main():
                 pr, cf = '0.6', 'monthly'
         mtime = date.fromtimestamp(p.stat().st_mtime).isoformat()
         pages.append((url, rel, pr, cf, mtime))
-    seen = {it[0]: it for it in pages}
+
+    seen = {}
+    for it in pages:
+        seen[it[0]] = it
     pages = sorted(seen.values(), key=lambda x: (-float(x[2]), x[0]))
 
     def images_for(rel):
-        html = (ROOT / rel).read_text(encoding='utf-8', errors='replace')
+        fp = ROOT / rel
+        html = fp.read_text(encoding='utf-8', errors='replace')
         imgs = []
         m = re.search(r'property="og:image"\s+content="([^"]+)"', html)
         if m and 'logo.svg' not in m.group(1):
@@ -70,7 +66,7 @@ def main():
         out, s = [], set()
         for i in imgs:
             i = i.replace('&', '&amp;')
-            if i not in s and 'pollinations' not in i:
+            if i not in s and 'pollinations.ai' not in i:
                 s.add(i); out.append(i)
         return out[:6]
 
@@ -80,8 +76,9 @@ def main():
         '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"',
         '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
         '',
-        f'    <!-- FULL CANONICAL SITEMAP for GSC — {TODAY} -->',
+        f'    <!-- FULL SITE SITEMAP — rebuilt {TODAY} -->',
         '    <!-- AUTO-BLOG-SITEMAP-START -->',
+        '    <!-- New daily blog URLs are inserted directly below this marker by generate-blog.mjs -->',
     ]
     for url, rel, pr, cf, mtime in pages:
         lastmod = TODAY if rel in ('index.html', 'tools.html', 'blogs.html', 'web-stories.html') else mtime
@@ -102,8 +99,9 @@ def main():
             lines += ['        <image:image>', f'            <image:loc>{img}</image:loc>', '        </image:image>']
         lines.append('    </url>')
     lines += ['    <!-- AUTO-BLOG-SITEMAP-END -->', '</urlset>', '']
-    (ROOT / 'sitemap.xml').write_text('\n'.join(lines), encoding='utf-8')
-    print(f'Wrote sitemap.xml with {len(pages)} canonical URLs')
+    out = ROOT / 'sitemap.xml'
+    out.write_text('\n'.join(lines), encoding='utf-8')
+    print(f'Wrote {out} with {len(pages)} URLs')
 
 if __name__ == '__main__':
     main()

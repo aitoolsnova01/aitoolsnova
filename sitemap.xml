@@ -3,9 +3,8 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-    <!-- FULL SITE SITEMAP — rebuilt 2026-08-17 -->
+    <!-- FULL CANONICAL SITEMAP for GSC — 2026-08-17 -->
     <!-- AUTO-BLOG-SITEMAP-START -->
-    <!-- New daily blog URLs are inserted directly below this marker by generate-blog.mjs -->
     <url>
         <loc>https://aitoolsnova.com/</loc>
         <lastmod>2026-08-17</lastmod>
