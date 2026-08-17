@@ -1692,4 +1692,12 @@
         </image:image>
     </url>
     <!-- AUTO-BLOG-SITEMAP-END -->
+
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/top-100-ai-tools-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>
