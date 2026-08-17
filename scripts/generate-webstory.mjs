@@ -42,8 +42,8 @@ const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
 })();
 
 const MODELS = process.env.GROQ_MODEL
-    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-20b']
-    : ['openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'openai/gpt-oss-20b'];
+    ? [process.env.GROQ_MODEL, 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it']
+    : ['llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it', 'openai/gpt-oss-120b'];
 
 if (!GROQ_KEY) {
     console.error('❌ GROQ_API_KEY env var missing. Get free key at https://console.groq.com/keys');
@@ -105,7 +105,7 @@ async function callGroq(messages) {
                         model,
                         messages,
                         temperature: 0.85,
-                        max_tokens: 2200,
+                        max_tokens: 1800,
                         response_format: { type: 'json_object' },
                     }),
                 });
@@ -135,7 +135,7 @@ async function callGroq(messages) {
                     model: 'deepseek-chat',
                     messages,
                     temperature: 0.85,
-                    max_tokens: 2200,
+                    max_tokens: 1800,
                     response_format: { type: 'json_object' },
                 }),
             });

@@ -48,7 +48,7 @@ jobs:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
           echo "First attempt failed — waiting 20s then retrying full generator..."
-          sleep 20
+          sleep 45
           node scripts/generate-blog.mjs
 
       - name: 🚀 Commit and push new blog
