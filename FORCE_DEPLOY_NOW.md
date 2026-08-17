@@ -1,59 +1,70 @@
-# 🚨 Live site deploy nahi ho raha — FIX (2 minutes)
+# 🚨 Cloudflare deploy — RIGHT NOW (token issue explained)
 
-## Diagnosis
-- GitHub `main` latest commit: **already pushed** (`0b7735b` + HD image commits)
-- Live `aitoolsnova.com` still shows **last-modified ~05:55 UTC** + old homepage text (`live user activity`)
-- Meaning: **Cloudflare Pages is NOT picking Git pushes** (webhook off / wrong project / auto-deploy disabled)
-- GitHub Action "Deploy to Cloudflare Pages" **failed** because secrets `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` are missing on the repo
+## Live site setup (confirmed)
+- DNS: `aitoolsnova.com` → **CNAME `aitoolsnova.pages.dev`** (Cloudflare Pages)
+- Project name is almost certainly: **`aitoolsnova`**
+- GitHub `main` already has all fixes
+- Live CDN still on old build (`last-modified` ~05:55, still shows `live user activity`)
 
-Code push alone cannot update the live CDN until Cloudflare rebuilds.
+## Why the token you sent cannot deploy
+API test result:
+- ✅ Token valid for **Account** + **Zone DNS** (`aitoolsnova.com`)
+- ❌ **Cloudflare Pages API = Authentication error (10000)**
+- So this token is missing: **Account → Cloudflare Pages → Edit**
+
+Without that permission, neither this server nor GitHub Actions can run:
+`wrangler pages deploy`
 
 ---
 
-## Option A — Manual deploy (fastest, no secrets)
+## FIX A — Dashboard manual deploy (fastest, 60 seconds)
 
-1. Open https://dash.cloudflare.com
-2. **Workers & Pages** → project connected to `aitoolsnova01/aitoolsnova` (often named `aitoolsnova`)
-3. Tab **Deployments**
-4. If a failed build exists → **⋯ → Retry deployment**
-5. If no new build for latest commit → **Create deployment** / **Retry** from production
-6. Wait until status = **Success**
-7. Hard refresh site: Ctrl+F5  
-   Check homepage source should contain `about-aitoolsnova` and NOT `live user activity`
+1. https://dash.cloudflare.com → login  
+2. **Workers & Pages** → open project **`aitoolsnova`**  
+3. **Deployments** → find latest → **⋯ → Retry deployment**  
+   OR **Create deployment** from branch **`main`**  
+4. Wait for **Success**  
+5. **Caching** → **Purge Everything** (optional but recommended)  
+6. Hard refresh https://aitoolsnova.com (Ctrl+F5)
 
-### Also turn auto-deploy back ON
-**Settings → Builds & deployments**
+### Success check
+Page source must contain: `about-aitoolsnova`  
+Must NOT contain: `live user activity`
+
+### Turn auto-deploy ON
+Workers & Pages → `aitoolsnova` → **Settings → Builds & deployments**
 - Production branch: `main`
-- Build command: *(empty)* OR `echo Build completed`
-- Build output directory: `/` or empty (this repo is static root)
-- Root directory: `/`
-- Automatic deployments: **On**
+- Build command: empty
+- Build output directory: empty or `/`
+- Automatic deployments: **Enabled**
+- Connected repo: `aitoolsnova01/aitoolsnova`
 
 ---
 
-## Option B — Auto deploy via GitHub Action (recommended long-term)
+## FIX B — New API token (so I / GitHub Action can deploy)
 
-1. Cloudflare → My Profile → **API Tokens** → Create Token  
-   Permission: **Account → Cloudflare Pages → Edit**
-2. Copy **Account ID** (dashboard sidebar)
-3. GitHub → `aitoolsnova01/aitoolsnova` → **Settings → Secrets and variables → Actions**
-   - `CLOUDFLARE_API_TOKEN` = token
-   - `CLOUDFLARE_ACCOUNT_ID` = account id
-   - Optional `CF_PAGES_PROJECT` = exact Pages project name if not `aitoolsnova`
-4. GitHub → **Actions → Deploy to Cloudflare Pages → Run workflow**
-5. Wait for green ✅
+1. https://dash.cloudflare.com/profile/api-tokens  
+2. **Create Token** → **Create Custom Token**  
+3. Permissions (exact):
+   - **Account** → **Cloudflare Pages** → **Edit**
+   - **Account** → **Account Settings** → **Read** (optional)
+4. Account Resources: **Include → your account**
+5. **NO IP restriction** (important)
+6. Create → copy token once
+
+7. GitHub → `aitoolsnova01/aitoolsnova` → **Settings → Secrets and variables → Actions**
+   - `CLOUDFLARE_API_TOKEN` = new token  
+   - `CLOUDFLARE_ACCOUNT_ID` = `e1fbd9456c1d1e2c8ae725dfe2f20d53`  
+   - optional `CF_PAGES_PROJECT` = `aitoolsnova`
+
+8. GitHub → **Actions → Deploy to Cloudflare Pages → Run workflow**
+
+OR paste the new **Pages Edit** token here and say “deploy” — then I can push live from here.
 
 ---
 
-## Verify live is new
-```bash
-curl -sI https://aitoolsnova.com/ | grep -i last-modified
-curl -s https://aitoolsnova.com/ | grep -o 'about-aitoolsnova\|live user activity'
-```
-Expect: `about-aitoolsnova` present, `live user activity` gone.
-
----
-
-## After deploy
-- Cloudflare → Caching → **Purge Everything** (if still old)
-- GSC → resubmit `sitemap.xml`
+## Security
+Revoke every token you pasted in chat after deploy:
+- Old IP-restricted tokens
+- This Zone-only token  
+Create a fresh one only when needed.
