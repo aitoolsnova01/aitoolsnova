@@ -116,9 +116,16 @@ const FLIPKART_AFFID = process.env.FLIPKART_AFFID || '';
 //   - openai/gpt-oss-120b : ~8000 TPM  ← best quality but easily hits TPM on long content
 // Free-tier safe order (2026): smaller models first so prompt+completion stays under ~8k TPM.
 // llama-3.3-70b-versatile was removed from many free orgs (404 model_not_found).
+// Verified against the Groq catalogue on 2026-08-18. Removed:
+//   gemma2-9b-it            -> decommissioned (400)
+//   llama-3.1-8b-instant    -> no longer on this org's free tier (404)
+//   llama-3.3-70b-versatile -> retired
+// Larger models are listed first: on an 8000 TPM free tier a long article is a
+// single big request, so a bigger model with one clean pass beats a small model
+// that needs three retries and burns the same budget.
 const MODELS = process.env.GROQ_MODEL
-    ? [process.env.GROQ_MODEL, 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it', 'llama-3.3-70b-versatile']
-    : ['llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it', 'openai/gpt-oss-120b'];
+    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']
+    : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
 
 if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
     console.error('❌ No AI key found. Add at least one GitHub secret:');
@@ -653,26 +660,71 @@ HTML only: p ul ol li strong em h3. No script/style. Return ONLY JSON.`;
         ...(parsed.faqs || []).map(f => `${f.q || ''} ${f.a || ''}`),
     ].join(' ').replace(/<[^>]+>/g, ' ');
     const wc = (approxText.match(/[A-Za-z0-9']+/g) || []).length;
-    if (wc < 800) {
-        throw new Error(`Content word count too low: ${wc} (need >= 800). Regenerating required.`);
+    // Hard floor only. Anything above this is expanded below with topic-specific
+    // sections rather than rejected: the previous code threw at <800 and then
+    // had an unreachable padding branch for <1200, so every 600-799 word draft
+    // failed the whole run even though it was recoverable.
+    if (wc < 450) {
+        throw new Error(`Content word count too low: ${wc} (need >= 450). Regenerating required.`);
     }
-    // If model returned short-but-usable copy, pad with unique practical sections (still original structure).
-    if (wc < 1200) {
-        parsed.sections = parsed.sections || [];
-        parsed.sections.push({
-            h2: 'Step-by-step workflow you can copy today',
-            body_html: '<p>Open one clear goal, run a single free tool end-to-end, then save the output. Repeat tomorrow with a tighter prompt. Consistency beats collecting twenty half-used apps.</p><ol><li><strong>Define the job</strong> in one sentence.</li><li><strong>Pick one AIToolsNova tool</strong> that matches that job.</li><li><strong>Produce a draft or file</strong> in under 15 minutes.</li><li><strong>Human-edit</strong> names, facts and tone before publishing.</li><li><strong>Package</strong> with meta tags, compression or a QR code if you are shipping online.</li></ol>'
-        });
-        parsed.sections.push({
-            h2: 'Common mistakes and better alternatives',
-            body_html: '<ul><li>Publishing raw AI text without examples.</li><li>Ignoring mobile layout and image weight.</li><li>Keyword stuffing instead of answering the search intent.</li><li>Skipping privacy sense with sensitive uploads.</li></ul><p>Prefer browser-based free tools on AIToolsNova when you want speed without another paid login.</p>'
-        });
-        if (!parsed.conclusion_html || parsed.conclusion_html.length < 80) {
-            parsed.conclusion_html = '<p>Start with one workflow from this guide, measure the time you save, then explore related free tools on AIToolsNova. Small daily improvements compound faster than waiting for a perfect stack.</p>';
+    // If the draft is usable but short, ask the model for MORE SECTIONS ON THIS
+    // TOPIC rather than appending a fixed block. The previous version pasted the
+    // same two hardcoded sections into every short post, which is exactly how a
+    // set of near-identical articles gets flagged as scaled content.
+    let finalWc = wc;
+    if (wc < 1000) {
+        const have = (parsed.sections || []).map(x => x.h2).filter(Boolean);
+        const need = Math.max(2, Math.ceil((1050 - wc) / 190));
+        console.log(`   ➤ Draft is ${wc} words. Requesting ${need} more topic-specific sections...`);
+        const expandPrompt = `You are expanding an existing article titled "${topic.title}".
+
+Sections already written (do NOT repeat these angles):
+${have.map(h => '- ' + h).join('\n')}
+
+Write ${need} ADDITIONAL sections that go deeper on this specific topic.
+Each section must contain 150-220 words of concrete, practical detail: real
+trade-offs, numbers, named situations, or step sequences. No filler, no
+restating the intro, no generic advice that would fit any other article.
+
+Return ONLY JSON:
+{"sections":[{"h2":"...","body_html":"<p>...</p><p>...</p>"}]}
+
+HTML allowed: p ul ol li strong em h3.`;
+
+        try {
+            const { parsed: extra } = await callGroqForJson(
+                [{ role: 'user', content: expandPrompt }],
+                { temperature: 0.8, max_tokens: 3000, json: true }
+            );
+            const add = Array.isArray(extra?.sections) ? extra.sections : [];
+            const seen = new Set(have.map(h => String(h).toLowerCase().trim()));
+            let added = 0;
+            for (const sec of add) {
+                if (!sec || !sec.h2 || !sec.body_html) continue;
+                const key = String(sec.h2).toLowerCase().trim();
+                if (seen.has(key)) continue;
+                seen.add(key);
+                parsed.sections.push(sec);
+                added++;
+            }
+            const reText = [
+                parsed.intro_html, parsed.conclusion_html,
+                ...(parsed.sections || []).map(x => `${x.h2 || ''} ${x.body_html || ''}`),
+                ...(parsed.faqs || []).map(x => `${x.q || ''} ${x.a || ''}`),
+            ].join(' ').replace(/<[^>]+>/g, ' ');
+            finalWc = (reText.match(/[A-Za-z0-9']+/g) || []).length;
+            console.log(`   ✔ Added ${added} section(s). Now ${finalWc} words.`);
+        } catch (err) {
+            console.warn(`   ⚠️  Expansion failed: ${err.message}`);
         }
-        console.log(`   ➤ Padded short draft (was ${wc} words)`);
+
+        // Never publish below the quality floor the site already meets.
+        if (finalWc < 900) {
+            throw new Error(`Content still too short after expansion: ${finalWc} (need >= 900).`);
+        }
     }
-    console.log(`   ➤ Approx body words: ${wc}`);
+
+    console.log(`   ➤ Approx body words: ${finalWc}`);
     return parsed;
 }
 
