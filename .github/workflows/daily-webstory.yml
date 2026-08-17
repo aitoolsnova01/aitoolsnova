@@ -13,7 +13,7 @@ permissions:
 jobs:
   generate-webstory:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: 📥 Checkout repo
         uses: actions/checkout@v4
@@ -42,6 +42,7 @@ jobs:
           git config user.email "bot@aitoolsnova.com"
           git pull --rebase origin main || true
           git add web-stories/ web-stories.html sitemap.xml
+          git add -A web-stories/ web-stories.html sitemap.xml
           if git diff --staged --quiet; then
             echo "No web-story changes to commit."
             exit 0

@@ -12,6 +12,47 @@
 # NOTE: Pages _redirects cannot match on hostname. The www -> apex 301 must be
 # created as a Cloudflare **Redirect Rule** in the dashboard (see CLOUDFLARE-GSC-ADSENSE.md).
 
+# ---- Bot / scanner 404 noise (24h CF analytics) ----
+/.env                                  /                                 301
+/.env.*                                /                                 301
+/xmlrpc.php                            /                                 301
+/wp-login.php                          /                                 301
+/wp-admin                              /                                 301
+/wp-admin/*                            /                                 301
+/wordpress                             /                                 301
+/wp                                    /                                 301
+/wp-content                            /                                 301
+/wp-content/*                          /                                 301
+/wp-includes/*                         /                                 301
+/admin                                 /                                 301
+/administrator                         /                                 301
+/phpmyadmin                            /                                 301
+/.git/*                                /                                 301
+/.git/config                           /                                 301
+/vendor/*                              /                                 301
+/node_modules/*                        /                                 301
+/package.json                          /                                 301
+/composer.json                         /                                 301
+/web.config                            /                                 301
+/Dockerfile                            /                                 301
+/api                                   /tools                            301
+/api/                                  /tools                            301
+/cdn-cgi/l/email-protection            /contact                          301
+/feed                                  /blogs                            301
+/feed/                                 /blogs                            301
+/rss                                   /blogs                            301
+/rss/                                  /blogs                            301
+/atom.xml                              /sitemap.xml                      301
+/sitemap_index.xml                     /sitemap.xml                      301
+/sitemap.txt                           /sitemap.xml                      301
+/home                                  /                                 301
+/index.php                             /                                 301
+/main                                  /                                 301
+/blog                                  /blogs                            301
+/search                                /tools                            301
+/search/                               /tools                            301
+/search/*                              /tools                            301
+
 /tools/                                /tools                           301
 /blogs/                                /blogs                           301
 /blog/                                 /blogs                           301

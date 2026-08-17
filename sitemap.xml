@@ -65,7 +65,7 @@
             <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
         </image:image>
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ec1ed1b1d78bf6ef.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb.jpg</image:loc>
@@ -74,10 +74,10 @@
             <image:loc>https://aitoolsnova.com/web-stories/img/0e0d62a59cebc29b.jpg</image:loc>
         </image:image>
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb.jpg</image:loc>
         </image:image>
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/682e93251e719636.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1527,6 +1527,36 @@
         </image:image>
     </url>
     <url>
+        <loc>https://aitoolsnova.com/web-stories/top-100-ai-tools-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/top-100-ai-tools-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ec1ed1b1d78bf6ef.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ec192c2628b2d3df.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/6ade4710f1fd4be0.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/3c28523515c78e8d.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/26c6fa40ac4454ad.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/cd1e598431975053.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
         <loc>https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop</loc>
         <lastmod>2026-08-17</lastmod>
         <changefreq>monthly</changefreq>
@@ -1692,12 +1722,4 @@
         </image:image>
     </url>
     <!-- AUTO-BLOG-SITEMAP-END -->
-
-    <url>
-        <loc>https://aitoolsnova.com/web-stories/top-100-ai-tools-2026</loc>
-        <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
 </urlset>
