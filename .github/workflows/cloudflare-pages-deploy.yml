@@ -16,24 +16,33 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check secrets
+        id: check
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          # This workflow is a manual backup. Cloudflare Pages already deploys
+          # every push through its own Git integration, so missing secrets are
+          # not an error - they just mean this optional path is not configured.
+          # Failing here produced a red X on every single push and buried the
+          # real failures (the daily blog job) in the run list.
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "::error::Missing CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID in repo Secrets"
-            echo "Add them at: GitHub → Settings → Secrets → Actions"
-            echo "OR deploy manually: Cloudflare → Workers & Pages → Deployments → Retry deployment"
-            exit 1
+            echo "::notice::Wrangler secrets not set - skipping. Cloudflare Pages Git integration handles deploys."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/checkout@v4
+        if: steps.check.outputs.configured == 'true'
 
       - uses: actions/setup-node@v4
+        if: steps.check.outputs.configured == 'true'
         with:
           node-version: '22'
 
       - name: Deploy with Wrangler
+        if: steps.check.outputs.configured == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
