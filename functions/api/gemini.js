@@ -218,8 +218,10 @@ export async function onRequest(context) {
 
     const cfModel = env.CLOUDFLARE_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
     const groqChain = env.GROQ_MODEL
-      ? [env.GROQ_MODEL, 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant']
-      : ['openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
+      // llama-3.3-70b-versatile is retired and llama-3.1-8b-instant returns 404
+      // for this org, so both only added latency before the Gemini fallback.
+      ? [env.GROQ_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']
+      : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
 
     async function callCloudflare() {
       if (!cfToken || !cfAccountId) return { ok: false, error: 'Cloudflare env vars missing' };

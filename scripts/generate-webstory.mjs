@@ -44,8 +44,10 @@ const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
 })();
 
 const MODELS = process.env.GROQ_MODEL
-    ? [process.env.GROQ_MODEL, 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it']
-    : ['llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it', 'openai/gpt-oss-120b'];
+    // Same catalogue cleanup as the blog generator: gemma2-9b-it is
+    // decommissioned (400) and llama-3.1-8b-instant 404s for this org.
+    ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']
+    : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
 
 if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
     console.error('❌ Need GROQ_API_KEY and/or GEMINI_API_KEY and/or DEEPSEEK_API_KEY');

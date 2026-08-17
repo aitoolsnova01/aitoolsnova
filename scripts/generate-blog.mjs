@@ -674,7 +674,7 @@ HTML only: p ul ol li strong em h3. No script/style. Return ONLY JSON.`;
     let finalWc = wc;
     if (wc < 1000) {
         const have = (parsed.sections || []).map(x => x.h2).filter(Boolean);
-        const need = Math.max(2, Math.ceil((1050 - wc) / 190));
+        const need = Math.max(3, Math.ceil((1150 - wc) / 150));
         console.log(`   ➤ Draft is ${wc} words. Requesting ${need} more topic-specific sections...`);
         const expandPrompt = `You are expanding an existing article titled "${topic.title}".
 
