@@ -53,7 +53,7 @@ async function localizeBlogHero(html) {
             const out = await sharp(file)
                 .resize(1600, 900, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
                 .sharpen({ sigma: 0.5 })
-                .jpeg({ quality: 90, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
+                .jpeg({ quality: 92, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
                 .toBuffer();
             await fs.writeFile(file, out);
             console.log(`   \u2191 upscaled ${path.basename(file)} to 1600x900 for Discover`);

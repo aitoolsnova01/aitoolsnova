@@ -235,7 +235,7 @@ async function upscaleForWebStories(file) {
         const out = await sharp(file)
             .resize(1080, 1920, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
             .sharpen({ sigma: 0.6 })
-            .jpeg({ quality: 90, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
+            .jpeg({ quality: 92, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
             .toBuffer();
         await fs.writeFile(file, out);
         console.log(`   ↑ HD ${path.basename(file)} ${(meta.width||'?')}x${(meta.height||'?')} → 1080x1920`);
