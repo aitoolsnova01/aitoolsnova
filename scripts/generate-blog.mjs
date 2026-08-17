@@ -874,6 +874,17 @@ function buildHtml(topic, content, todayISO, todayHuman) {
         "mainEntity": ${JSON.stringify(faqSchema)}
     }
     </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aitoolsnova.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://aitoolsnova.com/blogs" },
+            { "@type": "ListItem", "position": 3, "name": ${JSON.stringify(topic.title)}, "item": ${JSON.stringify(canonicalUrl)} }
+        ]
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -931,6 +942,14 @@ function buildHtml(topic, content, todayISO, todayHuman) {
     <header class="header">
         <div class="container">
             <a href="../" class="logo">🤖 <span>AIToolsNova</span></a>
+            <nav class="desktop-menu" aria-label="Main Navigation" style="display:flex;gap:20px;align-items:center;font-weight:600">
+                <a href="../index">Home</a>
+                <a href="../tools">Tools</a>
+                <a href="../blogs">Blogs</a>
+                <a href="../web-stories">Web Stories</a>
+                <a href="../about">About</a>
+                <a href="../contact">Contact</a>
+            </nav>
             <a href="../blogs" class="back-btn">← All Blogs</a>
         </div>
     </header>
