@@ -297,6 +297,7 @@
   // ---------- Trending Tools (home only) ----------
   function buildTrending() {
     if (!isHome) return;
+    if (document.getElementById('trending-widget') || document.getElementById('trending-tools')) return;
     const section = document.createElement("section");
     section.className = "atn-trending atn-fade-in";
     section.id = "trending-tools";

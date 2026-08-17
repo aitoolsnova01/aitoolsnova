@@ -422,147 +422,17 @@ function gtag(){ dataLayer.push(arguments); }
         </script>
 
                 
-        <section class="tools-section" id="trending-widget" aria-labelledby="trending-title" style="padding:50px 0;background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);color:#F8FAFC;">
-            <div class="container">
-                <div style="text-align:center;margin-bottom:30px;">
-                    <span style="display:inline-block;padding:4px 12px;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;border-radius:50px;font-size:.75rem;font-weight:800;letter-spacing:1px;margin-bottom:8px;">🔥 TRENDING NOW</span>
-                    <h2 id="trending-title" style="color:#F8FAFC;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin:0;">Top 3 Trending AI Tools This Week</h2>
-                    <p style="color:#94A3B8;margin-top:8px;">Hand-picked favourites · Rotates so you can discover more free tools</p>
-                </div>
-                <div id="trendingCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1080px;margin:0 auto;">
-                    
-                </div>
-            </div>
-        </section>
-        <script>
-        (function(){
-            // Curated pool — will rotate 3 at a time. Uses your existing tool pages, no external calls.
-            var TRENDING_POOL = [
-                {emoji:'💬', name:'AI Chat', desc:'Ask any question, get instant expert answers.', href:'tools/ai-chat', badge:'HOT'},
-                {emoji:'🎨', name:'Background Remover', desc:'One-click transparent background — 100% free.', href:'tools/background-remover', badge:'NEW'},
-                {emoji:'✍️', name:'AI Writer', desc:'Generate blog posts, emails & captions in seconds.', href:'tools/ai-writer', badge:'HOT'},
-                {emoji:'🖼️', name:'AI Image Generator', desc:'Turn any idea into a stunning AI-generated image.', href:'tools/ai-image-generator', badge:'HOT'},
-                {emoji:'📄', name:'Resume Builder', desc:'ATS-friendly resumes with AI suggestions.', href:'tools/resume-builder', badge:'TOP'},
-                {emoji:'📺', name:'YouTube Title', desc:'Generate viral, SEO-optimised YouTube titles.', href:'tools/youtube-title', badge:'HOT'},
-                {emoji:'📱', name:'Instagram Caption', desc:'Catchy captions + hashtags for every post.', href:'tools/instagram-caption', badge:'NEW'},
-                {emoji:'🔑', name:'Keyword Density', desc:'Instant SEO keyword analysis for your content.', href:'tools/keyword-density', badge:'TOP'},
-                {emoji:'🏷️', name:'Meta Tag Generator', desc:'Perfect meta title + description in one click.', href:'tools/meta-tag-generator', badge:'HOT'},
-                {emoji:'📩', name:'Email Generator', desc:'Professional business emails in 3 seconds.', href:'tools/email-generator', badge:'NEW'}
-            ];
-            var container = document.getElementById('trendingCards');
-            if (!container) return;
-            // Deterministic-random rotation seeded by day+hour so all users see same set for that hour
-            function pickThree(seed){
-                var pool = TRENDING_POOL.slice();
-                var picks = [];
-                for (var i=0;i<3 && pool.length;i++){
-                    var idx = (seed + i*7 + i*i) % pool.length;
-                    picks.push(pool[idx]);
-                    pool.splice(idx,1);
-                }
-                return picks;
-            }
-            function render(picks){
-                var badgeColors = {HOT:'#EF4444', NEW:'#10B981', TOP:'#F59E0B'};
-                container.innerHTML = picks.map(function(t){
-                    var bg = badgeColors[t.badge] || '#6366F1';
-                    return '<a href="'+t.href+'" class="trend-card" style="text-decoration:none;color:inherit;background:rgba(255,255,255,.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:24px 22px;transition:transform .3s ease, background .3s ease;display:block;position:relative;overflow:hidden;" onmouseover="this.style.transform=\'translateY(-4px)\';this.style.background=\'rgba(255,255,255,.08)\'" onmouseout="this.style.transform=\'\';this.style.background=\'rgba(255,255,255,.04)\'">' +
-                        '<span style="position:absolute;top:14px;right:14px;background:'+bg+';color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1px;padding:3px 10px;border-radius:50px;">'+t.badge+'</span>' +
-                        '<div style="font-size:2.4rem;margin-bottom:8px;">'+t.emoji+'</div>' +
-                        '<h3 style="font-size:1.15rem;font-weight:800;margin:0 0 6px;color:#F8FAFC;">'+t.name+'</h3>' +
-                        '<p style="color:#CBD5E1;font-size:.9rem;margin:0 0 12px;line-height:1.5;">'+t.desc+'</p>' +
-                        '<span style="color:#818CF8;font-weight:700;font-size:.85rem;">Try it now →</span>' +
-                    '</a>';
-                }).join('');
-            }
-            var now = new Date();
-            var seed = now.getUTCDate() * 24 + now.getUTCHours();
-            render(pickThree(seed));
-            // Rotate visible set every 8 seconds (client-side, no page reload)
-            var rotator = setInterval(function(){
-                seed += 1;
-                render(pickThree(seed));
-            }, 8000);
-            // Pause rotation when tab hidden to save CPU
-            document.addEventListener('visibilitychange', function(){
-                if (document.hidden) clearInterval(rotator);
-            });
-        })();
-        </script>
+        
 
         
-        <section id="ai-blog-widget" style="padding:50px 0;background:linear-gradient(135deg,#EEF2FF 0%,#FDF4FF 100%);">
-            <div class="container" style="max-width:820px;">
-                <div style="text-align:center;margin-bottom:24px;">
-                    <span style="display:inline-block;background:#4F46E5;color:#fff;padding:5px 14px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:.5px;margin-bottom:10px;">🤖 AI QUICK DRAFT</span>
-                    <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:6px;color:#0F172A;">Generate a Full Blog Draft in One Click</h2>
-                    <p style="color:#64748B;max-width:520px;margin:auto;font-size:.95rem;">Enter any topic and get an SEO-ready title, engaging intro, and complete outline — powered by AI.</p>
-                </div>
-                <div style="background:#fff;padding:22px;border-radius:18px;box-shadow:0 12px 35px rgba(15,23,42,.08);border:1px solid #E2E8F0;">
-                    <label for="blogTopicInput" style="display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:#0F172A;">✍️ Blog Topic</label>
-                    <input type="text" id="blogTopicInput" data-testid="blog-topic-input" placeholder="e.g. best AI tools for content creators in 2026"
-                           style="width:100%;padding:14px 16px;border:2px solid #E2E8F0;border-radius:12px;font-size:1rem;font-family:inherit;background:#F8FAFC;transition:.3s;outline:none;" />
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-                        <button id="blogWidgetGen" data-testid="blog-widget-generate"
-                                style="flex:1;min-width:180px;padding:14px 24px;border:none;border-radius:50px;background:linear-gradient(135deg,#4F46E5,#06B6D4);color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;transition:.3s;">✨ Generate Blog Draft</button>
-                        <button id="blogWidgetCopy" data-testid="blog-widget-copy" style="display:none;padding:14px 20px;border:1px solid #E2E8F0;border-radius:50px;background:#F8FAFC;font-weight:700;font-size:.9rem;cursor:pointer;">📋 Copy</button>
-                    </div>
-                    <div id="blogWidgetOutput" data-testid="blog-widget-output"
-                         style="display:none;margin-top:18px;padding:18px;background:#F8FAFC;border-radius:12px;border:1px solid #E2E8F0;white-space:pre-wrap;font-size:.92rem;line-height:1.75;color:#0F172A;max-height:420px;overflow-y:auto;"></div>
-                    <p style="margin-top:12px;font-size:.78rem;color:#94A3B8;text-align:center;">💡 Want the full article? Try our <a href="tools/ai-writer" style="color:#4F46E5;font-weight:600;">AI Writer</a> tool.</p>
-                </div>
-            </div>
-        </section>
-
-        <script>
-            (function(){
-                const btn = document.getElementById('blogWidgetGen');
-                const input = document.getElementById('blogTopicInput');
-                const out = document.getElementById('blogWidgetOutput');
-                const copyBtn = document.getElementById('blogWidgetCopy');
-                if (!btn) return;
-                btn.addEventListener('click', async function(){
-                    const topic = (input.value || '').trim();
-                    if (!topic) { input.focus(); input.style.borderColor='#EF4444'; setTimeout(()=>input.style.borderColor='#E2E8F0',1500); return; }
-                    out.style.display = 'block';
-                    out.textContent = '⏳ AI is drafting your blog...';
-                    copyBtn.style.display = 'none';
-                    const originalTxt = btn.textContent;
-                    btn.disabled = true; btn.textContent = '⏳ Generating...';
-                    const prompt = `You are an expert blog writer. For the topic "${topic}", generate a complete blog draft with EXACTLY this structure (use plain text, no markdown symbols like ** or ##):\n\n=== SEO TITLE ===\n(One catchy title, 55-60 chars, includes primary keyword and a power word)\n\n=== META DESCRIPTION ===\n(150-160 chars, CTR-focused, includes keyword)\n\n=== INTRODUCTION ===\n(150-word engaging intro that hooks the reader, ends with what they'll learn)\n\n=== OUTLINE ===\n(6-8 H2 section headings, each followed by 2-3 bullet points of what to cover under it)\n\n=== 5 SEO KEYWORDS ===\n(comma-separated primary + LSI keywords)\n\nBe concrete and specific to the topic. No meta commentary.`;
-                    try {
-                        const data = (window.ATN && ATN.callAI)
-                            ? await ATN.callAI({ message: prompt, tool: 'writer', timeoutMs: 60000 }).catch(e => ({ error: e.message }))
-                            : await (async () => { const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'writer' }) }); const j = await res.json().catch(()=>({})); if (!res.ok) j.error = j.error || 'fail'; return j; })();
-                        if (!data.error && data.reply) {
-                            out.textContent = data.reply;
-                            copyBtn.style.display = 'inline-block';
-                            if (window.gtag) gtag('event','blog_widget_generate',{topic_length: topic.length});
-                        } else {
-                            out.textContent = '❌ AI service unavailable right now. Please try again in a moment, or use our full AI Writer tool.';
-                        }
-                    } catch(err) {
-                        out.textContent = '❌ Network error. Please check your connection and try again.';
-                    } finally {
-                        btn.disabled = false; btn.textContent = originalTxt;
-                    }
-                });
-                copyBtn && copyBtn.addEventListener('click', function(){
-                    navigator.clipboard.writeText(out.textContent).then(()=>{
-                        copyBtn.textContent = '✅ Copied!';
-                        setTimeout(()=>copyBtn.textContent='📋 Copy',1500);
-                    });
-                });
-                input.addEventListener('keydown', e => { if (e.key==='Enter'){ e.preventDefault(); btn.click(); }});
-            })();
-        </script>
+        
 
                 
         <section class="tools-section" id="tools" aria-labelledby="tools-title">
             <div class="container">
                 <div class="section-title">
                     <h2 id="tools-title">Browse tools by category</h2>
-                    <p class="cat-hint" id="toolsCatHint">Har category ka colored box neeche hai. <strong>Box pe tap</strong> karo — uske tools khul jayenge.</p>
+                    <p class="cat-hint" id="toolsCatHint">Tap a colored category bar to open its tools. Tap again to close.</p>
                 </div>
 
                 
@@ -906,24 +776,6 @@ function gtag(){ dataLayer.push(arguments); }
         </section>
 
         
-        <section class="featured-categories" aria-labelledby="featured-cat-title">
-            <div class="container">
-                <div class="section-title">
-                    <h2 id="featured-cat-title">Explore More Categories</h2>
-                </div>
-                <div class="category-grid" id="homeCategoryGrid2" role="tablist" aria-label="More tool categories">
-                    <a href="#ai" data-cat="ai">🤖 <span>AI Tools</span></a>
-                    <a href="#image" data-cat="image">🖼 <span>Image Tools</span></a>
-                    <a href="#seo" data-cat="seo">📈 <span>SEO Tools</span></a>
-                    <a href="#social" data-cat="social">📱 <span>Social Media</span></a>
-                    <a href="#pdf" data-cat="pdf">📄 <span>PDF Tools</span></a>
-                    <a href="#calculator" data-cat="calculator">🧮 <span>Calculators</span></a>
-                    <a href="#utility" data-cat="utility">⚙ <span>Utilities</span></a>
-                </div>
-            </div>
-        </section>
-
-        
         <section class="trusted-section" aria-labelledby="trusted-title">
             <div class="container">
                 <div class="section-title">
@@ -1204,6 +1056,7 @@ function gtag(){ dataLayer.push(arguments); }
 <script src="/js/ai-client.js" defer></script>
 
 
+
 <script>
 (function(){
   var toolsSection = document.getElementById('tools');
@@ -1214,30 +1067,50 @@ function gtag(){ dataLayer.push(arguments); }
     ai: 'AI Tools', image: 'Image Tools', seo: 'SEO Tools', social: 'Social Media',
     pdf: 'PDF Tools', calculator: 'Calculators', utility: 'Utilities'
   };
+  var openId = null;
 
-  function showCat(id, pushHash, scrollTo){
-    if (!labels[id]) id = 'ai';
-    // top category cards
+  function setHint(id){
+    if (!hint) return;
+    if (!id) {
+      hint.innerHTML = 'Tap a <strong>colored category bar</strong> to open its tools. Tap the same bar again to close.';
+      return;
+    }
+    hint.innerHTML = 'Open: <strong>' + (labels[id] || id) + '</strong> — tap the same bar to close, or another to switch.';
+  }
+
+  function showCat(id, pushHash, scrollTo, allowToggleClose){
+    if (id && !labels[id]) id = null;
+
+    // Toggle close if clicking the already-open category
+    if (allowToggleClose && id && openId === id) {
+      id = null;
+    }
+
+    openId = id;
+
     document.querySelectorAll('[data-cat]').forEach(function(tab){
-      var on = tab.getAttribute('data-cat') === id;
-      tab.classList.toggle('active', on);
+      var on = id && tab.getAttribute('data-cat') === id;
+      tab.classList.toggle('active', !!on);
       tab.setAttribute('aria-selected', on ? 'true' : 'false');
     });
-    // accordion panels: all headings stay visible; only one body open
+
     toolsSection.querySelectorAll('.tool-category').forEach(function(panel){
-      var on = panel.id === id || panel.getAttribute('data-cat-panel') === id;
-      panel.classList.toggle('is-active', on);
+      var pid = panel.id || panel.getAttribute('data-cat-panel');
+      var on = id && pid === id;
+      panel.classList.toggle('is-active', !!on);
       panel.setAttribute('aria-expanded', on ? 'true' : 'false');
     });
-    if (hint) {
-      hint.innerHTML = 'Open: <strong>' + labels[id] + '</strong> — dusre colored box pe tap karke switch karo.';
-    }
-    var title = document.getElementById('tools-title');
-    if (title) title.textContent = 'Browse tools by category';
+
+    setHint(id);
+
     if (pushHash !== false) {
-      try { history.replaceState(null, '', '#' + id); } catch (e) {}
+      try {
+        if (id) history.replaceState(null, '', '#' + id);
+        else history.replaceState(null, '', location.pathname + location.search);
+      } catch (e) {}
     }
-    if (scrollTo) {
+
+    if (scrollTo && id) {
       var panel = document.getElementById(id);
       if (panel) {
         var top = panel.getBoundingClientRect().top + window.pageYOffset - 78;
@@ -1246,30 +1119,30 @@ function gtag(){ dataLayer.push(arguments); }
     }
   }
 
-  // Click top category boxes OR accordion headings
   document.addEventListener('click', function(e){
     var tab = e.target.closest('a[data-cat]');
-    if (tab && tab.closest('#homeCategoryGrid, #homeCategoryGrid2, .quick-links, .featured-categories')) {
+    if (tab && tab.closest('#homeCategoryGrid, #homeCategoryGrid2, .quick-links, .featured-categories, .categories')) {
       e.preventDefault();
-      showCat(tab.getAttribute('data-cat'), true, true);
+      showCat(tab.getAttribute('data-cat'), true, true, true);
       return;
     }
     var head = e.target.closest('.tools-section .category-heading');
     if (head && toolsSection.contains(head)) {
-      // ignore nested links if any
       e.preventDefault();
       var panel = head.closest('.tool-category');
       if (!panel) return;
       var id = panel.id || panel.getAttribute('data-cat-panel');
-      // toggle: if already open, keep open (or collapse to none - keep one always open)
-      showCat(id, true, false);
+      showCat(id, true, false, true);
     }
   });
 
+  // Start: open AI by default only if hash says so; else open AI once for discoverability
   var hash = (location.hash || '').replace('#','');
-  showCat(labels[hash] ? hash : 'ai', false, false);
+  if (labels[hash]) showCat(hash, false, false, false);
+  else showCat('ai', false, false, false);
 })();
 </script>
+
 
 
 <script src="enhancements.js" defer></script>
