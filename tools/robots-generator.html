@@ -185,6 +185,8 @@
                     <p>Yes, you can use Disallow rules to block specific pages or directories.</p>
                 </div>
 
+                <div class="depth-block-2"><h2>What robots.txt Can and Cannot Do</h2><p>robots.txt controls crawling, not indexing. Blocking a URL stops compliant crawlers from fetching it, but if other pages link to it the URL can still appear in search results with no description. To keep a page out of the index, allow crawling and use a noindex meta tag instead.</p><p>The file must sit at the domain root to be found, and it applies only to that exact host and protocol. A separate subdomain needs its own file.</p><p>Rules are matched by longest path, and Allow can override Disallow for a subpath. This is how you block a directory while keeping one file inside it crawlable.</p><h2>Mistakes That Quietly Remove a Site From Search</h2><p>The most damaging single line is a site-wide Disallow left over from staging. It is easy to deploy and takes weeks to recover from, so verify the live file immediately after any migration.</p><p>Blocking CSS and JavaScript directories used to be common advice and is now harmful. Google renders pages before judging them, and a page it cannot style or script looks broken to the evaluation.</p><p>Adding a sitemap directive is worth doing but does not replace submitting the sitemap in Search Console, which is where you can actually see whether URLs were accepted.</p></div>
+
                 <div class="related-box">
                     <h3>🛠️ Related Tools</h3>
                     <ul>
