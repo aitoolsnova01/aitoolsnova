@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60">
+  <rect width="240" height="60" rx="10" fill="#08080e"/>
+  <text x="18" y="40" font-family="Arial,sans-serif" font-size="26" font-weight="900" fill="#FFD166">AI</text>
+  <text x="58" y="40" font-family="Arial,sans-serif" font-size="26" font-weight="900" fill="#ffffff">Tools</text>
+  <text x="152" y="40" font-family="Arial,sans-serif" font-size="26" font-weight="900" fill="#FFD166">Nova</text>
+</svg>
