@@ -12,10 +12,9 @@
  * - Rebuilds web-stories.html index page listing all stories
  * - Pings Google/Bing sitemap + IndexNow so search engines discover it fast
  *
- * Env vars:
- *   GROQ_API_KEY   (required) - free key from https://console.groq.com/keys
- *   GROQ_MODEL     (optional) - override model, else fallback list is used
- *   INDEXNOW_KEY   (optional) - IndexNow key (auto-detected from repo root)
+ * Env vars (at least ONE AI key):
+ *   GROQ_API_KEY / GEMINI_API_KEY / DEEPSEEK_API_KEY
+ *   GROQ_MODEL / GEMINI_MODEL / INDEXNOW_KEY optional
  *
  * Run:  node scripts/generate-webstory.mjs
  */
@@ -32,7 +31,10 @@ const SITEMAP_XML = path.join(ROOT, 'sitemap.xml');
 const STORIES_INDEX = path.join(ROOT, 'web-stories.html');
 const SITE = 'https://aitoolsnova.com';
 
-const GROQ_KEY = process.env.GROQ_API_KEY;
+const GROQ_KEY = process.env.GROQ_API_KEY || process.env.GROQ_KEY || '';
+const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || process.env.Deepseek_API_key || '';
+const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.Gemini_API_key || process.env.GOOGLE_GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
     try {
         const keyFile = readdirSync(ROOT).find(f => /^[a-f0-9]{32}\.txt$/i.test(f));
@@ -45,10 +47,11 @@ const MODELS = process.env.GROQ_MODEL
     ? [process.env.GROQ_MODEL, 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it']
     : ['llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'gemma2-9b-it', 'openai/gpt-oss-120b'];
 
-if (!GROQ_KEY) {
-    console.error('❌ GROQ_API_KEY env var missing. Get free key at https://console.groq.com/keys');
+if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
+    console.error('❌ Need GROQ_API_KEY and/or GEMINI_API_KEY and/or DEEPSEEK_API_KEY');
     process.exit(1);
 }
+console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'} Gemini=${GEMINI_KEY ? 'yes' : 'no'} DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'}`);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -89,45 +92,83 @@ async function pickSourceBlog() {
     };
 }
 
-// ---------- Groq call ----------
+// ---------- Multi-provider AI call (Groq → Gemini → DeepSeek) ----------
 async function callGroq(messages) {
     let lastErr;
-    for (const model of MODELS) {
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            try {
-                const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${GROQ_KEY}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model,
-                        messages,
-                        temperature: 0.85,
-                        max_tokens: 1800,
-                        response_format: { type: 'json_object' },
-                    }),
-                });
-                if (!res.ok) {
-                    const t = await res.text();
-                    throw new Error(`HTTP ${res.status}: ${t.slice(0, 300)}`);
+    if (GROQ_KEY) {
+        for (const model of MODELS) {
+            for (let attempt = 1; attempt <= 2; attempt++) {
+                try {
+                    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${GROQ_KEY}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            model,
+                            messages,
+                            temperature: 0.85,
+                            max_tokens: 1800,
+                            response_format: { type: 'json_object' },
+                        }),
+                    });
+                    if (!res.ok) {
+                        const t = await res.text();
+                        throw new Error(`HTTP ${res.status}: ${t.slice(0, 300)}`);
+                    }
+                    const j = await res.json();
+                    const content = j.choices?.[0]?.message?.content;
+                    if (!content) throw new Error('Empty content');
+                    console.log(`   ✔ Groq: ${model}`);
+                    return { content, model: `groq:${model}` };
+                } catch (e) {
+                    lastErr = e;
+                    console.warn(`⚠️  groq:${model} attempt ${attempt} failed: ${e.message}`);
+                    await sleep(1500 * attempt);
                 }
-                const j = await res.json();
-                const content = j.choices?.[0]?.message?.content;
-                if (!content) throw new Error('Empty content');
-                return { content, model };
-            } catch (e) {
-                lastErr = e;
-                console.warn(`⚠️  ${model} attempt ${attempt} failed: ${e.message}`);
-                await sleep(1500 * attempt);
             }
         }
     }
-    const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || process.env.Deepseek_API_key || '';
+
+    if (GEMINI_KEY) {
+        try {
+            console.warn('   ⚠️  Groq unavailable — trying Gemini');
+            const sys = messages.find(m => m.role === 'system');
+            const user = messages.filter(m => m.role !== 'system');
+            const body = {
+                systemInstruction: sys ? { parts: [{ text: sys.content }] } : undefined,
+                contents: user.map(m => ({
+                    role: m.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: m.content }]
+                })),
+                generationConfig: {
+                    temperature: 0.85,
+                    maxOutputTokens: 2048,
+                    responseMimeType: 'application/json',
+                }
+            };
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
+            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok) {
+                const content = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('').trim() || '';
+                if (content) {
+                    console.log(`   ✔ Gemini: ${GEMINI_MODEL}`);
+                    return { content, model: `gemini:${GEMINI_MODEL}` };
+                }
+            } else {
+                console.warn(`   ⚠️  Gemini ${res.status}: ${data?.error?.message || ''}`);
+            }
+        } catch (e) {
+            console.warn(`   ⚠️  Gemini error: ${e.message}`);
+            lastErr = e;
+        }
+    }
+
     if (DEEPSEEK_KEY) {
         try {
-            console.warn('   ⚠️  All Groq models failed — falling back to DeepSeek');
+            console.warn('   ⚠️  Falling back to DeepSeek');
             const res = await fetch('https://api.deepseek.com/chat/completions', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
@@ -143,16 +184,20 @@ async function callGroq(messages) {
                 const data = await res.json();
                 const content = data.choices?.[0]?.message?.content?.trim() || '';
                 if (content) {
-                    console.log('   ✔ Using model: deepseek-chat');
+                    console.log('   ✔ DeepSeek: deepseek-chat');
                     return { content, model: 'deepseek-chat' };
                 }
+            } else {
+                const t = await res.text().catch(() => '');
+                console.warn(`   ⚠️  DeepSeek ${res.status}: ${t.slice(0, 200)}`);
             }
         } catch (e) {
             console.warn(`   ⚠️  DeepSeek error: ${e.message}`);
+            lastErr = e;
         }
     }
 
-    throw lastErr || new Error('All models failed');
+    throw lastErr || new Error('All AI providers failed');
 }
 
 function extractJson(text) {
