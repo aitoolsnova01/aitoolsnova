@@ -1,0 +1,5 @@
+Contact: mailto:support@aitoolsnova.com
+Preferred-Languages: en
+Canonical: https://aitoolsnova.com/.well-known/security.txt
+Policy: https://aitoolsnova.com/privacy-policy
+Expires: 2027-08-17T00:00:00.000Z

@@ -1,0 +1,3 @@
+# AIToolsNova app-ads.txt
+# Web ads authorization lives in /ads.txt
+google.com, pub-2278101269918728, DIRECT, f08c47fec0942fa0

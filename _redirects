@@ -50,7 +50,7 @@
 /wp-includes/*                         /                               301
 /wp-admin/*                            /                               301
 /feed/*                                /                               301
-/search/*                              /                               301
+/search/*                              /tools                           301
 # REMOVED: /?feed=* -> / matched the bare "/" path and caused a homepage redirect loop
 
 # ============================================
@@ -80,3 +80,84 @@
 /contact/                              /contact                          301
 /web-stories/                          /web-stories                      301
 /compare/                              /compare                          301
+
+# ============================================
+# 404 HARDENING (GSC / bots / typos) — Aug 2026
+# ============================================
+
+# /blog without trailing slash (only /blog/ was covered before)
+/blog                                  /blogs                           301
+/Blog                                  /blogs                           301
+/BLOG                                  /blogs                           301
+
+# Search endpoints (schema/old WP) -> tools search hub
+/search                                /tools                           301
+/search/                               /tools                           301
+/search/*                              /tools                           301
+
+# Short legal aliases
+/terms                                 /terms-and-conditions             301
+/terms.html                            /terms-and-conditions             301
+/term                                  /terms-and-conditions             301
+/tos                                   /terms-and-conditions             301
+/disclaimer.html                       /disclaimer                       301
+/cookies                               /cookie-policy                    301
+/cookie                                /cookie-policy                    301
+
+# Home aliases
+/home                                  /                                 301
+/main                                  /                                 301
+/index                                 /                                 301
+/index.php                             /                                 301
+
+# Root asset aliases bots/browsers request
+/logo.png                              /images/publisher-logo.png        301
+/logo.svg                              /images/logo.svg                  301
+/icon.png                              /images/apple-touch-icon.png      301
+/images/logo.png                       /images/publisher-logo.png        301
+
+# Tool short aliases / old names
+/tools/bg-remover                      /tools/background-remover         301
+/tools/remove-bg                       /tools/background-remover         301
+/tools/background-remove               /tools/background-remover         301
+/tools/compressor                      /tools/image-compressor           301
+/tools/compress-image                  /tools/image-compressor           301
+/tools/qr                              /tools/qr-generator               301
+/tools/qr-code                         /tools/qr-generator               301
+/tools/pdf                             /tools/pdf-merger                 301
+/tools/merge-pdf                       /tools/pdf-merger                 301
+/tools/split-pdf                       /tools/pdf-splitter               301
+/tools/chat                            /tools/ai-chat                    301
+/tools/writer                          /tools/ai-writer                  301
+/tools/resume                          /tools/resume-builder             301
+
+# WordPress / scanner noise -> home (stops GSC 404 pile-up)
+/wp-admin                              /                                 301
+/wp-admin/                             /                                 301
+/wp-login.php                          /                                 301
+/wp-login                              /                                 301
+/wordpress                             /                                 301
+/wp                                    /                                 301
+/xmlrpc.php                            /                                 301
+/wp-content                            /                                 301
+/wp-includes                           /                                 301
+/feed                                  /                                 301
+/feed/                                 /                                 301
+/rss                                   /                                 301
+/atom.xml                              /sitemap.xml                      301
+/sitemap_index.xml                     /sitemap.xml                      301
+/sitemap.txt                           /sitemap.xml                      301
+
+# Random CMS leftovers
+/author/*                              /blogs                            301
+/category/*                            /blogs                            301
+/tag/*                                 /blogs                            301
+/page/*                                /blogs                            301
+/2024/*                                /blogs                            301
+/2025/*                                /blogs                            301
+/2026/*                                /blogs                            301
+
+# Missing blog slugs that get typed/guessed
+/blog/ai                               /blogs                            301
+/blog/chatgpt                          /blog/chatgpt-alternatives        301
+/blog/seo                              /blog/seo-guide                   301
