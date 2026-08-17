@@ -6,47 +6,50 @@
 (function () {
   "use strict";
 
-  const path = location.pathname;
-  const isHome = path === "/" || path.endsWith("/index.html");
-  const isBlog = path.includes("/blog/") && path.endsWith(".html") && !path.endsWith("/blogs.html");
-  const isTool = path.includes("/tools/") && path.endsWith(".html") && !path.endsWith("/tools.html");
-  const isBlogList = path.endsWith("/blogs.html");
+  const path = location.pathname.replace(/\/+$/, "") || "/";
+  // Cloudflare Pages serves extensionless URLs (/blog/slug, /tools/ai-chat).
+  // Also accept .html for local previews.
+  const isHome = path === "/" || path.endsWith("/index") || path.endsWith("/index.html");
+  const isBlogList = /\/blogs(\.html)?$/.test(path);
+  const isToolsHub = /\/tools(\.html)?$/.test(path);
+  const isBlog = path.includes("/blog/") && !isBlogList;
+  const isTool = path.includes("/tools/") && !isToolsHub;
 
   const BASE = path.includes("/blog/") || path.includes("/tools/") ? "../" : "";
 
   // ---------- Related Content Data ----------
   const RELATED_TOOLS = [
-    { name: "AI Image Generator", url: "ai-image-generator.html", icon: "🎨", desc: "Text to image AI" },
-    { name: "AI Chat", url: "ai-chat.html", icon: "💬", desc: "Chat with AI assistant" },
-    { name: "AI Writer", url: "ai-writer.html", icon: "✍️", desc: "Generate articles" },
-    { name: "Email Generator", url: "email-generator.html", icon: "📧", desc: "Professional emails" },
-    { name: "Resume Builder", url: "resume-builder.html", icon: "📄", desc: "AI resume maker" },
-    { name: "Image Compressor", url: "image-compressor.html", icon: "🖼️", desc: "Compress images" },
-    { name: "Image Resizer", url: "image-resizer.html", icon: "📐", desc: "Resize photos" },
-    { name: "PDF Merger", url: "pdf-merger.html", icon: "📚", desc: "Merge PDFs" },
-    { name: "QR Generator", url: "qr-generator.html", icon: "📱", desc: "Create QR codes" },
-    { name: "Password Generator", url: "password-generator.html", icon: "🔐", desc: "Secure passwords" },
-    { name: "Keyword Density", url: "keyword-density.html", icon: "📊", desc: "SEO analysis" },
-    { name: "Background Remover", url: "background-remover.html", icon: "✂️", desc: "Remove BG" }
+    { name: "AI Image Generator", url: "ai-image-generator", icon: "🎨", desc: "Text to image AI" },
+    { name: "AI Chat", url: "ai-chat", icon: "💬", desc: "Chat with AI assistant" },
+    { name: "AI Writer", url: "ai-writer", icon: "✍️", desc: "Generate articles" },
+    { name: "Email Generator", url: "email-generator", icon: "📧", desc: "Professional emails" },
+    { name: "Resume Builder", url: "resume-builder", icon: "📄", desc: "AI resume maker" },
+    { name: "Image Compressor", url: "image-compressor", icon: "🖼️", desc: "Compress images" },
+    { name: "Image Resizer", url: "image-resizer", icon: "📐", desc: "Resize photos" },
+    { name: "PDF Merger", url: "pdf-merger", icon: "📚", desc: "Merge PDFs" },
+    { name: "QR Generator", url: "qr-generator", icon: "📱", desc: "Create QR codes" },
+    { name: "Password Generator", url: "password-generator", icon: "🔐", desc: "Secure passwords" },
+    { name: "Keyword Density", url: "keyword-density", icon: "📊", desc: "SEO analysis" },
+    { name: "Background Remover", url: "background-remover", icon: "✂️", desc: "Remove BG" }
   ];
 
   const RELATED_BLOGS = [
-    { title: "Best Free AI Tools in 2026", url: "best-free-ai-tools-2026.html" },
-    { title: "ChatGPT Alternatives You Must Try", url: "chatgpt-alternatives.html" },
-    { title: "Top 100 AI Tools 2026", url: "top-100-ai-tools-2026.html" },
-    { title: "How to Make Money with AI", url: "how-to-make-money-ai-tools.html" },
-    { title: "AI Tools for Bloggers", url: "ai-writing-tools-bloggers.html" },
-    { title: "AI Productivity Tools", url: "ai-productivity-tools.html" },
-    { title: "AI Tools for Students", url: "ai-tools-for-students.html" },
-    { title: "Complete SEO Guide", url: "seo-guide.html" }
+    { title: "Best Free AI Tools in 2026", url: "best-free-ai-tools-2026" },
+    { title: "ChatGPT Alternatives You Must Try", url: "chatgpt-alternatives" },
+    { title: "Top 100 AI Tools 2026", url: "top-100-ai-tools-2026" },
+    { title: "How to Make Money with AI", url: "how-to-make-money-ai-tools" },
+    { title: "AI Tools for Bloggers", url: "ai-writing-tools-bloggers" },
+    { title: "AI Productivity Tools", url: "ai-productivity-tools" },
+    { title: "AI Tools for Students", url: "ai-tools-for-students" },
+    { title: "Complete SEO Guide", url: "seo-guide" }
   ];
 
   const TRENDING_TOOLS = [
-    { name: "AI Image Generator", url: "tools/ai-image-generator.html", icon: "🎨", tag: "🆕 New", desc: "Text-to-image AI. Free, unlimited, no watermark" },
-    { name: "AI Chat", url: "tools/ai-chat.html", icon: "💬", tag: "🔥 Hot", desc: "Free AI chatbot powered by Gemini" },
-    { name: "Resume Builder", url: "tools/resume-builder.html", icon: "📄", tag: "🔥 Hot", desc: "Build professional resume with AI" },
-    { name: "Background Remover", url: "tools/background-remover.html", icon: "✂️", tag: "⚡ Fast", desc: "Remove image backgrounds instantly" },
-    { name: "PDF Converter", url: "tools/pdf-converter.html", icon: "📚", tag: "🔥 Hot", desc: "Convert PDF to any format" }
+    { name: "AI Image Generator", url: "tools/ai-image-generator", icon: "🎨", tag: "🆕 New", desc: "Text-to-image AI. Free, unlimited, no watermark" },
+    { name: "AI Chat", url: "tools/ai-chat", icon: "💬", tag: "🔥 Hot", desc: "Free AI chatbot powered by Gemini" },
+    { name: "Resume Builder", url: "tools/resume-builder", icon: "📄", tag: "🔥 Hot", desc: "Build professional resume with AI" },
+    { name: "Background Remover", url: "tools/background-remover", icon: "✂️", tag: "⚡ Fast", desc: "Remove image backgrounds instantly" },
+    { name: "PDF Converter", url: "tools/pdf-converter", icon: "📚", tag: "🔥 Hot", desc: "Convert PDF to any format" }
   ];
 
   // ---------- Inject Styles ----------
@@ -137,9 +140,9 @@
     div.setAttribute("aria-label", "Newsletter Signup");
     div.innerHTML = `
       <h3>📬 Get Weekly AI Tool Updates</h3>
-      <p>Join 25,000+ readers getting the freshest AI tools, tips & tutorials every Sunday. Free forever.</p>
+      <p>Get fresh AI tool roundups, practical tips and new free utilities — straight to your inbox. Unsubscribe anytime.</p>
       <form class="atn-nl-form" id="atnNlForm" novalidate>
-        <input type="email" id="atnNlEmail" placeholder="you@example.com" required aria-label="Your email" />
+        <input type="email" id="atnNlEmail" placeholder="your@email.com" required aria-label="Your email" />
         <button type="submit">Subscribe Free</button>
       </form>
       <div class="atn-nl-msg" id="atnNlMsg"></div>
@@ -215,7 +218,7 @@
     const pick = (arr, n, exclude) => arr.filter(x => !exclude || !x.url.includes(exclude))
       .sort(() => Math.random() - 0.5).slice(0, n);
 
-    const currentSlug = path.split("/").pop().replace(".html", "");
+    const currentSlug = path.split("/").pop().replace("", "");
 
     const section = document.createElement("section");
     section.className = "atn-related atn-fade-in";
@@ -257,7 +260,7 @@
         <h4>🎁 Free: 100 Powerful ChatGPT Prompts</h4>
         <p>Instant download. No signup needed. Boost productivity today.</p>
       </div>
-      <a href="${BASE}free-chatgpt-prompts.html">Get Free PDF →</a>
+      <a href="${BASE}free-chatgpt-prompts">Get Free PDF →</a>
     `;
     insertBeforeFooter(banner);
   }
@@ -311,24 +314,23 @@
     adWrap.innerHTML = `
       <div style="color:#94A3B8;font-size:.68rem;letter-spacing:1px;margin-bottom:6px;">ADVERTISEMENT</div>
       <ins class="adsbygoogle"
-           style="display:block;min-height:100px;"
+           style="display:block;text-align:center;min-height:100px;"
            data-ad-client="ca-pub-2278101269918728"
-           data-ad-slot=""
+           data-ad-slot="1700790558"
            data-ad-format="fluid"
            data-ad-layout="in-article"
            data-full-width-responsive="true"></ins>
     `;
     insertAfter.insertAdjacentElement('afterend', adWrap);
-    // Trigger AdSense to render
-    // Do not request an invalid ad unit. Auto Ads remains available globally.
-    if (adWrap.querySelector('[data-ad-slot]')?.dataset.adSlot) {
-      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
-    }
+    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
   }
 
   // ---------- Init (deferred to idle to avoid blocking main thread) ----------
+  const isLegal = /\/(privacy-policy|terms-and-conditions|disclaimer|cookie-policy)(\.html)?$/.test(path)
+    || /\/(404)(\.html)?$/.test(path);
+
   function initEnhancements() {
-    try { if (!isTool) buildNewsletter(); } catch (e) {}
+    try { if (!isTool && !isLegal) buildNewsletter(); } catch (e) {}
     try { if (isBlog) buildShareBar(); } catch (e) {}
     try { buildRelated(); } catch (e) {}
     try { buildFreebieBanner(); } catch (e) {}

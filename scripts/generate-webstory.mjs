@@ -124,25 +124,28 @@ async function callGroq(messages) {
             }
         }
     }
+    const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || process.env.Deepseek_API_key || '';
     if (DEEPSEEK_KEY) {
         try {
             console.warn('   ⚠️  All Groq models failed — falling back to DeepSeek');
-            const body = {
-                model: 'deepseek-chat',
-                messages,
-                temperature: opts.temperature ?? 0.7,
-                max_tokens: opts.max_tokens ?? 4000,
-            };
-            if (opts.json === true) body.response_format = { type: 'json_object' };
             const res = await fetch('https://api.deepseek.com/chat/completions', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
+                body: JSON.stringify({
+                    model: 'deepseek-chat',
+                    messages,
+                    temperature: 0.85,
+                    max_tokens: 2200,
+                    response_format: { type: 'json_object' },
+                }),
             });
             if (res.ok) {
                 const data = await res.json();
                 const content = data.choices?.[0]?.message?.content?.trim() || '';
-                if (content) { console.log('   ✔ Using model: deepseek-chat'); return content; }
+                if (content) {
+                    console.log('   ✔ Using model: deepseek-chat');
+                    return { content, model: 'deepseek-chat' };
+                }
             }
         } catch (e) {
             console.warn(`   ⚠️  DeepSeek error: ${e.message}`);
@@ -169,7 +172,7 @@ Schema:
   "story_title": "Catchy 60-char max headline",
   "meta_description": "160-char SEO description",
   "cover_caption": "Short punchy hook, 8-14 words",
-  "geo_keywords": "6 comma-separated location-flavoured SEO keywords, mix India/USA/UK e.g. best free ai tools in india, ai tools for us freelancers",
+  "geo_keywords": "10 comma-separated high-intent SEO keywords mixing Global/US/UK/Canada/India e.g. best free ai tools 2026, ai tools for us freelancers, free ai tools uk, ai tools canada students, best ai apps india",
   "cover_image_prompt": "cinematic HD photorealistic image prompt for cover, portrait 9:16, no text",
   "slides": [
     {
@@ -188,7 +191,7 @@ Rules:
 
     const user = `Blog title: "${title}"
 Blog description: "${description}"
-Create a 7-slide web story (cover + 5 tips + cta) that summarises the blog's biggest takeaways for young Indian/global mobile readers who love AI tools.`;
+Create a 7-slide web story (cover + 5 tips + cta) for mobile readers in the US, UK, Canada, India and worldwide. Make the cover title irresistible (curiosity + benefit + number when natural). Keywords must be search-friendly, not stuffed. Captions in clear global English.`;
 
     const { content } = await callGroq([
         { role: 'system', content: sys },
@@ -213,7 +216,7 @@ const esc = s => String(s || '')
 
 const imgUrl = (prompt, seed) => {
     const p = encodeURIComponent(String(prompt).slice(0, 380));
-    return `https://image.pollinations.ai/prompt/${p}?width=720&height=1280&nologo=true&enhance=true&model=flux&seed=${seed}`;
+    return `https://image.pollinations.ai/prompt/${p}?width=1080&height=1920&nologo=true&enhance=true&model=flux&seed=${seed}&safe=true`;
 };
 
 // ---------- Localize images: download remote HD images into the repo ----------
@@ -225,19 +228,19 @@ const REMOTE_RE = /https?:\/\/image\.pollinations\.ai\/prompt\/[^"'\\\s)]+/g;
 // Google Web Stories require at least 640x853. Pollinations returns 576x1024
 // no matter what we ask for, so every image needs upscaling to pass validation.
 async function upscaleForWebStories(file) {
+    // Always normalize to 1080x1920 HD portrait for AMP Web Stories approval + crisp phones.
     try {
         const sharp = (await import('sharp')).default;
         const meta = await sharp(file).metadata();
-        if ((meta.width || 0) >= 640 && (meta.height || 0) >= 853) return;
         const out = await sharp(file)
-            .resize(720, 1280, { fit: 'cover', kernel: 'lanczos3' })
-            .jpeg({ quality: 88, progressive: true, mozjpeg: true })
+            .resize(1080, 1920, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
+            .sharpen({ sigma: 0.6 })
+            .jpeg({ quality: 90, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
             .toBuffer();
         await fs.writeFile(file, out);
-        console.log(`   ↑ upscaled ${path.basename(file)} to 720x1280`);
+        console.log(`   ↑ HD ${path.basename(file)} ${(meta.width||'?')}x${(meta.height||'?')} → 1080x1920`);
     } catch (e) {
         console.warn(`   ⚠️  UPSCALE SKIPPED for ${path.basename(file)} - ${e.message}`);
-        console.warn('   ⚠️  Image stays below Google\'s 640x853 minimum for Web Stories.');
         console.warn('   ⚠️  Check that the "Install sharp" workflow step succeeded.');
     }
 }
@@ -284,7 +287,7 @@ async function localizeHtmlImages(html) {
 function buildStoryHtml({ slug, story }) {
     // Extensionless - the .html form 308-redirects on Cloudflare Pages.
     const canonical = `${SITE}/web-stories/${slug}`;
-    const publisherLogo = `/images/publisher-logo.png`;
+    const publisherLogo = `${SITE}/images/publisher-logo.png`;
     const coverImg = imgUrl(story.cover_image_prompt, 1000);
     const posterUrl = coverImg;
     const today = new Date().toISOString().split('T')[0];
@@ -295,7 +298,7 @@ function buildStoryHtml({ slug, story }) {
         return `
     <amp-story-page id="s-${i + 1}">
       <amp-story-grid-layer template="fill">
-        <amp-img src="${src}" width="720" height="1280" layout="responsive" alt="${esc(s.heading)}"></amp-img>
+        <amp-img src="${src}" width="1080" height="1920" layout="responsive" alt="${esc(s.heading)}"></amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="fill">
         <div class="scrim"></div>
@@ -377,7 +380,7 @@ function buildStoryHtml({ slug, story }) {
     <!-- Cover -->
     <amp-story-page id="cover">
       <amp-story-grid-layer template="fill">
-        <amp-img src="${coverImg}" width="720" height="1280" layout="responsive" alt="${esc(story.story_title)}"></amp-img>
+        <amp-img src="${coverImg}" width="1080" height="1920" layout="responsive" alt="${esc(story.story_title)}"></amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="fill">
         <div class="scrim"></div>
@@ -397,7 +400,7 @@ ${slidesHtml}
     <!-- CTA -->
     <amp-story-page id="cta">
       <amp-story-grid-layer template="fill">
-        <amp-img src="${imgUrl('futuristic glowing dashboard of AI tools, neon lights, cinematic', 9000)}" width="720" height="1280" layout="responsive" alt="Explore more"></amp-img>
+        <amp-img src="${imgUrl('futuristic glowing dashboard of AI tools, neon lights, cinematic', 9000)}" width="1080" height="1920" layout="responsive" alt="Explore more"></amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="fill">
         <div class="scrim"></div>
@@ -406,11 +409,11 @@ ${slidesHtml}
         <div class="cta-wrap">
           <h2 class="cta-title">Try 100+ Free AI Tools</h2>
           <p class="cta-desc">${esc(story.cta_line)}</p>
-          <a class="cta-cta" href="${SITE}/tools.html">Explore Tools →</a>
+          <a class="cta-cta" href="${SITE}/tools">Explore Tools →</a>
         </div>
       </amp-story-grid-layer>
       <amp-story-page-outlink layout="nodisplay">
-        <a href="${SITE}/tools.html">Explore AI Tools</a>
+        <a href="${SITE}/tools">Explore AI Tools</a>
       </amp-story-page-outlink>
     </amp-story-page>
 
@@ -452,7 +455,7 @@ async function rebuildStoriesIndex() {
         const t = (html.match(/<title>([^<]+)<\/title>/i)?.[1] || f).trim();
         const d = (html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1] || '').trim();
         const img = html.match(/poster-portrait-src="([^"]+)"/i)?.[1] || `${SITE}/images/publisher-logo.png`;
-        const url = `/web-stories/${f}`;
+        const url = `/web-stories/${f.replace(/\.html$/, '')}`;
         return `
       <a class="story-card" href="${url}" data-testid="story-card-${f.replace(/\.html$/, '')}">
         <div class="story-thumb"><img src="${img}" alt="${esc(t)}" loading="lazy" width="240" height="426"></div>
@@ -526,10 +529,10 @@ ${JSON.stringify({
   <p>Bite-sized, visual stories on the newest AI tools, hacks and how-to tips. New story every day.</p>
   <nav class="top" aria-label="Site">
     <a href="/" data-testid="nav-home">Home</a>
-    <a href="/tools.html" data-testid="nav-tools">Tools</a>
-    <a href="/blogs.html" data-testid="nav-blogs">Blogs</a>
-    <a href="/web-stories.html" data-testid="nav-stories">Stories</a>
-    <a href="/about.html" data-testid="nav-about">About</a>
+    <a href="/tools" data-testid="nav-tools">Tools</a>
+    <a href="/blogs" data-testid="nav-blogs">Blogs</a>
+    <a href="/web-stories" data-testid="nav-stories">Stories</a>
+    <a href="/about" data-testid="nav-about">About</a>
   </nav>
 </header>
 <main class="grid" data-testid="web-stories-grid">

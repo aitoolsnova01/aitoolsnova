@@ -1,763 +1,1696 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-    <!-- ============================================ -->
-    <!-- MAIN PAGES (Priority: 1.0 - 0.8) -->
-    <!-- ============================================ -->
-
+    <!-- FULL SITE SITEMAP — rebuilt 2026-08-17 -->
+    <!-- AUTO-BLOG-SITEMAP-START -->
+    <!-- New daily blog URLs are inserted directly below this marker by generate-blog.mjs -->
     <url>
         <loc>https://aitoolsnova.com/</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/free-chatgpt-prompts</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.85</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.85</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.85</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/blogs</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blogs" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blogs" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blogs" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blogs" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blogs" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blogs" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/about</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/contact</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <!-- ============================================ -->
-    <!-- LEGAL PAGES (Priority: 0.5) -->
-    <!-- ============================================ -->
-
-    <url>
-        <loc>https://aitoolsnova.com/privacy-policy</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/terms-and-conditions</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/disclaimer</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/cookie-policy</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-
-    <!-- ============================================ -->
-    <!-- TOOLS PAGES (Priority: 0.8) -->
-    <!-- ============================================ -->
-
-    <!-- AI TOOLS -->
-    <url>
-        <loc>https://aitoolsnova.com/tools/ai-image-generator</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
+        <loc>https://aitoolsnova.com/tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>daily</changefreq>
         <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/tools/youtube-kit</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
+        <loc>https://aitoolsnova.com/web-stories</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>daily</changefreq>
         <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0e0d62a59cebc29b.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/682e93251e719636.jpg</image:loc>
+        </image:image>
     </url>
-
     <url>
         <loc>https://aitoolsnova.com/tools/ai-chat</loc>
-    <lastmod>2026-08-17</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/ai-chat" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/ai-chat" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/ai-chat" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/ai-chat" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ai-chat" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ai-chat" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
+    <url>
+        <loc>https://aitoolsnova.com/tools/ai-image-generator</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/ai-image-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/ai-image-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/ai-image-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/ai-image-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ai-image-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ai-image-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
     <url>
         <loc>https://aitoolsnova.com/tools/ai-writer</loc>
-    <lastmod>2026-08-17</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/ai-writer" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/ai-writer" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/ai-writer" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/ai-writer" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ai-writer" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ai-writer" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/resume-builder</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/email-generator</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <!-- IMAGE TOOLS -->
-    <url>
-        <loc>https://aitoolsnova.com/tools/image-compressor</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/image-resizer</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/image-converter</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/tools/background-remover</loc>
-    <lastmod>2026-08-17</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/background-remover" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/background-remover" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/background-remover" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/background-remover" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/background-remover" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/background-remover" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <!-- SEO TOOLS -->
     <url>
-        <loc>https://aitoolsnova.com/tools/meta-tag-generator</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/email-generator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/email-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/email-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/email-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/email-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/email-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/email-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/sitemap-generator</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/keyword-density</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/robots-generator</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <!-- SOCIAL MEDIA TOOLS -->
-    <url>
-        <loc>https://aitoolsnova.com/tools/youtube-title</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/youtube-description</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/tools/facebook-description</loc>
-    <lastmod>2026-08-17</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/facebook-description" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/facebook-description" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/facebook-description" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/facebook-description" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/facebook-description" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/facebook-description" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/tools/instagram-caption</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/tools/hashtag-generator</loc>
-    <lastmod>2026-08-17</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/hashtag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/hashtag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/hashtag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/hashtag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/hashtag-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/hashtag-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <!-- PDF TOOLS -->
     <url>
-        <loc>https://aitoolsnova.com/tools/pdf-converter</loc>
-    <lastmod>2026-08-17</lastmod>
+        <loc>https://aitoolsnova.com/tools/image-compressor</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/image-compressor" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/image-compressor" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/image-compressor" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/image-compressor" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/image-compressor" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/image-compressor" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/tools/pdf-merger</loc>
-    <lastmod>2026-08-17</lastmod>
+        <loc>https://aitoolsnova.com/tools/image-converter</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/image-converter" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/image-converter" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/image-converter" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/image-converter" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/image-converter" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/image-converter" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/tools/pdf-splitter</loc>
-    <lastmod>2026-08-17</lastmod>
+        <loc>https://aitoolsnova.com/tools/image-resizer</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/image-resizer" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/image-resizer" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/image-resizer" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/image-resizer" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/image-resizer" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/image-resizer" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <!-- CALCULATORS -->
     <url>
-        <loc>https://aitoolsnova.com/tools/sleep-calculator</loc>
-    <lastmod>2026-08-17</lastmod>
+        <loc>https://aitoolsnova.com/tools/instagram-caption</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/instagram-caption" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/instagram-caption" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/instagram-caption" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/instagram-caption" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/instagram-caption" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/instagram-caption" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/tools/rain-calculator</loc>
-    <lastmod>2026-08-17</lastmod>
+        <loc>https://aitoolsnova.com/tools/keyword-density</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/keyword-density" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/keyword-density" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/keyword-density" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/keyword-density" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/keyword-density" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/keyword-density" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/tools/snow-calculator</loc>
-    <lastmod>2026-08-17</lastmod>
+        <loc>https://aitoolsnova.com/tools/meta-tag-generator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/meta-tag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/meta-tag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/meta-tag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/meta-tag-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/meta-tag-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/meta-tag-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <!-- UTILITY TOOLS -->
-    <url>
-        <loc>https://aitoolsnova.com/tools/qr-generator</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/tools/password-generator</loc>
-    <lastmod>2026-08-17</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <!-- ============================================ -->
-    <!-- BLOG POSTS (Priority: 0.7) -->
-    <!-- ============================================ -->
-
-    <!-- AUTO-BLOG-SITEMAP-START -->
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-resume-job-hunt-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/password-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/password-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/password-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/password-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/password-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/password-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/pdf-converter</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/pdf-converter" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/pdf-converter" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/pdf-converter" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/pdf-converter" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/pdf-converter" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/pdf-converter" />
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-freelance-passive-income</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/pdf-merger</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/pdf-merger" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/pdf-merger" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/pdf-merger" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/pdf-merger" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/pdf-merger" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/pdf-merger" />
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/pdf-splitter</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/pdf-splitter" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/pdf-splitter" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/pdf-splitter" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/pdf-splitter" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/pdf-splitter" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/pdf-splitter" />
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-generated-illustrations-tricks</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/qr-generator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/qr-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/qr-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/qr-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/qr-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/qr-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/qr-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-generated-logos-design-secrets</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/rain-calculator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/rain-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/rain-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/rain-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/rain-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/rain-calculator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/rain-calculator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-industry-mustread-updates</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/resume-builder</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/resume-builder" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/resume-builder" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/resume-builder" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/resume-builder" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/resume-builder" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/resume-builder" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-image-design-pro-tips</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/robots-generator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/robots-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/robots-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/robots-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/robots-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/robots-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/robots-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/sitemap-generator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/sitemap-generator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/sitemap-generator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/sitemap-generator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/sitemap-generator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/sitemap-generator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/sitemap-generator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-copywriting-hacks</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/sleep-calculator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/sleep-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/sleep-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/sleep-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/sleep-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/sleep-calculator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/sleep-calculator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-language-learning-tools</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/snow-calculator</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/snow-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/snow-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/snow-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/snow-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/snow-calculator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/snow-calculator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-generated-portrait-tips</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/youtube-description</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/youtube-description" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/youtube-description" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/youtube-description" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/youtube-description" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/youtube-description" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/youtube-description" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
-        <loc>https://aitoolsnova.com/blog/small-business-ai-chatbots-boost</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/tools/youtube-kit</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/youtube-kit" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/youtube-kit" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/youtube-kit" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/youtube-kit" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/youtube-kit" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/youtube-kit" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/tools/youtube-title</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/youtube-title" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/youtube-title" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/youtube-title" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/youtube-title" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/youtube-title" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/youtube-title" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-coding-assistants</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
         <loc>https://aitoolsnova.com/blog/ai-coding-hacks-developers</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-coding-hacks-developers" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-coding-hacks-developers" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-coding-hacks-developers" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-coding-hacks-developers" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-coding-hacks-developers" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-coding-hacks-developers" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/44306152a96da8e1.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-copywriting-hacks</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-copywriting-hacks" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-copywriting-hacks" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-copywriting-hacks" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-copywriting-hacks" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-copywriting-hacks" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-copywriting-hacks" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/90f442288d9d352a.jpg</image:loc>
+        </image:image>
     </url>
     <url>
         <loc>https://aitoolsnova.com/blog/ai-data-safeguard-tactics</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-data-safeguard-tactics" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-data-safeguard-tactics" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-data-safeguard-tactics" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-data-safeguard-tactics" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-data-safeguard-tactics" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-data-safeguard-tactics" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/40698af96d60f4d2.jpg</image:loc>
+        </image:image>
     </url>
-    <!-- AUTO-BLOG-SITEMAP-END -->
-
-    <!-- AI Tools Blogs -->
     <url>
-        <loc>https://aitoolsnova.com/blog/best-free-ai-tools-2026</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-design-hacks-brand-impact-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/69909afed54736d3.jpg</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/top-100-ai-tools-2026</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-freelance-passive-income</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-freelance-passive-income" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-freelance-passive-income" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-freelance-passive-income" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-freelance-passive-income" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-freelance-passive-income" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-freelance-passive-income" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/bd47228d85037d44.jpg</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/chatgpt-alternatives</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-generated-illustrations-tricks</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-generated-illustrations-tricks" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-generated-illustrations-tricks" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-generated-illustrations-tricks" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-generated-illustrations-tricks" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-generated-illustrations-tricks" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-generated-illustrations-tricks" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/016457bc7bd29a59.jpg</image:loc>
+        </image:image>
     </url>
-
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-generated-logos-design-secrets</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-generated-logos-design-secrets" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-generated-logos-design-secrets" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-generated-logos-design-secrets" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-generated-logos-design-secrets" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-generated-logos-design-secrets" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-generated-logos-design-secrets" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/c7ede3919422d281.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-generated-portrait-tips</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-generated-portrait-tips" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-generated-portrait-tips" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-generated-portrait-tips" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-generated-portrait-tips" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-generated-portrait-tips" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-generated-portrait-tips" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/4e90e3cc95afdf30.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-image-design-pro-tips</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-image-design-pro-tips" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-image-design-pro-tips" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-image-design-pro-tips" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-image-design-pro-tips" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-image-design-pro-tips" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-image-design-pro-tips" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/dfd60c87f7913870.jpg</image:loc>
+        </image:image>
+    </url>
     <url>
         <loc>https://aitoolsnova.com/blog/ai-image-generator-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-video-generator-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-industry-mustread-updates</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-industry-mustread-updates" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-industry-mustread-updates" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-industry-mustread-updates" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-industry-mustread-updates" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-industry-mustread-updates" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-industry-mustread-updates" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/30e6145921c7cd4e.jpg</image:loc>
+        </image:image>
     </url>
-
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-language-learning-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-language-learning-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-language-learning-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-language-learning-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-language-learning-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-language-learning-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-language-learning-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/c1a00d3e42b239bb.jpg</image:loc>
+        </image:image>
+    </url>
     <url>
         <loc>https://aitoolsnova.com/blog/ai-logo-maker-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-writing-tools-bloggers</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-milestones-2027-shaping-future" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/09b0adea3783b783.jpg</image:loc>
+        </image:image>
     </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-seo-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-for-students</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-content-creators</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-for-youtubers</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-digital-marketing</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-small-businesses</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-freelancers</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-website-builder-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-resume-builder-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-coding-assistants</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-productivity-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-voice-generator-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/blog/ai-presentation-maker-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <!-- Guide & How-to Blogs -->
     <url>
-        <loc>https://aitoolsnova.com/blog/how-to-make-money-ai-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-productivity-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-side-hustle-2026</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/choose-right-ai-tool</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/beginners-guide-ai-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/ai-trends-2026</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <!-- Category Specific Blogs -->
-    <url>
-        <loc>https://aitoolsnova.com/blog/free-online-image-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/free-pdf-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/free-seo-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/blog/free-qr-code-tools</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
     <url>
         <loc>https://aitoolsnova.com/blog/ai-prompt-generators</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-ecommerce</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-resume-builder-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-social-media</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-resume-job-hunt-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-resume-job-hunt-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-resume-job-hunt-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-resume-job-hunt-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-resume-job-hunt-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-resume-job-hunt-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-resume-job-hunt-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/9520633f4dfd0439.jpg</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-email-writing</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-seo-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-seo-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/ai-tools-research</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <loc>https://aitoolsnova.com/blog/ai-side-hustle-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
         <loc>https://aitoolsnova.com/blog/ai-tools-coding-beginners</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-    <!-- ============================================ -->
-    <!-- OLD/LEGACY BLOGS (for backward compatibility) -->
-    <!-- ============================================ -->
-
     <url>
-        <loc>https://aitoolsnova.com/blog/seo-guide</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+        <loc>https://aitoolsnova.com/blog/ai-tools-content-creators</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
-        <loc>https://aitoolsnova.com/blog/social-media-strategy</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+        <loc>https://aitoolsnova.com/blog/ai-tools-digital-marketing</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-ecommerce</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-email-writing</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-for-students</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-for-youtubers</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-freelancers</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-research</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-research" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-research" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-research" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-research" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-research" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-research" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-small-businesses</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-social-media</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-trends-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-trends-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-trends-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-trends-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-trends-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-trends-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-trends-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-video-generator-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-voice-generator-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-vs-traditional-tools-compare" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/32ec2acd787ae9c5.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-website-builder-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-writing-tools-bloggers</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/beginners-guide-ai-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/best-free-ai-tools-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/chatgpt-alternatives</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/choose-right-ai-tool</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/free-online-image-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/free-online-image-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/free-online-image-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/free-online-image-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/free-online-image-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-online-image-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-online-image-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/free-pdf-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/free-pdf-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/free-pdf-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/free-pdf-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/free-pdf-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-pdf-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-pdf-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/free-qr-code-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/free-seo-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/free-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/free-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/free-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/free-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-seo-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-seo-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/how-to-make-money-ai-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
     <url>
         <loc>https://aitoolsnova.com/blog/image-optimization</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/image-optimization" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
     <url>
         <loc>https://aitoolsnova.com/blog/monetize-tools</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-
-    <!-- ============================================ -->
-    <!-- WEB STORIES (Priority: 0.8) -->
-    <!-- ============================================ -->
-
-    <url>
-        <loc>https://aitoolsnova.com/web-stories</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/monetize-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-
     <url>
-        <loc>https://aitoolsnova.com/web-stories/free-qr-code-tools</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/blog/seo-guide</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/seo-guide" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-
     <url>
-        <loc>https://aitoolsnova.com/web-stories/monetize-tools</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/blog/small-business-ai-chatbots-boost</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/small-business-ai-chatbots-boost" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/c67f54489e4336af.jpg</image:loc>
+        </image:image>
     </url>
-
-
     <url>
-        <loc>https://aitoolsnova.com/web-stories/image-optimization</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/blog/social-media-strategy</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/social-media-strategy" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
-
-
     <url>
-        <loc>https://aitoolsnova.com/web-stories/social-media-strategy</loc>
-        <lastmod>2026-08-16</lastmod>
+        <loc>https://aitoolsnova.com/blog/top-100-ai-tools-2026</loc>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
-    </url>
-
-
-    <url>
-        <loc>https://aitoolsnova.com/web-stories/seo-guide</loc>
-        <lastmod>2026-08-16</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>https://aitoolsnova.com/monetize-tools</loc>
-    <lastmod>2026-08-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
     </url>
     <url>
         <loc>https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/76ce39a2a909c2c2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/9c02e6a0954245c3.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/78e24032d5b17958.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/32a9c7fba8a0311e.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/883c2150cac67117.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/c45ccd321e28c590.jpg</image:loc>
+        </image:image>
     </url>
-
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/682e93251e719636.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ed375b12c146a236.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/54f1ff6dc0570424.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/cc40f33a3f8136a1.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/9adfe7aa2a709cf5.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/6f71902ab9529a95.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/free-qr-code-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/82224e6ebda232c8.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/c1d7f72c5d0108b4.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/4696df58fd08d1d1.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/1467206bc9580f87.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/316094fd3b53f3f5.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/f033c8acbb0a2f0a.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/image-optimization</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/image-optimization" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/image-optimization" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/bc9e981f30683222.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/9bc0f40b8fc2d0c4.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/b6a5c57f029cc024.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/1dd6d7fa47555aeb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/001bceb036b2e202.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/1a745db5280ea30d.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/monetize-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/monetize-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/55edc383f9a4b6cb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/d77fc0358c6215a0.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/06a37b4a2f00c52b.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/7ad371185ebab785.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/a92e76c64004667e.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/seo-guide</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/seo-guide" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/seo-guide" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0e0d62a59cebc29b.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0ef6efda96187a0e.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/2eea04eba5eaa67f.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/bee3b057f5d3da43.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/fb8e04c3d38ce945.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/28fc434acc62291f.jpg</image:loc>
+        </image:image>
+    </url>
     <url>
         <loc>https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost</loc>
-        <lastmod>2026-08-16</lastmod>
+        <lastmod>2026-08-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/small-business-ai-chatbots-boost" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ace7fbecc7a2ce7e.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/bcdfe6090d16717a.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/6981e5c6adc45866.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ee88cfea7786f2be.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/4147e44cb8f2fb70.jpg</image:loc>
+        </image:image>
     </url>
-
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/social-media-strategy</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/47f0c12bcab194ee.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/d2b72e2c837eb7f1.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/2a07ae53a3ae41bb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/60494c1d06fa5c08.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/8ec99de6b99094e4.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/compare/canva-vs-adobe-express-vs-photoshop" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/compare/chatgpt-vs-gemini-vs-claude" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/compare/midjourney-vs-dalle-vs-nano-banana" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/about</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/about" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/about" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/about" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/about" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/about" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/about" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/contact</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/contact" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/contact" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/contact" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/contact" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/contact" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/contact" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/free-chatgpt-prompts</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/free-chatgpt-prompts" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/free-chatgpt-prompts" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/free-chatgpt-prompts" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/free-chatgpt-prompts" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/free-chatgpt-prompts" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/free-chatgpt-prompts" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/monetize-tools</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/monetize-tools" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/monetize-tools" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/cookie-policy</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/cookie-policy" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/cookie-policy" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/cookie-policy" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/cookie-policy" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/cookie-policy" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/cookie-policy" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/disclaimer</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/disclaimer" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/disclaimer" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/disclaimer" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/disclaimer" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/disclaimer" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/disclaimer" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/privacy-policy</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/privacy-policy" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/privacy-policy" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/privacy-policy" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/privacy-policy" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/privacy-policy" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/privacy-policy" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/terms-and-conditions</loc>
+        <lastmod>2026-08-17</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/terms-and-conditions" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/terms-and-conditions" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/terms-and-conditions" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/terms-and-conditions" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/terms-and-conditions" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/terms-and-conditions" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+        </image:image>
+    </url>
+    <!-- AUTO-BLOG-SITEMAP-END -->
 </urlset>

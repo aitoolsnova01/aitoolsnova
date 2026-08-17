@@ -68,6 +68,19 @@
     document.getElementById('atn-reject').onclick = function () { apply('denied'); bar.remove(); };
   }
 
+  // Allow Privacy page "Manage cookies" buttons to re-open the banner.
+  window.atnOpenCookieSettings = function () {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    var old = document.getElementById('atn-consent');
+    if (old) old.remove();
+    gtag('consent', 'default', {
+      ad_storage: 'denied', ad_user_data: 'denied',
+      ad_personalization: 'denied', analytics_storage: 'denied',
+      wait_for_update: 500
+    });
+    render();
+  };
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', render);
   } else {

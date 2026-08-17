@@ -53,3 +53,30 @@
 /search/*                              /                               301
 # REMOVED: /?feed=* -> / matched the bare "/" path and caused a homepage redirect loop
 
+# ============================================
+# Extensionless canonical — force .html → clean (CF also does this, belt+suspenders)
+# ============================================
+/index.html                            /                                 301
+/tools.html                            /tools                            301
+/blogs.html                            /blogs                            301
+/about.html                            /about                            301
+/contact.html                          /contact                          301
+/privacy-policy.html                   /privacy-policy                   301
+/terms-and-conditions.html             /terms-and-conditions             301
+/disclaimer.html                       /disclaimer                       301
+/cookie-policy.html                    /cookie-policy                    301
+/web-stories.html                      /web-stories                      301
+/free-chatgpt-prompts.html             /free-chatgpt-prompts             301
+/monetize-tools.html                   /monetize-tools                   301
+
+# Blog / tools / stories / compare .html → extensionless
+/blog/*.html                           /blog/:splat                      301
+/tools/*.html                          /tools/:splat                     301
+/web-stories/*.html                    /web-stories/:splat               301
+/compare/*.html                        /compare/:splat                   301
+
+# Trailing slash cleanup for content hubs
+/about/                                /about                            301
+/contact/                              /contact                          301
+/web-stories/                          /web-stories                      301
+/compare/                              /compare                          301

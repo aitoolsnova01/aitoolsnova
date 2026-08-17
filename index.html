@@ -6,9 +6,14 @@
     <title>AIToolsNova | Free AI Tools, SEO Tools & Online Utilities</title>
     <meta name="description" content="100+ free AI tools, image tools, SEO tools, PDF tools, calculators and online utilities. No signup, no limits.">
     <meta name="keywords" content="AI Tools, SEO Tools, PDF Tools, Image Tools, QR Generator, Calculators, Social Media Tools">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="theme-color" content="#4F46E5">
     <link rel="canonical" href="https://aitoolsnova.com/">
+    <meta name="language" content="English">
+    <meta name="distribution" content="global">
+    <meta name="rating" content="general">
+    <meta name="target" content="all">
+
     <meta name="google-site-verification" content="JdIed1Fuwp5Ie61wdusFGKIPLfL2lA_encfvwV2STU8" />
     <meta name="google-site-verification" content="BV_5l65yXVWdxsSb2Qtr1nNGjbS1L2b2dRw8OaTphtI" />
     <meta name="google-adsense-account" content="ca-pub-2278101269918728">
@@ -18,7 +23,13 @@
     <meta property="og:description" content="100+ free AI tools, image tools, SEO tools, PDF tools, calculators and online utilities. No signup required.">
     <meta property="og:url" content="https://aitoolsnova.com/">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://aitoolsnova.com/images/logo.svg">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="en_GB">
+    <meta property="og:locale:alternate" content="en_CA">
+    <meta name="language" content="English">
+    <meta property="og:image" content="https://aitoolsnova.com/images/og-image.webp">
+    <meta property="og:image:type" content="image/webp">
+    <meta name="twitter:image" content="https://aitoolsnova.com/images/og-image.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
@@ -37,7 +48,7 @@
         "@type": "Organization",
         "name": "AIToolsNova",
         "url": "https://aitoolsnova.com",
-        "logo": "https://aitoolsnova.com/images/logo.svg",
+        "logo": "https://aitoolsnova.com/images/publisher-logo.png",
         "description": "Free AI tools, SEO tools, image tools, PDF tools and online utilities.",
         "contactPoint": {
             "@type": "ContactPoint",
@@ -55,7 +66,7 @@
         "url": "https://aitoolsnova.com",
         "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://aitoolsnova.com/search?q={search_term_string}",
+            "target": "https://aitoolsnova.com/tools?q={search_term_string}",
             "query-input": "required name=search_term_string"
         }
     }
@@ -121,7 +132,7 @@
 
     
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <noscript><noscript><noscript><noscript></noscript></noscript></noscript></noscript>
+    
 
     
     <script src="/js/consent.js"></script>
@@ -255,7 +266,7 @@
                 <div style="text-align:center;margin-bottom:30px;">
                     <span style="display:inline-block;padding:4px 12px;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;border-radius:50px;font-size:.75rem;font-weight:800;letter-spacing:1px;margin-bottom:8px;">🔥 TRENDING NOW</span>
                     <h2 id="trending-title" style="color:#F8FAFC;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin:0;">Top 3 Trending AI Tools This Week</h2>
-                    <p style="color:#94A3B8;margin-top:8px;">Updated hourly · Auto-rotating picks based on live user activity</p>
+                    <p style="color:#94A3B8;margin-top:8px;">Hand-picked favourites · Rotates so you can discover more free tools</p>
                 </div>
                 <div id="trendingCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1080px;margin:0 auto;">
                     
@@ -266,16 +277,16 @@
         (function(){
             // Curated pool — will rotate 3 at a time. Uses your existing tool pages, no external calls.
             var TRENDING_POOL = [
-                {emoji:'💬', name:'AI Chat', desc:'Ask any question, get instant expert answers.', href:'tools/ai-chat.html', badge:'HOT'},
-                {emoji:'🎨', name:'Background Remover', desc:'One-click transparent background — 100% free.', href:'tools/background-remover.html', badge:'NEW'},
-                {emoji:'✍️', name:'AI Writer', desc:'Generate blog posts, emails & captions in seconds.', href:'tools/ai-writer.html', badge:'HOT'},
-                {emoji:'🖼️', name:'AI Image Generator', desc:'Turn any idea into a stunning AI-generated image.', href:'tools/ai-image-generator.html', badge:'HOT'},
-                {emoji:'📄', name:'Resume Builder', desc:'ATS-friendly resumes with AI suggestions.', href:'tools/resume-builder.html', badge:'TOP'},
-                {emoji:'📺', name:'YouTube Title', desc:'Generate viral, SEO-optimised YouTube titles.', href:'tools/youtube-title.html', badge:'HOT'},
-                {emoji:'📱', name:'Instagram Caption', desc:'Catchy captions + hashtags for every post.', href:'tools/instagram-caption.html', badge:'NEW'},
-                {emoji:'🔑', name:'Keyword Density', desc:'Instant SEO keyword analysis for your content.', href:'tools/keyword-density.html', badge:'TOP'},
-                {emoji:'🏷️', name:'Meta Tag Generator', desc:'Perfect meta title + description in one click.', href:'tools/meta-tag-generator.html', badge:'HOT'},
-                {emoji:'📩', name:'Email Generator', desc:'Professional business emails in 3 seconds.', href:'tools/email-generator.html', badge:'NEW'}
+                {emoji:'💬', name:'AI Chat', desc:'Ask any question, get instant expert answers.', href:'tools/ai-chat', badge:'HOT'},
+                {emoji:'🎨', name:'Background Remover', desc:'One-click transparent background — 100% free.', href:'tools/background-remover', badge:'NEW'},
+                {emoji:'✍️', name:'AI Writer', desc:'Generate blog posts, emails & captions in seconds.', href:'tools/ai-writer', badge:'HOT'},
+                {emoji:'🖼️', name:'AI Image Generator', desc:'Turn any idea into a stunning AI-generated image.', href:'tools/ai-image-generator', badge:'HOT'},
+                {emoji:'📄', name:'Resume Builder', desc:'ATS-friendly resumes with AI suggestions.', href:'tools/resume-builder', badge:'TOP'},
+                {emoji:'📺', name:'YouTube Title', desc:'Generate viral, SEO-optimised YouTube titles.', href:'tools/youtube-title', badge:'HOT'},
+                {emoji:'📱', name:'Instagram Caption', desc:'Catchy captions + hashtags for every post.', href:'tools/instagram-caption', badge:'NEW'},
+                {emoji:'🔑', name:'Keyword Density', desc:'Instant SEO keyword analysis for your content.', href:'tools/keyword-density', badge:'TOP'},
+                {emoji:'🏷️', name:'Meta Tag Generator', desc:'Perfect meta title + description in one click.', href:'tools/meta-tag-generator', badge:'HOT'},
+                {emoji:'📩', name:'Email Generator', desc:'Professional business emails in 3 seconds.', href:'tools/email-generator', badge:'NEW'}
             ];
             var container = document.getElementById('trendingCards');
             if (!container) return;
@@ -359,9 +370,10 @@
                     btn.disabled = true; btn.textContent = '⏳ Generating...';
                     const prompt = `You are an expert blog writer. For the topic "${topic}", generate a complete blog draft with EXACTLY this structure (use plain text, no markdown symbols like ** or ##):\n\n=== SEO TITLE ===\n(One catchy title, 55-60 chars, includes primary keyword and a power word)\n\n=== META DESCRIPTION ===\n(150-160 chars, CTR-focused, includes keyword)\n\n=== INTRODUCTION ===\n(150-word engaging intro that hooks the reader, ends with what they'll learn)\n\n=== OUTLINE ===\n(6-8 H2 section headings, each followed by 2-3 bullet points of what to cover under it)\n\n=== 5 SEO KEYWORDS ===\n(comma-separated primary + LSI keywords)\n\nBe concrete and specific to the topic. No meta commentary.`;
                     try {
-                        const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt }) });
-                        const data = await res.json().catch(()=>({}));
-                        if (res.ok && data.reply) {
+                        const data = (window.ATN && ATN.callAI)
+                            ? await ATN.callAI({ message: prompt, tool: 'writer', timeoutMs: 60000 }).catch(e => ({ error: e.message }))
+                            : await (async () => { const res = await fetch('/api/gemini', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: prompt, tool: 'writer' }) }); const j = await res.json().catch(()=>({})); if (!res.ok) j.error = j.error || 'fail'; return j; })();
+                        if (!data.error && data.reply) {
                             out.textContent = data.reply;
                             copyBtn.style.display = 'inline-block';
                             if (window.gtag) gtag('event','blog_widget_generate',{topic_length: topic.length});
@@ -556,7 +568,7 @@
                         <article class="tool-card">
                             <div class="tool-icon" aria-hidden="true">📄</div>
                             <h3>PDF Converter</h3>
-                            <p>Convert documents into PDF instantly.</p>
+                            <p>Convert JPG/PNG images into a PDF instantly.</p>
                             <a href="tools/pdf-converter" class="tool-btn">Open Tool</a>
                         </article>
                         <article class="tool-card">
@@ -883,7 +895,37 @@
     </main>
 
     
-    <footer class="footer" role="contentinfo">
+    
+        <section class="seo-home-depth" id="about-aitoolsnova" style="padding:56px 0;background:#fff;border-top:1px solid #E2E8F0;">
+            <div class="container" style="max-width:900px;">
+                <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:14px;">Free AI tools and online utilities for a worldwide audience</h2>
+                <p style="color:#475569;line-height:1.75;margin-bottom:14px;">AIToolsNova is a free toolkit for students, freelancers, marketers, developers and small businesses in the United States, United Kingdom, Canada, India and beyond. Every core utility is built to run in a modern browser with no forced account wall, so you can finish real work—writing, image cleanup, PDF packing, SEO tags, social captions and simple calculators—without stacking another subscription.</p>
+                <p style="color:#475569;line-height:1.75;margin-bottom:14px;">Unlike directories that only list outbound links, we host hands-on tools on this site and publish long-form guides that explain <em>how</em> to use them. That combination matters for both productivity and search quality: a tool page should solve a job, and a blog post should teach a process you can repeat.</p>
+
+                <h3 style="font-size:1.25rem;font-weight:800;margin:28px 0 10px;">What you can do here today</h3>
+                <ul style="color:#475569;line-height:1.75;padding-left:20px;margin-bottom:14px;">
+                    <li><strong>AI workspace:</strong> <a href="tools/ai-chat">AI Chat</a>, <a href="tools/ai-writer">AI Writer</a>, <a href="tools/email-generator">Email Generator</a>, <a href="tools/resume-builder">Resume Builder</a>.</li>
+                    <li><strong>Image lab:</strong> <a href="tools/ai-image-generator">AI Image Generator</a>, <a href="tools/background-remover">Background Remover</a>, <a href="tools/image-compressor">Image Compressor</a>, resizer and converter.</li>
+                    <li><strong>Document helpers:</strong> merge, split and image-to-PDF utilities that run with open libraries in your browser.</li>
+                    <li><strong>SEO &amp; social:</strong> meta tags, keyword density, YouTube kit, captions and hashtags.</li>
+                    <li><strong>Learning hub:</strong> in-depth <a href="blogs">blog guides</a> and visual <a href="web-stories">Web Stories</a> updated on a daily cadence.</li>
+                </ul>
+
+                <h3 style="font-size:1.25rem;font-weight:800;margin:28px 0 10px;">How we keep quality high enough for Google and AdSense</h3>
+                <p style="color:#475569;line-height:1.75;margin-bottom:14px;">We focus on original explanations, honest limitations, working software, clear privacy language and policy pages. We do not invent fake subscriber counts, guarantee income, or ship empty “coming soon” tools. Advertising helps keep the toolkit free; you control non-essential cookies through our consent banner.</p>
+
+                <h3 style="font-size:1.25rem;font-weight:800;margin:28px 0 10px;">Suggested workflow for new visitors</h3>
+                <ol style="color:#475569;line-height:1.75;padding-left:20px;margin-bottom:14px;">
+                    <li>Pick one job (for example: “compress hero images” or “draft three outreach emails”).</li>
+                    <li>Open the matching tool from the directory and produce a first result.</li>
+                    <li>Read the related blog guide for process tips, then refine and publish.</li>
+                    <li>Save prompts and settings so tomorrow’s work is faster than today’s.</li>
+                </ol>
+                <p style="color:#475569;line-height:1.75;">Questions or corrections? <a href="contact">Contact the editorial team</a> or email support@aitoolsnova.com. Read our <a href="about">About</a>, <a href="privacy-policy">Privacy Policy</a> and <a href="terms-and-conditions">Terms</a> anytime.</p>
+            </div>
+        </section>
+
+<footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-about">
@@ -914,11 +956,9 @@
                 <div class="footer-links">
                     <h4>Follow Us</h4>
                     <ul>
-                        <li><a href="#" rel="noopener">Facebook</a></li>
-                        <li><a href="#" rel="noopener">Instagram</a></li>
-                        <li><a href="#" rel="noopener">YouTube</a></li>
-                        <li><a href="#" rel="noopener">X (Twitter)</a></li>
-                        <li><a href="#" rel="noopener">LinkedIn</a></li>
+                        <li><a href="mailto:support@aitoolsnova.com">Email</a></li>
+                        <li><a href="contact">Contact / Feedback</a></li>
+                        <li><a href="blogs">Latest Articles</a></li>
                     </ul>
                 </div>
             </div>
@@ -1011,7 +1051,7 @@
                 searchBtn.addEventListener('click', function() {
                     const query = searchInput.value.trim().toLowerCase();
                     if (!query) return;
-                    window.location.href = 'tools.html?q=' + encodeURIComponent(query);
+                    window.location.href = 'tools?q=' + encodeURIComponent(query);
                 });
                 searchInput.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
@@ -1021,6 +1061,7 @@
             }
         });
     </script>
+<script src="/js/ai-client.js" defer></script>
 <script src="enhancements.js" defer></script>
 </body>
 </html>

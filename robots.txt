@@ -1,4 +1,5 @@
-# ROBOTS.TXT - AIToolsNova.com  |  v6.0
+# ROBOTS.TXT — AIToolsNova.com
+# https://aitoolsnova.com/robots.txt
 
 User-agent: *
 Allow: /
@@ -7,8 +8,11 @@ Disallow: /temp/
 Disallow: /backup/
 Disallow: /logs/
 Disallow: /config/
+Disallow: /functions/
+Disallow: /frontend/
+Disallow: /backend/
 
-# ---- Google AdSense (MUST be explicit - AdsBot ignores User-agent: *) ----
+# ---- Google AdSense (AdsBot ignores User-agent: *) ----
 User-agent: Mediapartners-Google
 Allow: /
 
@@ -21,14 +25,14 @@ Allow: /
 User-agent: AdsBot-Google-Mobile-Apps
 Allow: /
 
-User-agent: Google-AdSense
-Allow: /
-
 # ---- Search engines ----
 User-agent: Googlebot
 Allow: /
 
 User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-News
 Allow: /
 
 User-agent: Bingbot
@@ -40,7 +44,10 @@ Allow: /
 User-agent: Slurp
 Allow: /
 
-# ---- Social ----
+User-agent: Yandex
+Allow: /
+
+# ---- Social previews ----
 User-agent: Twitterbot
 Allow: /
 
@@ -56,7 +63,26 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-# ---- Block scrapers ----
+# ---- AI crawlers (public content / citations) ----
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# ---- Block pure scrapers (optional bandwidth save) ----
 User-agent: SemrushBot
 Disallow: /
 
@@ -72,4 +98,5 @@ Disallow: /
 User-agent: BLEXBot
 Disallow: /
 
+# Sitemaps
 Sitemap: https://aitoolsnova.com/sitemap.xml

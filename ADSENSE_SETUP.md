@@ -9,7 +9,7 @@ Aapki site pe ab **2 manual ad slots** add ho gaye hain (jo Auto Ads se 5-10x zy
 
 **Lekin ye ads tabhi actual earn karenge jab aap real AdSense slot IDs replace kar denge.**
 
-Abhi placeholder `data-ad-slot="1234567890"` set hai — ye chalega nahi.
+Abhi placeholder `data-ad-slot="1700790558"` set hai — ye chalega nahi.
 
 ---
 
@@ -44,21 +44,21 @@ Open `/app/index.html`, dhundo:
 <ins class="adsbygoogle"
      style="display:block;min-height:90px;"
      data-ad-client="ca-pub-2278101269918728"
-     data-ad-slot="1234567890"
+     data-ad-slot="1700790558"
 ```
 
-`1234567890` ko **Unit 1** wale actual slot ID se replace karo.
+`1700790558` ko **Unit 1** wale actual slot ID se replace karo.
 
 **Fix 2: Mid-article ad (enhancements.js me)**
 
 Open `/app/enhancements.js`, dhundo:
 ```javascript
-data-ad-slot="1234567890"
+data-ad-slot="1700790558"
 data-ad-format="fluid"
 data-ad-layout="in-article"
 ```
 
-`1234567890` ko **Unit 2** wale actual in-article slot ID se replace karo.
+`1700790558` ko **Unit 2** wale actual in-article slot ID se replace karo.
 
 ### Step 3: GitHub pe push aur Cloudflare pe deploy
 

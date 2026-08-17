@@ -48,10 +48,12 @@ async function localizeBlogHero(html) {
         try {
             const sharp = (await import('sharp')).default;
             const meta = await sharp(file).metadata();
-            if ((meta.width || 0) >= 1200) return;
+            // Always normalize heroes to crisp 1600x900 for Discover + social
+            if ((meta.width || 0) >= 1600 && (meta.height || 0) >= 900 && (await import('node:fs')).statSync(file).size > 80000) return;
             const out = await sharp(file)
-                .resize(1600, 900, { fit: 'cover', kernel: 'lanczos3' })
-                .jpeg({ quality: 86, progressive: true, mozjpeg: true })
+                .resize(1600, 900, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
+                .sharpen({ sigma: 0.5 })
+                .jpeg({ quality: 90, progressive: true, mozjpeg: true, chromaSubsampling: '4:4:4' })
                 .toBuffer();
             await fs.writeFile(file, out);
             console.log(`   \u2191 upscaled ${path.basename(file)} to 1600x900 for Discover`);
@@ -451,17 +453,29 @@ GEO + KEYWORD SEO (mandatory - this drives search traffic):
 - Add 3-5 long-tail question-style subheadings people actually search (How/What/Which/Best...).
 - Keep keyword density natural (1-2%). Readability first, keywords second.
 
+
+UNIQUENESS & GOOGLE POLICY (critical for AdSense approval):
+- Every paragraph must add NEW information. Ban filler openers like "In today's digital world", "In conclusion", "It goes without saying".
+- Do NOT rehash the same tool list that appears on every AI blog. Prefer specific workflows, checklists, mistakes to avoid, and before/after examples.
+- Do NOT claim fake user counts, fake rankings, or "millions of users" for AIToolsNova.
+- Do NOT promise guaranteed income, "get rich", or medical/financial advice. Stay practical and honest.
+- Clearly label opinions as opinions. Prefer evergreen how-to depth over hype.
+- Content must be original enough that a plagiarism checker would score it as unique.
+
 ABSOLUTE RULES:
 - Only include VERIFIED, well-established facts. If mentioning a prediction, market forecast, or emerging trend, clearly label it (e.g. "According to industry analysts...", "This is speculation, not confirmed...").
 - Do NOT invent statistics. Only use ballpark ranges you are highly confident about (e.g. "millions of users"), never specific fake numbers.
 - Do NOT report any rumor as fact. If a rumor is relevant, prefix with "Rumored:" and explicitly note it is unverified.
 - Do NOT mention pricing of paid competitors unless you're sure (skip prices if unsure).
 - Do NOT promote any illegal, unethical or misleading activity.
+- NEVER promise guaranteed income, passive income without work, "get rich", lottery-style earnings, or medical/financial advice. If the topic involves freelancing or side income, include a clear one-line disclaimer that results vary and nothing is guaranteed.
+- NEVER fabricate testimonials, user counts, revenue screenshots, or "as seen on" claims for AIToolsNova.
+
 - Never write about specific individuals in a defamatory way.
 - Focus on genuinely helpful, evergreen information that also feels current.
 
 LENGTH & DEPTH (mandatory - thin posts do not rank):
-- The article body must be AT LEAST 1400 words of real, substantive prose. Aim for 1600-1900.
+- The article body must be AT LEAST 1600 words of real, substantive prose. Aim for 1700-2200.
 - Minimum 6 H2 sections, each with 2-4 full paragraphs (not one-liners).
 - Include at least one comparison table and one numbered step-by-step list.
 - Every tool/technique mentioned must have a concrete "how you actually use it" example.
@@ -499,15 +513,15 @@ STRUCTURE (return ONLY valid JSON — no markdown code fences, no explanation ou
   "affiliate_picks": [
     {"name": "Product Name", "why": "one-line benefit", "amazon_query": "search terms", "flipkart_query": "search terms"}
   ],
-  "related_tools": ["ai-chat.html","ai-writer.html","ai-image-generator.html","youtube-kit.html"],
-  "related_blogs": ["best-free-ai-tools-2026.html","top-100-ai-tools-2026.html","ai-productivity-tools.html"]
+  "related_tools": ["ai-chat","ai-writer","ai-image-generator","youtube-kit"],
+  "related_blogs": ["best-free-ai-tools-2026","top-100-ai-tools-2026","ai-productivity-tools"]
 }
 
 Rules:
 - intro_html MUST start with a bold hook sentence and MUST end with a "Quick Takeaways" list (great for featured snippets + reader retention)
 - 7 to 9 sections total, each H2 must be benefit-driven and specific (never "Introduction", "Overview", "Conclusion")
 - 4 to 6 FAQs
-- Minimum 1600 words total across intro + sections + conclusion
+- Minimum 1700 words total across intro + sections + conclusion
 - Use <p>, <ul>, <ol>, <li>, <strong>, <em>, <h3>
 - No <script>, no <style>, no external links except aitoolsnova.com internal ones
 - Use straight ASCII quotes inside HTML attributes; escape any inline double-quote inside JSON strings
@@ -523,16 +537,43 @@ Return ONLY the JSON object.`;
     // Defensive defaults
     parsed.meta_description = parsed.meta_description || `Learn about ${topic.title} with AIToolsNova — free, expert-backed guide.`;
     parsed.meta_keywords = parsed.meta_keywords || 'ai tools, free ai, ai guide, aitoolsnova';
-    parsed.meta_keywords = [parsed.meta_keywords, topic.primary_keyword, topic.geo_keywords].filter(Boolean).join(', ');
+    // Dedupe keywords to avoid Google spam signals from stuffed meta keywords
+    {
+        const parts = [parsed.meta_keywords, topic.primary_keyword, topic.geo_keywords]
+            .filter(Boolean).join(',').split(',').map(s => s.trim()).filter(Boolean);
+        const seen = new Set();
+        const uniq = [];
+        for (const p of parts) {
+            const k = p.toLowerCase().replace(/\s+/g, ' ');
+            if (seen.has(k)) continue;
+            // drop obvious duplicates like "best best ..."
+            if (/\b(\w+) \1\b/i.test(k)) continue;
+            seen.add(k);
+            uniq.push(p);
+            if (uniq.length >= 12) break;
+        }
+        parsed.meta_keywords = uniq.join(', ');
+    }
     parsed.read_time_min = parsed.read_time_min || 7;
     parsed.intro_html = parsed.intro_html || '<p>Welcome to this guide.</p>';
     parsed.sections = Array.isArray(parsed.sections) && parsed.sections.length ? parsed.sections : [];
     parsed.faqs = Array.isArray(parsed.faqs) ? parsed.faqs : [];
     parsed.conclusion_html = parsed.conclusion_html || '<p>Thanks for reading! Explore more free AI tools on AIToolsNova.</p>';
-    parsed.related_tools = parsed.related_tools || ['ai-chat.html','ai-writer.html','ai-image-generator.html','youtube-kit.html'];
-    parsed.related_blogs = parsed.related_blogs || ['best-free-ai-tools-2026.html','top-100-ai-tools-2026.html','ai-productivity-tools.html'];
+    parsed.related_tools = parsed.related_tools || ['ai-chat','ai-writer','ai-image-generator','youtube-kit'];
+    parsed.related_blogs = parsed.related_blogs || ['best-free-ai-tools-2026','top-100-ai-tools-2026','ai-productivity-tools'];
     parsed.affiliate_picks = Array.isArray(parsed.affiliate_picks) ? parsed.affiliate_picks.slice(0, 3) : [];
-    if (parsed.sections.length < 3) throw new Error('Content too short (needs >=3 sections). Got: ' + parsed.sections.length);
+    if (parsed.sections.length < 6) throw new Error('Content too short (needs >=6 sections). Got: ' + parsed.sections.length);
+    // Approximate word count across main fields — reject thin AI output before it ships
+    const approxText = [
+        parsed.intro_html, parsed.conclusion_html,
+        ...(parsed.sections || []).map(s => `${s.h2 || ''} ${s.body_html || ''}`),
+        ...(parsed.faqs || []).map(f => `${f.q || ''} ${f.a || ''}`),
+    ].join(' ').replace(/<[^>]+>/g, ' ');
+    const wc = (approxText.match(/[A-Za-z0-9']+/g) || []).length;
+    if (wc < 1400) {
+        throw new Error(`Content word count too low for AdSense/SEO standards: ${wc} (need >= 1400). Regenerating required.`);
+    }
+    console.log(`   ➤ Approx body words: ${wc}`);
     return parsed;
 }
 
@@ -603,9 +644,9 @@ function buildHtml(topic, content, todayISO, todayHuman) {
     }));
 
     const relTools = (content.related_tools || []).slice(0, 6)
-        .map(u => `<li><a href="../tools/${u}">${u.replace(/-/g,' ').replace('.html','').replace(/\b\w/g, c=>c.toUpperCase())}</a></li>`).join('');
+        .map(u => { const slug = String(u).replace(/\.html$/, ''); return `<li><a href="../tools/${slug}">${slug.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase())}</a></li>`; }).join('');
     const relBlogs = (content.related_blogs || []).slice(0, 4)
-        .map(u => `<li><a href="${u}">${u.replace(/-/g,' ').replace('.html','').replace(/\b\w/g, c=>c.toUpperCase())}</a></li>`).join('');
+        .map(u => { const slug = String(u).replace(/\.html$/, ''); return `<li><a href="${slug}">${slug.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase())}</a></li>`; }).join('');
     const affiliateHtml = AFFILIATE_PRODUCT_NAME && /^https?:\/\//i.test(AFFILIATE_PRODUCT_URL)
         ? `<aside class="affiliate-box"><strong>Recommended resource: ${esc(AFFILIATE_PRODUCT_NAME)}</strong><p>${esc(AFFILIATE_DISCLOSURE)}</p><a href="${esc(AFFILIATE_PRODUCT_URL)}" rel="sponsored nofollow noopener" target="_blank">View product</a></aside>`
         : '';
@@ -645,6 +686,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
       });
     </script>
 
+    <script src="/js/consent.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -660,7 +702,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
         "headline": ${JSON.stringify(topic.title)},
         "description": ${JSON.stringify(content.meta_description)},
         "image": ${JSON.stringify(heroImg)},
-        "author": { "@type": "Person", "name": "AIToolsNova Team" },
+        "author": { "@type": "Person", "name": "AIToolsNova Editorial", "url": "https://aitoolsnova.com/about" },
         "datePublished": "${todayISO}",
         "dateModified": "${todayISO}",
         "mainEntityOfPage": { "@type": "WebPage", "@id": "${canonicalUrl}" },
@@ -670,7 +712,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
         "publisher": {
             "@type": "Organization",
             "name": "AIToolsNova",
-            "logo": { "@type": "ImageObject", "url": "https://aitoolsnova.com/images/logo.svg" }
+            "logo": { "@type": "ImageObject", "url": "https://aitoolsnova.com/images/publisher-logo.png", "width": 600, "height": 60 }
         }
     }
     </script>
@@ -737,8 +779,8 @@ function buildHtml(topic, content, todayISO, todayHuman) {
 
     <header class="header">
         <div class="container">
-            <a href="../index.html" class="logo">🤖 <span>AIToolsNova</span></a>
-            <a href="../blogs.html" class="back-btn">← All Blogs</a>
+            <a href="../" class="logo">🤖 <span>AIToolsNova</span></a>
+            <a href="../blogs" class="back-btn">← All Blogs</a>
         </div>
     </header>
 
@@ -775,7 +817,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
                     <h3>🛠️ Related Tools</h3>
                     <ul>
                         ${relTools}
-                        <li><a href="../tools.html">View All Tools →</a></li>
+                        <li><a href="../tools">View All Tools →</a></li>
                     </ul>
                 </div>
 
@@ -783,13 +825,15 @@ function buildHtml(topic, content, todayISO, todayHuman) {
                     <h3>📚 Related Blogs</h3>
                     <ul>
                         ${relBlogs}
-                        <li><a href="../blogs.html">View All Blogs →</a></li>
+                        <li><a href="../blogs">View All Blogs →</a></li>
                     </ul>
                 </div>
 
-                <p style="margin-top:24px;padding-top:16px;border-top:1px solid #E2E8F0;font-size:.85rem;color:#94A3B8;">
-                    <strong>Published:</strong> ${todayHuman}
-                </p>
+                <aside class="author-box" style="margin-top:28px;padding:20px;border:1px solid #E2E8F0;border-radius:14px;background:#fff;">
+                    <strong style="display:block;margin-bottom:6px;color:#0F172A;">About the author</strong>
+                    <p style="margin:0;color:#475569;font-size:.95rem;">Written by the <a href="../about" style="color:#4F46E5;font-weight:600;">AIToolsNova Editorial team</a>. We test free AI and productivity tools so creators, students and small businesses can work faster without paid subscriptions. Questions? <a href="../contact" style="color:#4F46E5;font-weight:600;">Contact us</a>.</p>
+                    <p style="margin:12px 0 0;font-size:.85rem;color:#94A3B8;"><strong>Published:</strong> ${todayHuman} · <strong>Updated:</strong> ${todayHuman}</p>
+                </aside>
             </div>
         </article>
     </div>
@@ -797,7 +841,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
     <footer class="footer">
         <div class="container">
             <div class="footer-bottom">
-                <p>© 2026 AIToolsNova. All Rights Reserved. | <a href="../privacy-policy.html">Privacy Policy</a> | <a href="../terms-and-conditions.html">Terms</a> | <a href="../disclaimer.html">Disclaimer</a></p>
+                <p>© 2026 AIToolsNova. All Rights Reserved. | <a href="../privacy-policy">Privacy Policy</a> | <a href="../terms-and-conditions">Terms</a> | <a href="../disclaimer">Disclaimer</a></p>
             </div>
         </div>
     </footer>
@@ -829,7 +873,7 @@ async function updateBlogsList(topic, content, todayHuman) {
                                 <span>⏱ ${content.read_time_min || 7} min read</span>
                             </div>
                             <p>${shortDesc}</p>
-                            <a href="blog/${topic.slug}.html" class="read-more">Read More →</a>
+                            <a href="blog/${topic.slug}" class="read-more">Read More →</a>
                         </div>
                     </article>
 `;
@@ -917,6 +961,16 @@ async function main() {
     finalHtml = await localizeBlogHero(finalHtml);
     const finalPath = path.join(BLOG_DIR, `${topic.slug}.html`);
     await fs.writeFile(finalPath, finalHtml);
+    // Final on-disk QA: refuse to leave thin HTML in the repo
+    {
+        const plain = finalHtml.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ');
+        const wc2 = (plain.match(/[A-Za-z0-9']+/g) || []).length;
+        if (wc2 < 1600) {
+            await fs.unlink(finalPath).catch(()=>{});
+            throw new Error(`Word count QA failed after write (${wc2} words). Thin posts are not published.`);
+        }
+        console.log(`   ➤ On-disk visible words ~= ${wc2}`);
+    }
     console.log(`   ✅ Written: blog/${topic.slug}.html (${(finalHtml.length/1024).toFixed(1)} KB)`);
 
     console.log('\n🔗 Updating blogs.html and sitemap.xml...');
@@ -931,7 +985,7 @@ async function main() {
     await pingIndexNow(topic);
 
     console.log('\n🎉 Done! Blog post created successfully.');
-    console.log(`   Preview URL: https://aitoolsnova.com/blog/${topic.slug}.html\n`);
+    console.log(`   Preview URL: https://aitoolsnova.com/blog/${topic.slug}\n`);
 }
 
 main().catch(err => {
