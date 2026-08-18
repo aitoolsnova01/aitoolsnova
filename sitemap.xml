@@ -1734,4 +1734,12 @@
         </image:image>
     </url>
     <!-- AUTO-BLOG-SITEMAP-END -->
+
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business</loc>
+        <lastmod>2026-08-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>
