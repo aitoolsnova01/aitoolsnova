@@ -177,7 +177,7 @@
 
                     <div class="contact-form">
                         <h3 style="margin-bottom:20px;">Send a Message</h3>
-                        <form id="contactForm" onsubmit="return false;">
+                        <form id="contactForm" novalidate>
                             <div class="form-row">
                                 <div>
                                     <label for="fullName">Full Name</label>
@@ -242,7 +242,9 @@
     <div class="depth-block"><h2>What to Expect When You Write to Us</h2><p>We read every message that arrives at aitoolsnova01@gmail.com. Most enquiries are answered within 24 to 48 hours on working days; if you write over a weekend the reply usually lands on Monday. If you have not heard back after three working days, it is worth checking your spam folder before writing again, as automated filters sometimes catch our replies.</p><h3>Reporting a problem with a tool</h3><p>Bug reports are the most useful messages we receive, and a few details make them far easier to act on. Tell us which tool you were using, what you were trying to do, what happened instead, and which browser and device you were on. If the tool produced an error message, quoting it exactly usually points straight at the cause. Screenshots help, but please avoid sending files that contain personal or client information.</p><h3>Suggesting a new tool</h3><p>Many of the tools on this site exist because someone asked for them. If there is something you find yourself doing manually every week, describe the task rather than the solution you have in mind. Knowing the underlying problem often leads to something more useful than the feature originally requested. We prioritise suggestions that can run entirely in the browser, since that keeps the tools free, fast and private.</p><h3>Business, advertising and partnerships</h3><p>For sponsorship, advertising or collaboration enquiries, please include your company, the nature of the proposal and any relevant timelines in the first message. We do not publish paid links inside editorial content, and we do not accept guest posts written primarily to place a backlink. Genuine partnership proposals are welcome and are answered individually.</p><h3>Corrections and content feedback</h3><p>If you spot something inaccurate or out of date in a guide, tell us which article and which claim. Pricing and feature details change frequently across the tools we write about, and reader corrections are the fastest way we learn that something needs updating. We correct errors promptly and note significant changes in the article itself.</p><h3>Privacy of your message</h3><p>Messages you send are used only to respond to your enquiry. We do not add correspondents to a mailing list, and we do not share contact details with third parties. Please do not send passwords, financial information or confidential documents by email; if a support question requires sensitive data, we will tell you how to proceed safely.</p></div>
                 </main>
 
-    <footer class="footer">
+    
+<section data-atn-newsletter aria-label="Newsletter signup" style="padding:44px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0"></section>
+<footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div>
@@ -338,30 +340,50 @@
             }
 
             // Contact form handler
-            document.getElementById('contactForm').addEventListener('submit', function(e) {
+            document.getElementById('contactForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
+                const form = this;
+                const btn = form.querySelector('button[type=submit], .primary-btn, button');
+                const status = document.getElementById('contactStatus');
                 const name = document.getElementById('fullName').value.trim();
                 const email = document.getElementById('email').value.trim();
                 const subject = document.getElementById('subject').value.trim();
                 const message = document.getElementById('message').value.trim();
 
-                if (!name || !email || !subject || !message) {
-                    alert('Please fill all fields.');
-                    return;
-                }
+                const say = (text, ok) => {
+                    if (!status) { alert(text); return; }
+                    status.textContent = text;
+                    status.style.color = ok ? '#16A34A' : '#DC2626';
+                };
 
-                if (!email.includes('@') || !email.includes('.')) {
-                    alert('Please enter a valid email address.');
-                    return;
-                }
+                if (!name || !email || !subject || !message) { say('Please fill in every field.', false); return; }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say('Please enter a valid email address.', false); return; }
 
-                const body = 'Name: ' + name + '\nEmail: ' + email + '\n\n' + message;
-                const mailto = 'mailto:aitoolsnova01@gmail.com'
-                    + '?subject=' + encodeURIComponent(subject)
-                    + '&body=' + encodeURIComponent(body);
-                window.location.href = mailto;
-                alert('✅ Opening your email app to send the message to aitoolsnova01@gmail.com.');
-                this.reset();
+                const label = btn ? btn.textContent : '';
+                if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+                say('', true);
+
+                try {
+                    // Posted to our own endpoint. The old version opened a mailto:
+                    // link, which silently did nothing for visitors without a
+                    // desktop mail client - most people on a phone.
+                    const res = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, subject, message, website: '' })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok && data.ok) {
+                        say(data.message || 'Thanks - your message has been received.', true);
+                        form.reset();
+                    } else {
+                        say(data.detail || 'Could not send. Please email support@aitoolsnova.com directly.', false);
+                    }
+                } catch (err) {
+                    say('Network error. Please email support@aitoolsnova.com directly.', false);
+                } finally {
+                    if (btn) { btn.disabled = false; btn.textContent = label; }
+                }
             });
 
             console.log('📧 Contact page loaded.');
@@ -369,5 +391,6 @@
     </script>
 
 <script src="enhancements.js" defer></script>
+<script src="/js/newsletter.js" defer></script>
 </body>
 </html>
