@@ -22,7 +22,12 @@ export async function onRequestPost(context) {
             }));
         }
 
-        return new Response(JSON.stringify({ ok: true, message: 'Subscribed successfully' }), {
+        // Report whether the write actually persisted so a missing binding is
+        // visible instead of looking like a successful signup.
+        const stored = Boolean(context.env.SUBSCRIBERS);
+        if (!stored) console.warn('SUBSCRIBERS KV not bound - subscriber not persisted:', email);
+
+        return new Response(JSON.stringify({ ok: true, stored, message: 'Subscribed successfully' }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
