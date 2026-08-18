@@ -1,17 +1,27 @@
 /**
- * Keep preview hostnames out of search results.
+ * Send the public Pages hostname to the real domain, and keep every other
+ * non-production hostname out of search results.
  *
- * The site is served from two places: the real domain (aitoolsnova.com) and the
- * Cloudflare Pages hostname (aitoolsnova.pages.dev, plus per-deploy subdomains
- * like abc123.aitoolsnova.pages.dev). Both return 200 and serve identical HTML,
- * so search engines treated the preview host as a full duplicate of the site.
+ * The site answers on two public hostnames: aitoolsnova.com and
+ * aitoolsnova.pages.dev. Both returned 200 with identical HTML, so search
+ * engines indexed the Pages host as a complete duplicate of the site (Bing
+ * alone reported ~39,400 results for it). Two copies competing for the same
+ * queries splits ranking signals and spends the crawl budget twice.
  *
- * A canonical tag alone was not enough - it is a hint, and crawlers still have
- * to fetch every page to read it. X-Robots-Tag is a directive, so it removes
- * the preview host from the index and stops the crawl budget being spent twice.
+ * Handling differs per host on purpose:
  *
- * Only the preview hosts are affected. Requests to the production domain pass
- * through completely untouched.
+ *   aitoolsnova.com / www      -> untouched.
+ *   aitoolsnova.pages.dev      -> 301 to the same path on the real domain.
+ *                                 A redirect consolidates link equity, which a
+ *                                 noindex header cannot do, and it stops any
+ *                                 human who lands there seeing a second copy.
+ *   <hash>.aitoolsnova.pages.dev -> noindex only, no redirect. These are
+ *                                 per-deployment previews and redirecting them
+ *                                 would make it impossible to test a build
+ *                                 before it goes live.
+ *
+ * API routes are never redirected. A 301 turns a POST into a GET and drops the
+ * request body, which would silently break every AI tool called from a preview.
  */
 
 const PRODUCTION_HOSTS = new Set([
@@ -19,20 +29,32 @@ const PRODUCTION_HOSTS = new Set([
   'www.aitoolsnova.com',
 ]);
 
+// The stable, publicly shared Pages hostname (not a per-deploy preview).
+const PUBLIC_PAGES_HOST = 'aitoolsnova.pages.dev';
+
+const CANONICAL_ORIGIN = 'https://aitoolsnova.com';
+
 export async function onRequest(context) {
   const { request, next } = context;
   const url = new URL(request.url);
   const host = url.hostname.toLowerCase();
 
-  const response = await next();
-
-  // Production traffic: no change at all.
+  // Production traffic: pass straight through, no changes.
   if (PRODUCTION_HOSTS.has(host)) {
-    return response;
+    return next();
   }
 
-  // Anything else reaching this Pages project is a preview/deployment host
-  // (*.pages.dev). Serve it, but tell crawlers not to index or follow it.
+  const isApi = url.pathname.startsWith('/api/');
+
+  // The shared pages.dev hostname: redirect everything except the API.
+  if (host === PUBLIC_PAGES_HOST && !isApi) {
+    const target = CANONICAL_ORIGIN + url.pathname + url.search;
+    return Response.redirect(target, 301);
+  }
+
+  // Per-deployment previews, and API calls on any preview host: serve the
+  // response but make sure crawlers never index it.
+  const response = await next();
   const headers = new Headers(response.headers);
   headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
 
