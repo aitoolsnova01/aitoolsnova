@@ -19,9 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Cloudflare diagnose + fix
+      - name: Run Cloudflare diagnose and fix
         run: bash scripts/cf-fix.sh
-
 
       - name: Post report to issue 2
         if: always()
@@ -30,21 +29,23 @@ jobs:
         run: |
           REPORT=$(cat cf-report.md 2>/dev/null || true)
           if [ -n "$REPORT" ]; then
-            BODY="**CF Auto-Fix run** (${{ github.run_number }}) — ${{ github.ref_name }}
-Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
----
-
-$REPORT"
-            gh issue comment 2 --repo "${{ github.repository }}" --body "$BODY" || true
+            {
+              echo "**CF Auto-Fix run** (${{ github.run_number }}) -- ${{ github.ref_name }}"
+              echo "Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              echo ""
+              echo "---"
+              echo ""
+              echo "$REPORT"
+            } > /tmp/body.txt
+            gh issue comment 2 --repo "${{ github.repository }}" --body-file /tmp/body.txt || true
           fi
 
-      - name: Security cleanup - remove this workflow file (token scrub)
+      - name: Security cleanup (remove workflow file)
         if: always()
         run: |
           cd "$GITHUB_WORKSPACE"
-          git config user.name "cf-fix-cleanup[bot]"
-          git config user.email "cf-fix-cleanup[bot]@users.noreply.github.com"
+          git config user.name "cf-fix-cleanup-bot"
+          git config user.email "cf-fix-cleanup-bot@users.noreply.github.com"
           if git ls-files --error-unmatch .github/workflows/cf-fix.yml >/dev/null 2>&1; then
             git rm .github/workflows/cf-fix.yml
             git commit -m "chore: remove one-shot cf-fix workflow (token scrub)" || true
