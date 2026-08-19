@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      CF_TOKEN: cfut_pBPxxEn7S3Kh4ISQYSCBi6H91RlQUelt40yJCnG2f2aca933
+      CF_TOKEN: cfut_3fUw28MRXNq9yxXCZFLo7pqEjHa7n9b210587
       FIX: "true"
     steps:
       - uses: actions/checkout@v4
