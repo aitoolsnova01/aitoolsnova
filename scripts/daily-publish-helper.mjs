@@ -177,6 +177,16 @@ export async function commitAndPush({
     ]);
 
     const workflowToken = process.env.WORKFLOW_PAT || process.env.GH_WORKFLOW_TOKEN || '';
+    if (onlyWorkflows && !workflowToken) {
+        console.log('ℹ️  No WORKFLOW_PAT — cannot push workflow files. Reverting workflow changes; content-only commit will follow.');
+        await git(['restore', '--staged', '.github/workflows']).catch(() => {});
+        await git(['restore', '--worktree', '.github/workflows']).catch(() => {});
+        // The commit already includes workflow files — undo it entirely
+        try {
+            await git(['reset', '--soft', 'HEAD~1']).catch(() => {});
+        } catch { /* no commit to undo */ }
+        return false;
+    }
     if (onlyWorkflows && workflowToken) {
         const repo = process.env.GITHUB_REPOSITORY || 'aitoolsnova01/aitoolsnova';
         const url = `https://x-access-token:${workflowToken}@github.com/${repo}.git`;

@@ -36,6 +36,7 @@ jobs:
 
       - name: Generate today's blog post
         id: gen
+        continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -44,6 +45,7 @@ jobs:
         run: node scripts/generate-blog.mjs
 
       - name: Commit and push new blog
+        if: always()
         run: |
           git config user.name "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
