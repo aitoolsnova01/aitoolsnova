@@ -23,6 +23,13 @@ import fs from 'node:fs/promises';
 import { readdirSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {
+    isBlogWorkflowBroken,
+    selfHealWorkflows,
+    commitAndPush,
+    runBlogGenerator,
+    git,
+} from './daily-publish-helper.mjs';
 
 const ROOT = path.resolve(process.cwd());
 const BLOG_DIR = path.join(ROOT, 'blog');
@@ -620,6 +627,38 @@ async function main() {
     console.log('🚀 AIToolsNova - Web Story Generator');
     await fs.mkdir(STORIES_DIR, { recursive: true });
 
+    // ---- Resilience layer ----
+    // 1) Check BEFORE healing: is daily-blog.yml still invalid? If yes, this
+    //    run must also generate today's blog (its own workflow can't run).
+    const blogWorkflowBroken = await isBlogWorkflowBroken();
+
+    // 2) SELF-HEAL broken workflow files from scripts/workflow-fixes/*.fixed.
+    //    GitHub Actions' token may update workflow files because THIS workflow
+    //    lives in the default branch. Best-effort: content continues either way.
+    const healed = await selfHealWorkflows();
+    if (healed.length) {
+        console.log(`🩹 Repaired workflow files: ${healed.join(', ')} — pushing fix commit...`);
+        try {
+            const pushed = await commitAndPush({
+                message: 'ci: self-heal broken workflow files',
+                onlyWorkflows: true,
+            });
+            console.log(pushed ? '🩹 Workflow fix pushed to main' : '🩹 No workflow changes to push');
+        } catch (err) {
+            console.warn(`⚠️  Workflow fix push failed: ${err.message}`);
+            await git(['restore', '--staged', '--worktree', '.github/workflows']).catch(() => {});
+            console.warn('   → reverted workflow files; continuing with content generation.');
+        }
+    }
+
+    // 3) Combined content: while daily-blog.yml is broken, generate the blog here.
+    if (blogWorkflowBroken) {
+        console.log('📝 daily-blog workflow is broken → generating today\'s blog from here too...');
+        await runBlogGenerator();
+    } else {
+        console.log('✅ daily-blog workflow is healthy → blog handled by its own schedule.');
+    }
+
     const src = await pickSourceBlog();
     console.log(`📖 Source blog: ${src.sourceFile}`);
     console.log(`🎯 Slug: ${src.slug}`);
@@ -646,6 +685,13 @@ async function main() {
         `${SITE}/web-stories`,
         `${SITE}/sitemap.xml`,
     ]);
+
+    // ---- AUTO-PUBLISH: commit + push everything generated this run ----
+    console.log('📦 Committing and pushing today\'s content...');
+    const pushed = await commitAndPush({
+        message: `content(day): ${src.slug} web story${blogWorkflowBroken ? ' + blog' : ''}`,
+    });
+    console.log(pushed ? '📦 Content pushed to main' : '📦 No content changes to push');
 
     console.log('✅ Done');
 }
