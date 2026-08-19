@@ -12,11 +12,14 @@
 /
   Cache-Control: public, max-age=60, s-maxage=300, stale-while-revalidate=600
 
-# ---- Static assets override the catch-all above (1 year immutable) ----
+# ---- CSS/JS are edited in-place (no content-hash in the filename). ----
+# A 1-year `immutable` cache hid consent.js / enhancements.js updates after
+# deploy — browsers and the edge kept serving the old file. Short TTL +
+# must-revalidate so the next page load picks up a new deploy.
 /*.css
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=120, s-maxage=120, must-revalidate
 /*.js
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=120, s-maxage=120, must-revalidate
 /images/*
   Cache-Control: public, max-age=31536000, immutable
 /web-stories/img/*

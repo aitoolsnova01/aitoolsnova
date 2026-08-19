@@ -31,6 +31,7 @@ GSC Domain property + Cloudflare DNS TXT verify; submit sitemap; URL-inspect top
 See ACTION_PLAN.md.
 
 ## Backlog / next
-- P1: Localize blog hero images (currently still hotlinked from Pollinations in `generate-blog.mjs`).
+- P1: Daily blog/webstory workflows — invalid `secrets: read` + truncated webstory YAML. Fixed in 19 Aug continue session (this branch).
 - P2: Improve/rewrite top 5 existing blogs for uniqueness (AI cost — needs user OK).
 - P2: Image sitemap for web-story images; Hindi web-story variant; social auto-share.
+- Done: Blog generator localizes hero images to `blog/img/` (1600×900). Existing posts already local except leftover dns-prefetch.
