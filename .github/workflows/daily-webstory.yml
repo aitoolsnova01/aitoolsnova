@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-webstory
+  cancel-in-progress: false
+
 jobs:
   generate-webstory:
     runs-on: ubuntu-latest
@@ -26,7 +30,7 @@ jobs:
         run: npm install --no-save sharp
 
       - name: Generate today's web story
-        
+        continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -34,9 +38,21 @@ jobs:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
           WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}
         run: node scripts/generate-webstory.mjs
-        
+
       - name: Commit and push new web story
+        if: always()
         run: |
           git config user.name "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
-          git add web-stories/ web-stories.html sitemap.xml || true
+          git add web-stories/ web-stories.html sitemap.xml blog/ blogs.html scripts/topic-history.json || true
+          if git diff --staged --quiet; then
+            echo "No changes."; exit 0
+          fi
+          git commit -m "chore(webstory): auto-publish"
+          git push
+
+      - name: Ping search engines
+        continue-on-error: true
+        run: |
+          curl -s "https://www.google.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
+          curl -s "https://www.bing.com/ping?sitemap=https://aitoolsnova.com/sitemap.xml" || true
