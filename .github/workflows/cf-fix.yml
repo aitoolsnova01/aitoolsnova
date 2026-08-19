@@ -1,0 +1,51 @@
+name: CF Auto-Fix
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+  workflows: write
+
+jobs:
+  cf-fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CF_TOKEN: cfut_pBPxxEn7S3Kh4ISQYSCBi6H91RlQUelt40yJCnG2f2aca933
+      FIX: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Cloudflare diagnose + fix
+        run: bash scripts/cf-fix.sh
+
+      - name: Post report to issue 2
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REPORT=$(cat cf-report.md 2>/dev/null || true)
+          if [ -n "$REPORT" ]; then
+            BODY="**CF Auto-Fix run** (${{ github.run_number }}) — ${{ github.ref_name }}
+Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+---
+
+$REPORT"
+            gh issue comment 2 --repo "${{ github.repository }}" --body "$BODY" || true
+          fi
+
+      - name: Security cleanup - remove this workflow file (token scrub)
+        if: always()
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "cf-fix-cleanup[bot]"
+          git config user.email "cf-fix-cleanup[bot]@users.noreply.github.com"
+          if git ls-files --error-unmatch .github/workflows/cf-fix.yml >/dev/null 2>&1; then
+            git rm .github/workflows/cf-fix.yml
+            git commit -m "chore: remove one-shot cf-fix workflow (token scrub)" || true
+            git push origin main || true
+          fi
