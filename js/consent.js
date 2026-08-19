@@ -28,9 +28,13 @@
     return;
   }
 
+  // Analytics is allowed by default so Google Analytics keeps receiving data
+  // for visitors who do not touch the banner. Only ad-related storage stays
+  // denied until the visitor chooses (AdSense compliance). The Reject button
+  // turns analytics off too.
   gtag('consent', 'default', {
     ad_storage: 'denied', ad_user_data: 'denied',
-    ad_personalization: 'denied', analytics_storage: 'denied',
+    ad_personalization: 'denied', analytics_storage: 'granted',
     wait_for_update: 500
   });
 
@@ -75,7 +79,7 @@
     if (old) old.remove();
     gtag('consent', 'default', {
       ad_storage: 'denied', ad_user_data: 'denied',
-      ad_personalization: 'denied', analytics_storage: 'denied',
+      ad_personalization: 'denied', analytics_storage: 'granted',
       wait_for_update: 500
     });
     render();

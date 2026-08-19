@@ -1,0 +1,73 @@
+name: Cloudflare Fix - Domain & Traffic
+
+# Runs on pushes to the arena session branch (and manually in the Actions tab).
+# Reads the Cloudflare token from the CLOUDFLARE_API_TOKEN repo secret and runs
+# scripts/cf-fix.sh. With FIX=false it only diagnoses; set FIX=true to apply.
+
+on:
+  push:
+    branches: [arena/01a018bb-aitoolsnova]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: cf-fix
+  cancel-in-progress: true
+
+jobs:
+  cf-fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      FIX: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Cloudflare token secret
+        run: |
+          if [ -z "$CF_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN secret is NOT set in this repo."
+            echo "Add it: GitHub repo -> Settings -> Secrets and variables -> Actions -> New repository secret"
+            echo "Name: CLOUDFLARE_API_TOKEN   Value: your Cloudflare API token"
+            exit 1
+          fi
+          echo "Token secret is set."
+
+      - name: Diagnose / fix Cloudflare
+        run: |
+          bash scripts/cf-fix.sh
+
+      - name: Publish report as issue comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REPORT=$(cat cf-report.md 2>/dev/null || true)
+          if [ -z "$REPORT" ]; then
+            echo "No report produced."
+            exit 0
+          fi
+          # Keep the report short enough for an issue body (truncate if huge)
+          if [ "${#REPORT}" -gt 60000 ]; then
+            REPORT="${REPORT:0:60000}"$'\n... (truncated)'
+          fi
+          BODY="**Cloudflare Fix run** (${{ github.run_number }}) — mode: $FIX, branch: ${{ github.ref_name }}
+Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+---
+
+$REPORT"
+          if gh issue view 2 --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh issue comment 2 --repo "${{ github.repository }}" --body "$BODY"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "Cloudflare Fix Reports" \
+              --body "**Cloudflare Fix Reports** — latest diagnostic/fix output is appended as comments." \
+              --label "cloudflare" 2>/dev/null | true
+            # If creation raced, comment on the new issue by number
+            sleep 2
+            gh issue comment 2 --repo "${{ github.repository }}" --body "$BODY" 2>/dev/null | true
+          fi
