@@ -1,5 +1,10 @@
 name: Blog Auto-Publish (Mon/Wed/Fri)
 
+# NOTE: Do NOT add a `secrets` permission key.
+# That key is not valid in GitHub Actions and makes the entire
+# workflow invalid (red X on every push, 0s, no logs).
+# Secrets are available to jobs by default.
+
 on:
   schedule:
     - cron: '0 14 * * 1,3,5'
@@ -7,7 +12,10 @@ on:
 
 permissions:
   contents: write
-  secrets: read
+
+concurrency:
+  group: daily-blog
+  cancel-in-progress: false
 
 jobs:
   generate-blog:
@@ -28,6 +36,7 @@ jobs:
 
       - name: Generate today's blog post
         id: gen
+        continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -36,6 +45,7 @@ jobs:
         run: node scripts/generate-blog.mjs
 
       - name: Commit and push new blog
+        if: always()
         run: |
           git config user.name "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
