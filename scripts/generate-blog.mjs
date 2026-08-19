@@ -943,7 +943,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
         <div class="container">
             <a href="../" class="logo">🤖 <span>AIToolsNova</span></a>
             <nav class="desktop-menu" aria-label="Main Navigation" style="display:flex;gap:20px;align-items:center;font-weight:600">
-                <a href="../index">Home</a>
+                <a href="/">Home</a>
                 <a href="../tools">Tools</a>
                 <a href="../blogs">Blogs</a>
                 <a href="../web-stories">Web Stories</a>

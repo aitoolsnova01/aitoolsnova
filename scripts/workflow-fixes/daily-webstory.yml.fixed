@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-webstory
+  cancel-in-progress: false
+
 jobs:
   generate-webstory:
     runs-on: ubuntu-latest
@@ -31,13 +35,14 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}
         run: node scripts/generate-webstory.mjs
 
       - name: Commit and push new web story
         run: |
           git config user.name "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
-          git add web-stories/ web-stories.html sitemap.xml || true
+          git add web-stories/ web-stories.html sitemap.xml blog/ blogs.html scripts/topic-history.json || true
           if git diff --staged --quiet; then
             echo "No changes."; exit 0
           fi

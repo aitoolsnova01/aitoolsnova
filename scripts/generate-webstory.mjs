@@ -633,8 +633,8 @@ async function main() {
     const blogWorkflowBroken = await isBlogWorkflowBroken();
 
     // 2) SELF-HEAL broken workflow files from scripts/workflow-fixes/*.fixed.
-    //    GitHub Actions' token may update workflow files because THIS workflow
-    //    lives in the default branch. Best-effort: content continues either way.
+    //    GITHUB_TOKEN usually cannot push workflow files; WORKFLOW_PAT can.
+    //    Best-effort: content continues either way.
     const healed = await selfHealWorkflows();
     if (healed.length) {
         console.log(`🩹 Repaired workflow files: ${healed.join(', ')} — pushing fix commit...`);

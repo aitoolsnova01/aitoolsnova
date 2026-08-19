@@ -13,15 +13,19 @@
  * daily-webstory workflow, does three jobs so the daily automation
  * keeps running with zero manual steps:
  *   a) SELF-HEAL: if a workflow file differs from its fixed copy in
- *      scripts/workflow-fixes/*.fixed, restore it and push (GitHub
- *      Actions' own token CAN update workflow files because the calling
- *      workflow lives in the default branch).
+ *      scripts/workflow-fixes/*.fixed, restore it and push.
+ *      GITHUB_TOKEN usually CANNOT update workflow files (GitHub
+ *      security restriction). A repo secret named WORKFLOW_PAT
+ *      (classic PAT with the `workflow` scope) makes the heal stick.
+ *      This PR also ships the repaired YAML directly.
  *   b) COMBINED CONTENT: while daily-blog.yml is still broken, also
  *      generate the daily blog from here.
- *   c) AUTO-PUBLISH: commit + push all generated content to main.
+ *   c) AUTO-PUBLISH: commit + push all generated content to main
+ *      (only when running inside GitHub Actions).
  *
- * CLI (for local checks):
+ * CLI:
  *   node scripts/daily-publish-helper.mjs status
+ *   node scripts/daily-publish-helper.mjs validate
  */
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -41,15 +45,41 @@ const FIX_DIR = path.join(ROOT, 'scripts', 'workflow-fixes');
 const BLOG_WF = 'daily-blog.yml';
 const WEBSTORY_WF = 'daily-webstory.yml';
 
+// GitHub Actions job-level `permissions:` keys. Anything else (e.g.
+// `secrets: read`) makes the whole workflow file invalid.
+export const VALID_PERMISSION_KEYS = new Set([
+    'actions', 'attestations', 'checks', 'contents', 'deployments',
+    'discussions', 'id-token', 'issues', 'models', 'packages', 'pages',
+    'pull-requests', 'repository-projects', 'security-events', 'statuses',
+]);
+
 export const git = (args, opts = {}) =>
     execFileP('git', args, { cwd: ROOT, ...opts, maxBuffer: 64 * 1024 * 1024 });
 
-/** True if daily-blog.yml is missing or contains the invalid `secrets: read` scope. */
+function permissionKeysIn(src) {
+    const keys = [];
+    const block = src.match(/^permissions:\s*\n((?:[ \t]+.+\n)*)/m);
+    if (!block) return keys;
+    for (const line of block[1].split('\n')) {
+        const m = line.match(/^\s+([A-Za-z0-9_-]+)\s*:/);
+        if (m) keys.push(m[1]);
+    }
+    return keys;
+}
+
+export function invalidPermissionKeys(src) {
+    return permissionKeysIn(src).filter(k => !VALID_PERMISSION_KEYS.has(k));
+}
+
+/** True if daily-blog.yml is missing or contains an invalid permission. */
 export async function isBlogWorkflowBroken() {
     const p = path.join(WF_DIR, BLOG_WF);
     if (!existsSync(p)) return true;
     const src = await fs.readFile(p, 'utf8');
-    return /^\s*secrets:\s*read\s*$/m.test(src);
+    if (/^\s*secrets:\s*read\s*$/m.test(src)) return true;
+    if (invalidPermissionKeys(src).length) return true;
+    if (!/git commit/.test(src) || !/git push/.test(src)) return true;
+    return false;
 }
 
 /**
@@ -74,9 +104,44 @@ export async function selfHealWorkflows() {
 }
 
 /**
+ * Validate every workflow YAML we own. Returns an array of error strings
+ * (empty = healthy). Used by CLI + unit tests so `secrets: read` can
+ * never silently ship again.
+ */
+export async function validateWorkflows() {
+    const errors = [];
+    const names = existsSync(WF_DIR)
+        ? (await fs.readdir(WF_DIR)).filter(f => f.endsWith('.yml') || f.endsWith('.yaml'))
+        : [];
+    if (!names.includes(BLOG_WF)) errors.push(`missing ${BLOG_WF}`);
+    if (!names.includes(WEBSTORY_WF)) errors.push(`missing ${WEBSTORY_WF}`);
+
+    for (const name of names) {
+        const src = await fs.readFile(path.join(WF_DIR, name), 'utf8');
+        const bad = invalidPermissionKeys(src);
+        if (bad.length) {
+            errors.push(`${name}: invalid permission key(s): ${bad.join(', ')}`);
+        }
+        if (name === BLOG_WF || name === WEBSTORY_WF) {
+            if (!/git commit/.test(src)) errors.push(`${name}: missing git commit`);
+            if (!/git push/.test(src)) errors.push(`${name}: missing git push`);
+            if (!/node scripts\/generate-/.test(src)) {
+                errors.push(`${name}: missing node generate script step`);
+            }
+        }
+    }
+    return errors;
+}
+
+function inActions() {
+    return process.env.GITHUB_ACTIONS === 'true' || process.env.FORCE_PUBLISH === '1';
+}
+
+/**
  * Stage + commit + push.
  *  - onlyWorkflows=true  -> stages ONLY .github/workflows (self-heal commit)
  *  - otherwise           -> stages everything EXCEPT .github/workflows
+ * Auto commit/push is skipped outside GitHub Actions unless FORCE_PUBLISH=1.
  * Returns true when a commit was created and pushed, false when nothing to push.
  */
 export async function commitAndPush({
@@ -85,6 +150,10 @@ export async function commitAndPush({
     remote = 'origin',
     branch = 'main',
 } = {}) {
+    if (!inActions()) {
+        console.log('ℹ️  Not in GitHub Actions — skip auto commit/push (set FORCE_PUBLISH=1 to override).');
+        return false;
+    }
     if (onlyWorkflows) {
         await git(['add', '-A', '--', '.github/workflows']);
     } else {
@@ -106,6 +175,22 @@ export async function commitAndPush({
         '-c', 'user.email=bot@aitoolsnova.com',
         'commit', '-m', message,
     ]);
+
+    const workflowToken = process.env.WORKFLOW_PAT || process.env.GH_WORKFLOW_TOKEN || '';
+    if (onlyWorkflows && workflowToken) {
+        const repo = process.env.GITHUB_REPOSITORY || 'aitoolsnova01/aitoolsnova';
+        const url = `https://x-access-token:${workflowToken}@github.com/${repo}.git`;
+        try {
+            await git(['push', url, `HEAD:refs/heads/${branch}`], {
+                env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
+            });
+        } catch (err) {
+            const safe = String(err && err.message ? err.message : err).replace(workflowToken, '***');
+            throw new Error(safe);
+        }
+        return true;
+    }
+
     await git(['push', remote, `HEAD:refs/heads/${branch}`]);
     return true;
 }
@@ -140,12 +225,25 @@ export function runBlogGenerator(timeoutMs = 9 * 60 * 1000) {
     });
 }
 
-// ---- CLI: node scripts/daily-publish-helper.mjs status ----
+// ---- CLI ----
 const isMain = process.argv[1]
     && import.meta.url === new URL(`file://${process.argv[1]}`).href;
-if (isMain && process.argv[2] === 'status') {
-    const broken = await isBlogWorkflowBroken();
-    console.log(`daily-blog.yml      : ${broken ? 'BROKEN (secrets: read / missing)' : 'healthy'}`);
-    console.log(`fixed copy (blog)   : ${existsSync(path.join(FIX_DIR, `${BLOG_WF}.fixed`)) ? 'present' : 'MISSING'}`);
-    console.log(`fixed copy (story)  : ${existsSync(path.join(FIX_DIR, `${WEBSTORY_WF}.fixed`)) ? 'present' : 'MISSING'}`);
+if (isMain) {
+    const cmd = process.argv[2] || 'status';
+    if (cmd === 'validate') {
+        const errors = await validateWorkflows();
+        if (errors.length) {
+            console.error('❌ Workflow validation failed:');
+            for (const e of errors) console.error('  -', e);
+            process.exit(1);
+        }
+        console.log('✅ All workflow files look valid');
+    } else {
+        const broken = await isBlogWorkflowBroken();
+        const errors = await validateWorkflows();
+        console.log(`daily-blog.yml      : ${broken ? 'BROKEN (invalid permission / missing push)' : 'healthy'}`);
+        console.log(`fixed copy (blog)   : ${existsSync(path.join(FIX_DIR, `${BLOG_WF}.fixed`)) ? 'present' : 'MISSING'}`);
+        console.log(`fixed copy (story)  : ${existsSync(path.join(FIX_DIR, `${WEBSTORY_WF}.fixed`)) ? 'present' : 'MISSING'}`);
+        console.log(`validate            : ${errors.length ? errors.join(' | ') : 'ok'}`);
+    }
 }

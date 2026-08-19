@@ -1,55 +1,49 @@
-# Session Notes — 19 Aug 2026 ("naye session me aao fix karo")
+# Session Notes — 19 Aug 2026 (continue: ship the workflow fix now)
 
-## Kya toota tha (2 problems)
+## Previous session (PR #5, merged 10:36 UTC)
+Self-heal helper + generate-webstory fallback shipped, but **workflow YAML
+files themselves were not updated** (token lacked `workflows` permission).
+`daily-blog.yml` still had invalid `permissions: secrets: read` → every push
+still showed a 0s red X, and the 14:00 UTC blog job could not start.
 
-1. **`daily-blog.yml` invalid tha** — `permissions: secrets: read` (GitHub ka valid
-   permission nahi) → pura workflow reject, har push pe red X (0s, no logs).
-2. **`daily-webstory.yml` adhoora tha** — `git commit`/`git push` steps missing →
-   story banti thi lekin publish kabhi nahi hoti thi.
+`GITHUB_TOKEN` also cannot persist workflow-file edits, so tonight's 15:30
+self-heal would generate the blog (good) but would **not** actually repair
+the YAML on `main`.
 
-## Maine kya kiya — ZERO manual steps wala fix (self-healing)
+## This session (continue)
 
-Is session ka GitHub token `.github/workflows/*` push nahi kar sakta (App ke paas
-`workflows` permission nahi thi jab token bana). Isliye maine ye banaya:
+Arena's GitHub App token still cannot push `.github/workflows/*`
+(`workflows` permission missing). So the repaired YAML is shipped as
+`scripts/workflow-fixes/*.fixed` plus a one-step apply path.
 
-- **`scripts/workflow-fixes/daily-blog.yml.fixed`** — fixed (valid) workflow file
-- **`scripts/workflow-fixes/daily-webstory.yml.fixed`** — fixed (with commit/push) workflow file
-- **`scripts/daily-publish-helper.mjs`** — naya helper:
-  - `isBlogWorkflowBroken()` — detect karta hai invalid blog workflow ko
-  - `selfHealWorkflows()` — .fixed files se workflow files repair karta hai
-  - `commitAndPush()` — git add/commit/push (workflow files ko content commit se exclude rakhta hai)
-  - `runBlogGenerator()` — blog generator ko 9-min guard ke saath chalata hai
-- **`scripts/generate-webstory.mjs` upgraded** — ab har run pe:
-  1. Blog workflow broken hai to blog bhi generate karta hai (combined content)
-  2. Workflow files self-heal karke push karta hai
-  3. Saara content commit + push karta hai main pe
+What landed in this PR:
 
-**Kyun ye kaam karega:** GitHub Actions ka apna token workflow files update kar
-SAKTA hai jab calling workflow default branch (main) me ho. daily-webstory.yml
-main pe hai, isliye ye allowed hai.
+1. **`scripts/workflow-fixes/daily-blog.yml.fixed`** — no invalid
+   `secrets` permission, concurrency group, warning comment
+2. **`scripts/workflow-fixes/daily-webstory.yml.fixed`** — restored
+   `git commit` + `git push` + search-engine ping + blog fallback files
+3. **`scripts/daily-publish-helper.mjs`**
+   - Detects *any* invalid permission key, not just `secrets: read`
+   - Treats missing `git commit`/`git push` as broken
+   - Auto commit/push only inside GitHub Actions (`FORCE_PUBLISH=1` override)
+   - Optional `WORKFLOW_PAT` so a future Actions run can persist YAML
+   - `node scripts/daily-publish-helper.mjs validate`
+4. **`scripts/test-publish-helper.mjs`** — 12 offline tests (heal / no-leak)
+5. **55 blog posts + generator template** — Home nav `../index` → `/`
 
-**Tests pass:** scratch repo me simulate kiya — heal ✅, workflow-fix push ✅,
-content commit me workflow leak nahi ✅.
+## To kill the red X (2 min, one of these)
 
-## Aaj raat timeline (Wed 19 Aug, IST)
+GitHub web UI → each file → pencil → replace contents with the matching
+`.fixed` file → Commit:
 
-- **19:30 IST (14:00 UTC)** — daily-blog run: abhi bhi broken workflow se 1 red X aayega
-  (fix 21:00 ke run me hota hai — isko rokna impossible tha bina workflow file badle)
-- **21:00 IST (15:30 UTC)** — Web Story workflow (valid) run hoga naye script ke saath:
-  1. Blog generate (kyunki daily-blog abhi broken hai)
-  2. DONO workflow files self-heal + push
-  3. Web story generate
-  4. Saara content commit + push main pe
-- **Uske baad** — daily-blog.yml valid ho jayega → Mon/Wed/Fri 14:00 UTC par normal chalega,
-  koi red X nahi. Web story bhi Mon/Wed/Fri publish hogi. Cloudflare auto-deploy karega.
+- `.github/workflows/daily-blog.yml`
+  ← `scripts/workflow-fixes/daily-blog.yml.fixed`
+- `.github/workflows/daily-webstory.yml`
+  ← `scripts/workflow-fixes/daily-webstory.yml.fixed`
 
-## Verify (kal subah)
+OR reconnect GitHub in Arena with `workflows` permission and ask me to
+push the YAML.
 
-- Actions → Workflows → `Blog Auto-Publish (Mon/Wed/Fri)` naam se dikhna chahiye (file path nahi)
-- Actions → runs → "ci: self-heal broken workflow files" aur "content(day): ..." commits
-- Site pe naya blog + nayi web story live
-
-## Optional (sirf agar chaho)
-
-GitHub ko Arena me reconnect karo — naya token `workflows` permission ke saath banega,
-phir main direct fix bhi push kar sakta hoon. Self-heal ke baad ye zaroori nahi hai.
+Until then: 15:30 UTC web-story run still generates today's blog as
+fallback and publishes the story. The 14:00 UTC blog job itself stays
+red until the YAML is replaced.
