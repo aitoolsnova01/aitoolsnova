@@ -12,16 +12,19 @@ import { buildStoryHtml, rebuildStoriesIndex, updateSitemap } from './generate-w
 process.env.GROQ_API_KEY = 'test'; // satisfy top-level check on next import (already imported)
 
 const story = {
-    story_title: 'Test: 5 AI Hacks Every Creator Needs',
-    meta_description: 'Five must-know AI hacks that save hours and boost creativity. Free tools, no signup.',
-    cover_caption: 'Discover 5 AI hacks that save hours every week.',
+    story_title: 'Test: 8 AI Hacks Every Creator Needs',
+    meta_description: 'Eight must-know AI hacks that save hours and boost creativity. Free tools, no signup.',
+    cover_caption: 'Discover 8 AI hacks that save hours every week.',
     cover_image_prompt: 'cinematic hd ai brain glowing neon portrait',
     slides: [
-        { heading: 'ChatGPT Prompts', caption: 'Use structured prompts to get answers 10x faster than plain questions.', image_prompt: 'photorealistic person using ChatGPT on laptop' },
-        { heading: 'AI Image Tools', caption: 'Free AI image tools that create studio-quality visuals in under 30 seconds.', image_prompt: 'photorealistic studio image creation on tablet' },
-        { heading: 'Voice Clone', caption: 'Clone your voice in minutes and turn any blog post into a podcast episode.', image_prompt: 'photorealistic studio microphone neon glow' },
-        { heading: 'AI Resume', caption: 'Auto-tailor your resume for every job with a single click.', image_prompt: 'photorealistic resume on desk with laptop cinematic' },
-        { heading: 'SEO Automation', caption: 'Let AI find keywords, write meta tags and speed your ranking journey.', image_prompt: 'photorealistic seo dashboard glowing neon' },
+        { heading: 'ChatGPT Prompts', caption: 'Use structured prompts to get answers 10x faster than plain questions. This works for all AI chatbots and saves hours every week.', image_prompt: 'photorealistic person using ChatGPT on laptop' },
+        { heading: 'AI Image Tools', caption: 'Free AI image tools create studio-quality visuals in under 30 seconds. No design skills needed for professional results.', image_prompt: 'photorealistic studio image creation on tablet' },
+        { heading: 'Voice Clone', caption: 'Clone your voice in minutes and turn any blog post into a podcast episode. This tool works with just a short audio sample.', image_prompt: 'photorealistic studio microphone neon glow' },
+        { heading: 'AI Resume', caption: 'Auto-tailor your resume for every job with a single click. AI matches keywords to each job description automatically.', image_prompt: 'photorealistic resume on desk with laptop cinematic' },
+        { heading: 'SEO Automation', caption: 'Let AI find keywords, write meta tags and speed your ranking journey. Free SEO tools make optimization effortless.', image_prompt: 'photorealistic seo dashboard glowing neon' },
+        { heading: 'AI Writing', caption: 'Generate entire blog posts with AI in minutes. These tools create human-quality content on any topic.', image_prompt: 'photorealistic person writing on laptop with AI interface' },
+        { heading: 'Data Analysis', caption: 'Use AI to analyze spreadsheets and find patterns instantly. No coding required for powerful data insights.', image_prompt: 'photorealistic dashboard with charts and AI analysis' },
+        { heading: 'Video Editing', caption: 'AI video editors trim, caption and enhance your footage automatically. Create professional videos in half the time.', image_prompt: 'photorealistic video editing timeline with AI tools' },
     ],
     cta_line: 'Explore 100+ free AI tools on AIToolsNova - no signup needed.',
 };
@@ -33,11 +36,12 @@ const checks = [
     ['<amp-story', 'amp-story tag present'],
     ['amp-story-page id="cover"', 'cover page present'],
     ['amp-story-page id="cta"', 'cta page present'],
-    ['amp-story-page id="s-5"', '5th slide present'],
+    ['amp-story-page id="s-8"', '8th slide present (min 6-9 tip slides)'],
     ['slide-caption', 'caption class present'],
     ['Playfair+Display', 'google font imported'],
     ['application/ld+json', 'schema.org json-ld present'],
-    ['Five must-know AI hacks', 'meta description escaped correctly'],
+    ['Eight must-know AI hacks', 'meta description escaped correctly'],
+    ['Tip 8 of 8', 'pill shows correct count (8 tips)'],
 ];
 let failed = 0;
 for (const [needle, desc] of checks) {

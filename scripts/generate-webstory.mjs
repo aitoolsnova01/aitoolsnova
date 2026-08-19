@@ -3,10 +3,10 @@
  * AIToolsNova - Daily Web Story Auto Generator
  * ---------------------------------------------
  * - Reads the most recently added/updated blog post
- * - Generates a Google Web Story (AMP Story) with 7 slides:
- *      Cover + 5 tip slides + CTA
+ * - Generates a Google Web Story (AMP Story) with 8–11 slides:
+ *      Cover + 6–9 tip slides + CTA
  * - Uses HD portrait images from Pollinations.ai (free, no key)
- * - Each image slide has a single readable caption line beneath the image
+ * - Each image slide has 2-3 readable caption lines beneath the image
  * - Modern Google Fonts (Poppins + Playfair Display) - no emoji-only slides
  * - Adds the new story URL to sitemap.xml
  * - Rebuilds web-stories.html index page listing all stories
@@ -231,32 +231,32 @@ Schema:
   "slides": [
     {
       "heading": "Big 3-5 word slide heading",
-      "caption": "Single readable line that appears under the image, 10-18 words, no hashtags, no emoji",
+      "caption": "2-3 readable sentences under the image, 20-40 words total, no hashtags, no emoji",
       "image_prompt": "cinematic HD photorealistic prompt for portrait 9:16, no text overlay"
     }
-    // exactly 5 slides
+    // 6-9 slides
   ],
   "cta_line": "Short CTA line, 8-14 words, benefit-led"
 }
 Rules:
 - Never include quotation marks inside string values.
-- Captions must be ONE clean sentence, no emojis, no hashtags, no ALL CAPS.
+- Captions must be 2-3 clean sentences, no emojis, no hashtags, no ALL CAPS.
 - Image prompts must describe HD real photos (studio lighting, cinematic, ultra-detailed), NEVER cartoons or text.`;
 
     const user = `Blog title: "${title}"
 Blog description: "${description}"
-Create a 7-slide web story (cover + 5 tips + cta) for mobile readers in the US, UK, Canada, India and worldwide. Make the cover title irresistible (curiosity + benefit + number when natural). Keywords must be search-friendly, not stuffed. Captions in clear global English.`;
+Create an 8-11 slide web story (cover + 6-9 tips + cta) for mobile readers in the US, UK, Canada, India and worldwide. Make the cover title irresistible (curiosity + benefit + number when natural). Keywords must be search-friendly, not stuffed. Captions in clear global English.`;
 
     const { content } = await callGroq([
         { role: 'system', content: sys },
         { role: 'user', content: user },
     ]);
     const data = extractJson(content);
-    if (!data.slides || !Array.isArray(data.slides) || data.slides.length < 3) {
+    if (!data.slides || !Array.isArray(data.slides) || data.slides.length < 6) {
         throw new Error('Invalid slides array');
     }
-    // Trim to 5 slides
-    data.slides = data.slides.slice(0, 5);
+    // Trim to 9 slides (max)
+    data.slides = data.slides.slice(0, 9);
     return data;
 }
 
@@ -647,7 +647,8 @@ async function main() {
         } catch (err) {
             console.warn(`⚠️  Workflow fix push failed: ${err.message}`);
             await git(['restore', '--staged', '--worktree', '.github/workflows']).catch(() => {});
-            console.warn('   → reverted workflow files; continuing with content generation.');
+            await git(['reset', '--soft', 'HEAD~1']).catch(() => {});
+            console.warn('   → reverted workflow files and commit; continuing with content generation.');
         }
     }
 
