@@ -1,0 +1,72 @@
+name: Deploy to Cloudflare Pages
+
+# REQUIRED GitHub Secrets (otherwise this job is a no-op):
+#   CLOUDFLARE_API_TOKEN  — Account → Cloudflare Pages → Edit
+#   CLOUDFLARE_ACCOUNT_ID
+# OPTIONAL:
+#   CF_PAGES_PROJECT (default: aitoolsnova)
+#
+# This is a BACKUP to Cloudflare Pages' own Git integration.
+# If secrets are missing, the job must NOT pretend a deploy happened.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check secrets
+        id: check
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          {
+            echo "## Cloudflare Wrangler deploy"
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "⚠️ **Wrangler secrets are NOT set — this job did not deploy anything.**"
+              echo
+              echo "GitHub Actions → green check here only means 'skipped'."
+              echo "Live site updates only if **Cloudflare Pages Git integration** is ON:"
+              echo "Workers & Pages → aitoolsnova → Settings → Builds & deployments"
+              echo "- Production branch: \`main\`"
+              echo "- Automatic deployments: **Enabled**"
+              echo "- Connected repo: \`aitoolsnova01/aitoolsnova\`"
+              echo
+              echo "Or add secrets \`CLOUDFLARE_API_TOKEN\` + \`CLOUDFLARE_ACCOUNT_ID\`"
+              echo "(token needs Account → Cloudflare Pages → Edit) and re-run."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID missing. Wrangler deploy skipped. Enable Cloudflare Pages Git auto-deploy or add the secrets."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Secrets present — will deploy with Wrangler." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.configured == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.configured == 'true'
+        with:
+          node-version: '22'
+
+      - name: Deploy with Wrangler
+        if: steps.check.outputs.configured == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ secrets.CF_PAGES_PROJECT }}
+        run: |
+          PROJECT_NAME="${PROJECT:-aitoolsnova}"
+          npm install -g wrangler@3
+          npx wrangler pages deploy . \
+            --project-name="$PROJECT_NAME" \
+            --branch=main \
+            --commit-dirty=true

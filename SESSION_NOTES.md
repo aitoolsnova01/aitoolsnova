@@ -47,3 +47,13 @@ push the YAML.
 Until then: 15:30 UTC web-story run still generates today's blog as
 fallback and publishes the story. The 14:00 UTC blog job itself stays
 red until the YAML is replaced.
+
+## Deploy not happening (diagnosed this turn)
+
+GitHub Actions "Deploy to Cloudflare Pages" after PR #5 was a **fake
+success**: secrets missing → checkout + wrangler **skipped** → green
+tick in 6s. Nothing was uploaded.
+
+`_headers` also cached `/*.js` for 1 year `immutable`, so even a real
+Pages deploy would keep serving old `consent.js`. Fixed: 120s TTL +
+`?v=20260819c` cache-bust. See `DEPLOY_STATUS.md`.
