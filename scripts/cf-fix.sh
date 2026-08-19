@@ -221,11 +221,12 @@ if [ "$FIX" = "true" ] && [ -n "$PAGES_PROJECT" ] && [ -n "$PAGES_ACCOUNT" ]; th
   PA="$PAGES_ACCOUNT"
   PP="$PAGES_PROJECT"
 
-  # 7.1 Pages custom domains: keep only apex + www, remove anything else
+  # 7.1 Pages custom domains: keep only apex + www + the default pages.dev
+  # subdomain; remove anything else (e.g. a wrongly-bound domain)
   D=$(cf GET "/accounts/$PA/pages/projects/$PP/domains?per_page=100")
   if ok "$D"; then
     for dom in $(printf '%s' "$D" | jq -r '.result[].name'); do
-      if [ "$dom" = "$TARGET_DOMAIN" ] || [ "$dom" = "$WWW_DOMAIN" ]; then
+      if [ "$dom" = "$TARGET_DOMAIN" ] || [ "$dom" = "$WWW_DOMAIN" ] || [ "$dom" = "$PAGES_SUBDOMAIN" ]; then
         log2 "- keep custom domain: $dom"
       else
         log2 "- REMOVE wrong custom domain: $dom"
