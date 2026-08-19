@@ -5,9 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
   issues: write
-  workflows: write
 
 jobs:
   cf-fix:
@@ -38,16 +36,4 @@ jobs:
               echo "$REPORT"
             } > /tmp/body.txt
             gh issue comment 2 --repo "${{ github.repository }}" --body-file /tmp/body.txt || true
-          fi
-
-      - name: Security cleanup (remove workflow file)
-        if: always()
-        run: |
-          cd "$GITHUB_WORKSPACE"
-          git config user.name "cf-fix-cleanup-bot"
-          git config user.email "cf-fix-cleanup-bot@users.noreply.github.com"
-          if git ls-files --error-unmatch .github/workflows/cf-fix.yml >/dev/null 2>&1; then
-            git rm .github/workflows/cf-fix.yml
-            git commit -m "chore: remove one-shot cf-fix workflow (token scrub)" || true
-            git push origin main || true
           fi
