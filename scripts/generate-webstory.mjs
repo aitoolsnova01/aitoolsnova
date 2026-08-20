@@ -4,8 +4,9 @@
  * ---------------------------------------------
  * - Reads the most recently added/updated blog post
  * - Generates a Google Web Story (AMP Story) with 8–11 slides:
- *      Cover + 6–9 tip slides + CTA
- * - Uses HD portrait images from Pollinations.ai (free, no key)
+ *      Cover + 8–9 tip slides + CTA  (10–11 pages total)
+ * - Uses HD portrait images from Pollinations.ai (free, no key), forced
+ *   photorealistic so they read as real photos, not AI renders
  * - Each image slide has 2-3 readable caption lines beneath the image
  * - Modern Google Fonts (Poppins + Playfair Display) - no emoji-only slides
  * - Adds the new story URL to sitemap.xml
@@ -227,21 +228,21 @@ Schema:
   "meta_description": "160-char SEO description",
   "cover_caption": "Short punchy hook, 8-14 words",
   "geo_keywords": "10 comma-separated high-intent SEO keywords mixing Global/US/UK/Canada/India e.g. best free ai tools 2026, ai tools for us freelancers, free ai tools uk, ai tools canada students, best ai apps india",
-  "cover_image_prompt": "cinematic HD photorealistic image prompt for cover, portrait 9:16, no text",
+  "cover_image_prompt": "photorealistic image prompt for cover, portrait 9:16, no text",
   "slides": [
     {
       "heading": "Big 3-5 word slide heading",
-      "caption": "2-3 readable sentences under the image, 20-40 words total, no hashtags, no emoji",
-      "image_prompt": "cinematic HD photorealistic prompt for portrait 9:16, no text overlay"
+      "caption": "Exactly 2-3 short lines (about 18-30 words), plain spoken English, no hashtags, no emoji",
+      "image_prompt": "photorealistic prompt for portrait 9:16, no text overlay"
     }
-    // 6-9 slides
+    // EXACTLY 8 content slides (so the story is cover + 8 + cta = 10 total)
   ],
   "cta_line": "Short CTA line, 8-14 words, benefit-led"
 }
 Rules:
 - Never include quotation marks inside string values.
-- Captions must be 2-3 clean sentences, no emojis, no hashtags, no ALL CAPS.
-- Image prompts must describe HD real photos (studio lighting, cinematic, ultra-detailed), NEVER cartoons or text.`;
+- Return EXACTLY 8 slides. Each slide caption must be 2-3 short, punchy lines of plain English (18-30 words), no emojis, no hashtags, no ALL CAPS.
+- Every image_prompt MUST describe a REAL photograph, not an illustration: "a real photo of ..." with a concrete subject, setting, lighting and camera feel (e.g. shot on a DSLR, natural window light, candid documentary style, shallow depth of field). NEVER cartoons, 3D renders, CGI, clipart, or text overlays.`;
 
     const user = `Blog title: "${title}"
 Blog description: "${description}"
@@ -252,11 +253,23 @@ Create an 8-11 slide web story (cover + 6-9 tips + cta) for mobile readers in th
         { role: 'user', content: user },
     ]);
     const data = extractJson(content);
-    if (!data.slides || !Array.isArray(data.slides) || data.slides.length < 6) {
+    if (!data.slides || !Array.isArray(data.slides)) {
         throw new Error('Invalid slides array');
     }
-    // Trim to 9 slides (max)
+    // Normalize: keep only well-formed slides (heading + caption + image_prompt).
+    data.slides = data.slides.filter(s => s && typeof s.heading === 'string' && typeof s.caption === 'string' && typeof s.image_prompt === 'string');
+    // REQUIRE the full 8 content slides -> cover + 8 + cta = 10 total (within the 8-11 range).
+    if (data.slides.length < 8) {
+        throw new Error(`Too few slides: got ${data.slides.length}, need exactly 8 content slides (cover + 8 + cta = 10 total)`);
+    }
+    // Cap at 9 content slides max (cover + 9 + cta = 11 total, still inside 8-11).
     data.slides = data.slides.slice(0, 9);
+    // Enforce 2-3 line captions: collapse whitespace and make sure every caption reads short.
+    data.slides = data.slides.map(s => ({
+        ...s,
+        heading: String(s.heading).replace(/\s+/g, ' ').trim(),
+        caption: String(s.caption).replace(/\s+/g, ' ').trim(),
+    }));
     return data;
 }
 
@@ -268,8 +281,14 @@ const esc = s => String(s || '')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// Force every generated image to read as a genuine photograph. We append a
+// strong photorealism suffix so even a weak model prompt still comes back as a
+// real-looking photo rather than an obvious AI render.
+const PHOTO_SUFFIX = ', real photograph, shot on a DSLR camera, natural light, candid documentary style, shallow depth of field, ultra realistic, no CGI, no illustration, no cartoon, no 3D render, no text, no watermark';
 const imgUrl = (prompt, seed) => {
-    const p = encodeURIComponent(String(prompt).slice(0, 380));
+    const base = String(prompt).replace(/\s+/g, ' ').trim();
+    // Keep enough room for the photorealistic suffix within Pollinations' length limits.
+    const p = encodeURIComponent((base + PHOTO_SUFFIX).slice(0, 520));
     return `https://image.pollinations.ai/prompt/${p}?width=1080&height=1920&nologo=true&enhance=true&model=flux&seed=${seed}&safe=true`;
 };
 
@@ -454,7 +473,7 @@ ${slidesHtml}
     <!-- CTA -->
     <amp-story-page id="cta">
       <amp-story-grid-layer template="fill">
-        <amp-img src="${imgUrl('futuristic glowing dashboard of AI tools, neon lights, cinematic', 9000)}" width="1080" height="1920" layout="responsive" alt="Explore more"></amp-img>
+        <amp-img src="${imgUrl('a real photo of a person using a laptop and smartphone at a clean desk, bright daylight, candid', 9000)}" width="1080" height="1920" layout="responsive" alt="Explore more"></amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="fill">
         <div class="scrim"></div>

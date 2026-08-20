@@ -535,7 +535,7 @@ ${avoidList.map(t => '- ' + t).join('\n')}
    - A short slug (lowercase-hyphen-separated, 3-6 words, .html suffix not needed)
    - A category from: "ai", "seo", "social", "productivity", "coding", "image", "writing"
    - A single emoji that visually represents the topic
-   - A concise "hero_prompt": 6-12 word visual description for a hero image (e.g. "futuristic AI dashboard glowing blue neon")
+   - A concise "hero_prompt": 6-12 word visual description for a hero image, describing a REAL photo (e.g. "a person working on a laptop at a bright desk, real photo")
    - "primary_keyword": the exact main search phrase people type (3-6 words, high intent)
    - "geo": ONE target region for this post - pick from "India","USA","UK","Canada","Australia","UAE","Global"
    - "geo_keywords": 5 comma-separated location-flavoured long-tail keywords using that region (e.g. "best free ai tools in india", "ai tools for indian students")
@@ -581,7 +581,7 @@ async function generateContent(topic) {
             .slice(0, 12).join('\n');
     } catch { existingSlugList = '- best-free-ai-tools-2026\n- ai-trends-2026'; }
 
-        const prompt = `You are a senior SEO writer for AIToolsNova (free AI tools blog).
+        const prompt = `You are an experienced human writer who personally tests free AI tools and writes hands-on guides for AIToolsNova (a free AI tools blog). You write like a real person sharing what they actually tried — never like a content mill or a corporate AI.
 
 Write ONE original article as STRICT JSON only (no markdown fences).
 
@@ -591,19 +591,28 @@ Primary keyword: "${topic.primary_keyword}"
 Region angle: ${topic.geo}
 Geo keywords: ${topic.geo_keywords}
 
+WRITING VOICE (most important — make it read as HUMAN, not AI):
+- Use contractions (you'll, it's, don't, we've) and a natural, slightly informal tone.
+- Vary sentence length: mix short punchy sentences with longer ones.
+- Write in first/second person where natural ("I tested...", "you'll notice...", "here's what surprised me").
+- Include small concrete specifics: a realistic step, a trade-off, a "gotcha", a personal opinion. No generic filler that could fit any other article.
+- NEVER use these AI-tell phrases or their variants: "In today's digital world/landscape", "delve", "furthermore", "moreover", "it's important to note", "in conclusion", "game-changer", "unlock your potential", "leverage", "elevate", "seamlessly", "cutting-edge", "revolutionize", "in the realm of", "a testament to". Do NOT start the article with "In today's...".
+- Do not pad with the same sentence rephrased. Every paragraph must add new information.
+- No fake statistics, no fabricated user testimonials, no guaranteed income/rankings.
+
 REQUIREMENTS:
 - Simple clear English (global US/UK/CA/India readers).
-- Fresh angle. No "In today's digital world". No fake stats or guaranteed income.
+- Fresh angle, written from a first-person "I actually tried this" perspective.
 - Body ~1200-1600 words total across intro+sections+conclusion.
-- Exactly 6 H2 sections (benefit-driven titles).
-- Exactly 5 FAQs.
+- Exactly 6 H2 sections (benefit-driven titles, no clickbait).
+- Exactly 5 FAQs (question phrasing a real person would type).
 - 3 internal links using ONLY these slugs:
 ${existingSlugList || '- best-free-ai-tools-2026'}
 - 2 affiliate_picks with real product-style names + amazon_query + flipkart_query.
 
 JSON shape:
 {
-  "meta_description": "140-158 chars with primary keyword",
+  "meta_description": "140-158 chars with primary keyword, natural sentence",
   "meta_keywords": "8-12 comma keywords",
   "read_time_min": 7,
   "intro_html": "<p><strong>Hook.</strong> ...</p><h3>Quick Takeaways</h3><ul><li>...</li></ul>",
@@ -759,7 +768,8 @@ function buildHtml(topic, content, todayISO, todayHuman) {
     // and Google drops redirecting URLs from the index.
     const canonicalUrl = `https://aitoolsnova.com/blog/${topic.slug}`;
     // Enrich the raw hero prompt with quality-boosting keywords so Pollinations returns sharp, professional images.
-    const enrichedPrompt = `${topic.hero_prompt || topic.title}, high quality, sharp focus, 8k, professional photography, cinematic lighting, ultra detailed, modern tech aesthetic, vibrant colors`;
+    // Push toward photorealism so the hero reads like a real photograph, not an obvious AI render.
+    const enrichedPrompt = `${topic.hero_prompt || topic.title}, real photograph, shot on a DSLR camera, natural light, candid documentary style, shallow depth of field, ultra realistic, no CGI, no illustration, no cartoon, no text, no watermark`;
     const heroPromptEnc = encodeURIComponent(enrichedPrompt);
     // Pollinations Flux model produces MUCH sharper output than the default.
     // width/height at 1600x900 (16:9) → downscaled by browsers cleanly, no pixelation.
