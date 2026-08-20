@@ -45,6 +45,9 @@
 /sitemap.xml
   Content-Type: application/xml; charset=utf-8
   Cache-Control: public, max-age=600, s-maxage=1800
+/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=600, s-maxage=1800
 
 # ---- Background Remover needs cross-origin isolation for multithreaded WASM ----
 # 'credentialless' keeps third-party scripts (AdSense, GA) working, unlike
