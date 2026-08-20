@@ -65,22 +65,14 @@
 
     <style>*{margin:0;padding:0;box-sizing:border-box}:root{--primary:#4F46E5;--secondary:#06B6D4;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--radius:18px;--transition:.35s ease}html{scroll-behavior:smooth;font-size:16px}body{font-family:"Inter",sans-serif;background:var(--light);color:var(--text);line-height:1.8}.container{width:min(1200px,92%);margin:auto}a{text-decoration:none;color:inherit;transition:var(--transition)}button{font-family:inherit;cursor:pointer;border:none}h1{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:800;line-height:1.2}h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-top:35px;margin-bottom:12px}h3{font-size:1.2rem;font-weight:700;margin-top:20px;margin-bottom:8px}h4{font-size:1.05rem;font-weight:600;margin-top:16px;margin-bottom:6px}p{color:var(--text2);margin-bottom:16px;font-size:1rem;line-height:1.8}.header{position:sticky;top:0;width:100%;height:68px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}.header .container{display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;color:var(--text)}.logo span{color:var(--primary)}.desktop-menu{display:flex;gap:28px;font-weight:600;color:var(--text2)}.desktop-menu a:hover{color:var(--primary)}.header-right{display:flex;align-items:center;gap:10px}.icon-btn{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:var(--transition)}.icon-btn:hover{background:var(--primary);color:#fff}.donate-btn{padding:10px 22px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:.9rem;transition:var(--transition)}.donate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(79,70,229,.3)}.menu-btn{display:none;font-size:26px;background:none;padding:4px}.mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;padding:30px 20px;transition:.4s;z-index:10000;box-shadow:-10px 0 30px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:8px;overflow-y:auto}.mobile-menu.active{right:0}.mobile-menu .close-menu{align-self:flex-end;font-size:28px;background:none;padding:4px 10px;color:var(--text);line-height:1}.mobile-menu .close-menu:hover{color:var(--primary)}.mobile-menu a{padding:12px 16px;border-radius:10px;font-weight:600;color:var(--text2);font-size:.95rem}.mobile-menu a:hover{background:#EEF2FF;color:var(--primary)}.mobile-menu .mobile-donate{margin-top:4px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;text-align:center;border-radius:50px}@media(max-width:992px){.desktop-menu,.donate-btn{display:none}.menu-btn{display:block}}@media(max-width:768px){.header{height:60px}.mobile-menu{width:260px;padding:25px 16px}}.tool-hero{padding:100px 0 30px;text-align:center;background:linear-gradient(180deg,#fff 0%,#F8FAFC 50%,#EEF2FF 100%)}.tool-hero h1{max-width:700px;margin:auto;margin-bottom:12px}.tool-hero p{max-width:600px;margin:auto;font-size:1.1rem;color:var(--text2)}.tool-area{padding:30px 0 50px}.tool-box{max-width:850px;margin:auto;background:#fff;border-radius:var(--radius);padding:40px;box-shadow:var(--shadow);border:1px solid var(--border)}.tool-box label{font-weight:600;display:block;margin-bottom:4px;color:var(--text);font-size:.9rem}.tool-box input[type="text"]{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:14px;font-size:1rem;font-family:inherit;background:var(--light);margin-bottom:16px}.tool-box input[type="text"]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,70,229,.1)}.tool-box .checkbox-group{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px}.tool-box .checkbox-group label{display:flex;align-items:center;gap:8px;font-weight:400;font-size:.95rem;cursor:pointer}.tool-btn{padding:14px 34px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;font-size:1rem;transition:var(--transition);display:inline-flex;align-items:center;gap:10px;margin:6px}.tool-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(79,70,229,.35)}.tool-btn.secondary{background:var(--light);color:var(--text);border:1px solid var(--border)}.tool-btn.secondary:hover{background:var(--border);transform:translateY(-2px)}.output-box{margin-top:24px;padding:20px;background:var(--light);border-radius:14px;border:1px solid var(--border);min-height:80px;white-space:pre-wrap;word-wrap:break-word;color:var(--text);font-size:.95rem;line-height:1.8;display:none}.output-box.show{display:block;animation:fadeIn .3s ease}.copy-btn{margin-top:14px;padding:8px 18px;border-radius:30px;background:var(--primary);color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;border:none}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.tool-content{padding:40px 0 70px}.tool-content .container{max-width:850px}.tool-content h2:first-child{margin-top:0}.tool-content ul,.tool-content ol{padding-left:24px;margin-bottom:16px;color:var(--text2)}.tool-content ul li,.tool-content ol li{margin-bottom:8px;line-height:1.8}.highlight-box{background:#EEF2FF;padding:20px 24px;border-radius:12px;border-left:4px solid var(--primary);margin:20px 0}.highlight-box p{margin-bottom:0;color:var(--text)}.faq-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0}.faq-box h4{margin-bottom:6px;font-size:1rem}.faq-box p{margin-bottom:0}.related-box{background:#F1F5F9;border-radius:12px;padding:20px;margin:24px 0}.related-box h3{margin-top:0}.related-box ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px}.related-box ul li{display:inline-block;background:#fff;padding:6px 14px;border-radius:50px;border:1px solid var(--border);font-size:.85rem}.related-box ul li a{color:var(--primary);text-decoration:none}.related-box ul li a:hover{text-decoration:underline}.footer{background:#020617;padding:50px 0 16px;color:#CBD5E1;text-align:center}.footer a{color:#94A3B8;margin:0 12px;font-size:.9rem;text-decoration:none}.footer a:hover{color:#fff}.footer p{color:#64748B;margin-top:16px;font-size:.85rem}@media(max-width:768px){.tool-hero{padding:85px 0 20px}.tool-hero h1{font-size:1.8rem}.tool-box{padding:24px 18px}.tool-content{padding:30px 0 50px}}body.dark{--light:#020617;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}body.dark .header{background:rgba(15,23,42,.92)}body.dark .header,body.dark .tool-box,body.dark .faq-box,body.dark .related-box{background:#0F172A;border-color:#1E293B}body.dark .tool-box input[type="text"]{background:#020617;color:#F8FAFC;border-color:#1E293B}body.dark .tool-box input[type="text"]:focus{border-color:var(--primary)}body.dark .highlight-box{background:#1E293B}body.dark .related-box{background:#1E293B}body.dark .related-box ul li{background:#0F172A;border-color:#1E293B}body.dark .footer{background:#000814}body.dark .mobile-menu{background:#0F172A}body.dark .mobile-menu a{color:#CBD5E1}body.dark .mobile-menu a:hover{background:#1E293B;color:#fff}body.dark .tool-hero{background:linear-gradient(180deg,#0F172A 0%,#020617 50%,#0F172A 100%)}body.dark .tool-hero h1{color:#F8FAFC}body.dark .tool-hero p{color:#CBD5E1}body.dark .secondary-btn{background:#0F172A;border-color:#1E293B;color:#CBD5E1}body.dark .secondary-btn:hover{background:#1E293B}body.dark .output-box{background:#020617;border-color:#1E293B}::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#E5E7EB}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:20px}::selection{background:var(--primary);color:#fff}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}</style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://aitoolsnova.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://aitoolsnova.com/tools"}, {"@type": "ListItem", "position": 3, "name": "Robots.txt Generator - Free Robots.txt Creator", "item": "https://aitoolsnova.com/tools/robots-generator"}]}</script>
-
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"Is 🤖 Robots.txt Generator free?","acceptedAnswer":{"@type":"Answer","text":"Yes. AIToolsNova tools are free to use in your browser without a required account."}},
-{"@type":"Question","name":"Does 🤖 Robots.txt Generator work on mobile?","acceptedAnswer":{"@type":"Answer","text":"Yes. The page is responsive for phones and tablets. Large files work best on Wi-Fi."}},
-{"@type":"Question","name":"Do I need to install software?","acceptedAnswer":{"@type":"Answer","text":"No installation is required for normal use in a modern browser."}}
-]}
-</script>
 </head>
 <body>
 
     <header class="header">
         <div class="container">
-            <a href="../index" class="logo">🤖 <span>AIToolsNova</span></a>
+            <a href="/" class="logo">🤖 <span>AIToolsNova</span></a>
             <nav class="desktop-menu">
-                <a href="../index">Home</a>
+                <a href="/">Home</a>
                 <a href="../tools">Tools</a>
                 <a href="../blogs">Blogs</a><a href="../web-stories">Web Stories</a>
                 <a href="../about">About</a>
@@ -96,7 +88,7 @@
 
     <div class="mobile-menu" id="mobileMenu">
         <button class="close-menu" id="closeMenuBtn">✕</button>
-        <a href="../index">🏠 Home</a>
+        <a href="/">🏠 Home</a>
         <a href="../tools">🛠 Tools</a>
         <a href="../blogs">📝 Blogs</a>
         <a href="../web-stories">📱 Web Stories</a>
@@ -237,74 +229,28 @@
 
     
 <section class="seo-content atn-depth" id="about-tool" style="max-width:900px;margin:48px auto;padding:0 16px 24px;">
-  <h2>What this robots.txt helper is for</h2>
-  <p><strong>🤖 Robots.txt Generator</strong> on AIToolsNova helps you draft crawl rules for search engines without creating an account. Processing stays in your browser whenever the tool design allows it, which is better for privacy than uploading every file to a random server.</p>
-  <p>People who get the most value are usually developers, SEOs, site owners. If you only need a quick result, you should not have to pay a monthly subscription or sit through a forced trial wall.</p>
-
-  <h2>How to use 🤖 Robots.txt Generator (step-by-step)</h2>
-  <ol>
-    <li><strong>Open the tool on this page</strong> — no signup form, no credit card.</li>
-    <li><strong>Add your input</strong> — text, prompt, or file, depending on the tool.</li>
-    <li><strong>Adjust options</strong> if you see tone, size, quality, page range, or format controls.</li>
-    <li><strong>Run the action</strong> and wait for the result panel to populate.</li>
-    <li><strong>Copy or download</strong> the output, then review it before you publish, send, or print.</li>
-  </ol>
-
-  <h2>Practical tips that improve results</h2>
-  <ul>
-    <li>Download or copy results immediately, then do a 30-second human review before publishing or sending.</li>
-    <li>If a file tool feels slow, compress or resize first — smaller inputs almost always finish faster.</li>
-    <li>Prefer this free browser tool when you do not want another paid SaaS login for a one-off task.</li>
-    <li>Start with a clear goal before you open the robots.txt helper. One outcome beats five half-finished tabs.</li>
-    <li>Use short, specific inputs. Vague prompts create vague output — especially on AI tools.</li>
-  </ul>
-
-  <h2>Why use a free tool on AIToolsNova?</h2>
-  <p>Search results are full of “free” utilities that bait you into email walls. Our goal is different: ship useful robots.txt helper workflows that work in modern browsers (Chrome, Edge, Firefox, Safari) for visitors in the US, UK, Canada, India and worldwide.</p>
-  <ul>
-    <li><strong>No account required</strong> for standard use.</li>
-    <li><strong>Mobile-friendly layout</strong> so you can finish tasks away from a desk.</li>
-    <li><strong>Honest limitations</strong> — if a format needs a heavy server, we say so instead of faking a download.</li>
-    <li><strong>Related guides</strong> on the blog if you want strategy, not only a button.</li>
-  </ul>
-
-  <h2>Privacy &amp; responsible use</h2>
-  <p>Do not paste passwords, medical records, exam content, or confidential client data into any online AI box. For files, prefer tools that process locally when available. Advertising and optional affiliate links keep AIToolsNova free — details are in our <a href="../privacy-policy">Privacy Policy</a> and <a href="../disclaimer">Disclaimer</a>.</p>
-
-  <h2>Frequently asked questions</h2>
-  <div class="faq-item" style="margin:12px 0;padding:14px 16px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;">
-    <h3 style="font-size:1.05rem;margin:0 0 6px;">Is 🤖 Robots.txt Generator free?</h3>
-    <p style="margin:0;color:#475569;">Yes. You can use it free in your browser. The site is supported by ads so the tools can stay free.</p>
-  </div>
-  <div class="faq-item" style="margin:12px 0;padding:14px 16px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;">
-    <h3 style="font-size:1.05rem;margin:0 0 6px;">Do I need to install software?</h3>
-    <p style="margin:0;color:#475569;">No install is required for normal use. A current browser is enough.</p>
-  </div>
-  <div class="faq-item" style="margin:12px 0;padding:14px 16px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;">
-    <h3 style="font-size:1.05rem;margin:0 0 6px;">Does it work on iPhone and Android?</h3>
-    <p style="margin:0;color:#475569;">Yes — the layout is responsive. Large files are still easier on Wi‑Fi and a desktop browser.</p>
-  </div>
-  <div class="faq-item" style="margin:12px 0;padding:14px 16px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;">
-    <h3 style="font-size:1.05rem;margin:0 0 6px;">What if the result is wrong?</h3>
-    <p style="margin:0;color:#475569;">Try clearer input, another option, or a smaller file. AI outputs always need a human check before important use.</p>
-  </div>
-
-  <h2>Related free tools</h2>
-  <p>Continue with <a href="../tools/ai-chat">AI Chat</a>, <a href="../tools/ai-writer">AI Writer</a>, <a href="../tools/image-compressor">Image Compressor</a>, <a href="../tools/qr-generator">QR Generator</a>, or browse the full <a href="../tools">tools directory</a>. For strategy, read the <a href="../blogs">AIToolsNova blog</a>.</p>
+<h2>What robots.txt does — and doesn't</h2>
+<p>It asks crawlers not to fetch certain paths. It does <em>not</em> hide pages: a URL blocked in robots.txt can still appear in results (URL-only), and it is not a security layer — the file is public at /robots.txt for anyone to read. Don't list your secret admin path in it; that's literally publishing the path.</p>
+<h2>What a small site actually needs</h2>
+<pre style="background:#F1F5F9;padding:12px;border-radius:8px;overflow:auto;">User-agent: *
+Allow: /
+Sitemap: https://yoursite.com/sitemap.xml</pre>
+<p>That's it, for most sites. Block /cart/, /search results, or /admin paths if crawl budget or noise is a real problem you've observed — not because a checklist said so.</p>
+<h2>The classic self-inflicted wounds</h2>
+<ul>
+  <li><code>Disallow: /</code> left over from staging. It removes you from Google over a few weeks, silently. If traffic vanished, check this first.</li>
+  <li>Blocking CSS/JS folders — Google renders pages, and blocked assets can make it see a broken page.</li>
+  <li>Using robots.txt to remove indexed pages. Wrong tool: that's a <code>noindex</code> tag (which requires the page to be crawlable — the two together deadlock).</li>
+</ul>
+<p>After uploading to your site root, test in Search Console's robots tester, and generate the <a href="../tools/sitemap-generator">sitemap</a> it should point at.</p>
 </section>
 
-<section class="atn-extra-tool" style="max-width:900px;margin:20px auto 40px;padding:0 16px;">
-  <h2>Pro workflow examples</h2>
-  <p>Use this tool as one step inside a larger pipeline. Example A: draft in AI Writer → polish tone in AI Chat → package SEO with Meta Tag Generator → compress images → publish. Example B: export a transparent product shot with Background Remover → convert images to PDF for a sales leave-behind → attach a QR code that opens your live page.</p>
-  <p>For teams in the US, UK and Canada, keep client-facing language plain and specific; for mobile-first audiences in India and other markets, prefer shorter paragraphs and faster image weights. If something fails, retry on Wi‑Fi, update your browser, and avoid uploading sensitive documents.</p>
-  <h3>Accessibility &amp; device notes</h3>
-  <p>Buttons and forms on AIToolsNova are designed for keyboard and screen use on desktop and phones. If you rely on assistive technology and hit a blocker, email aitoolsnova01@gmail.com with the tool name and device details so we can fix it.</p>
-</section>
+
 
 
 <footer class="footer">
         <div class="container">
-            <a href="../index">Home</a>
+            <a href="/">Home</a>
             <a href="../tools">Tools</a>
             <a href="../blogs">Blogs</a>
             <a href="../about">About</a>

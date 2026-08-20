@@ -6,6 +6,11 @@ Aapke website me ab **12 tools AI-powered hain** — lekin ye AI features tabhi 
 
 **Preview URL pe AI test nahi hoga** kyunki preview server sirf static files serve karta hai (`/api/gemini` sirf Cloudflare Pages pe kaam karta hai).
 
+> **AI "Generate" not working on the live site? (quick fix)**
+> 1. Cloudflare Pages dashboard → project → **Settings → Environment variables → Production** me `GEMINI_API_KEY` aur `GROQ_API_KEY` add karein.
+> 2. Env vars save karne ke baad **Deployments → ⋯ → Retry deployment** zaroor karein — purani deployment ko nayi keys nahi milti.
+> 3. Bina in dashboard keys ke `/api/gemini` har provider par fail karega; code me koi fallback/fake response nahi hai (by design).
+
 ---
 
 ## ✅ Step 1: GitHub pe Push Karein
