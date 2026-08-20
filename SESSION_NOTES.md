@@ -130,3 +130,29 @@ posters), scripts deferred (only consent.js early — required), no hardcoded
 secrets, workflows valid (daily-blog + webstory YAML == .fixed versions; last
 red runs were pre-fix pushes), _headers secure, _redirects 247 lines valid.
 Live site was ALREADY current (consent fix + age-calculator live).
+
+---
+
+# Session 20 Aug 2026 — branch arena/01a02029-aitoolsnova (PR #11)
+
+Human thinking+writing rewrite shipped:
+- All 56 blog/*.html bodies rewritten (scene intro, 6+ unique H2 with
+  example+caveat, honest limit + related next step). Templated blocks
+  removed everywhere: atn-depth-blog "Expert playbook", the 5-section
+  generic quintet, depth-block/howto-block/faq-block dupes. Zero repeated
+  paragraphs across posts (hash-verified). FAQPage JSON-LD regenerated.
+- All 10 web-stories rebuilt: 9 pages each (cover+7+CTA), human captions,
+  must-have story now shows 7 distinct tools, OG added to the 2 stories
+  missing it, fake "4.9/5" badges removed. AMP tags balanced.
+- 27 tools/*.html: unique atn-depth per tool, atn-extra-tool deleted,
+  generic "Do I need to install software?" FAQPage JSON-LD removed (17
+  files), image/PDF FAQ near-dupes differentiated. Tool JS untouched.
+- /api + /api/ 301s removed from _redirects (they shadowed Pages
+  Functions). gemini.js: corsHeaders no longer throws on malformed
+  Origin; error output redacts keys/tokens. DEPLOYMENT.md: env-keys +
+  retry-deploy note.
+- Verified: sitemap parses, 178 redirect rules all 3-part 301, 34 splats
+  (<100), no ^/api rules, node --check OK, JSON-LD all valid, internal
+  links resolve, div/section balance clean.
+
+User merges PR #11; Cloudflare Pages auto-deploys from main.
