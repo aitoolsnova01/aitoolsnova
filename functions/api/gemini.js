@@ -121,13 +121,18 @@ function rateLimit(ip, limit = 40, windowMs = 60_000) {
 
 function corsHeaders(request) {
   const origin = request.headers.get('Origin') || '';
-  // Allow production + Cloudflare Pages preview hosts; block random sites
-  const allow =
-    !origin ||
-    origin === 'https://aitoolsnova.com' ||
-    origin === 'https://www.aitoolsnova.com' ||
-    /\.pages\.dev$/i.test(new URL(origin).host) ||
-    /\.e2b\.app$/i.test(new URL(origin).host || '');
+  // Allow production + Cloudflare Pages preview hosts; block random sites.
+  // Never throw here: a malformed Origin header (e.g. "null", garbage bytes)
+  // must degrade to "not allowed", not crash the whole function into a 1101.
+  let allow = !origin || origin === 'https://aitoolsnova.com' || origin === 'https://www.aitoolsnova.com';
+  if (!allow && origin) {
+    try {
+      const host = new URL(origin).host || '';
+      allow = /\.pages\.dev$/i.test(host) || /\.e2b\.app$/i.test(host);
+    } catch {
+      allow = false;
+    }
+  }
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
@@ -141,6 +146,15 @@ function corsHeaders(request) {
     headers['Access-Control-Max-Age'] = '86400';
   }
   return headers;
+}
+
+// Strip anything that could leak a credential into a client-visible error:
+// query-string API keys, bearer tokens, and long key-looking blobs.
+function redactSecrets(s) {
+  return String(s || '')
+    .replace(/([?&](?:key|api_key|apikey|token|access_token)=)[^&\s"']+/gi, '$1[redacted]')
+    .replace(/Bearer\s+[A-Za-z0-9._~+\/-]+=*/gi, 'Bearer [redacted]')
+    .replace(/\b(AIza[0-9A-Za-z_-]{20,}|gsk_[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{20,})\b/g, '[redacted]');
 }
 
 function json(obj, status, request) {
@@ -354,12 +368,12 @@ export async function onRequest(context) {
       errors.push(`cloudflare: ${cloudflare.error}`);
     }
 
-    return json({ error: 'All AI providers failed. Please try again in a moment.', details: errors }, 500, request);
+    return json({ error: 'All AI providers failed. Please try again in a moment.', details: errors.map(redactSecrets) }, 500, request);
   } catch (error) {
     const msg = error?.message || String(error);
     if (/timeout|aborted/i.test(msg)) {
       return json({ error: 'AI took too long. Please try a shorter prompt.' }, 504, request);
     }
-    return json({ error: msg || 'Internal server error' }, 500, request);
+    return json({ error: redactSecrets(msg) || 'Internal server error' }, 500, request);
   }
 }

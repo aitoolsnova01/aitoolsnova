@@ -35,8 +35,6 @@
 /composer.json                         /                                 301
 /web.config                            /                                 301
 /Dockerfile                            /                                 301
-/api                                   /tools                            301
-/api/                                  /tools                            301
 /cdn-cgi/l/email-protection            /contact                          301
 /feed                                  /blogs                            301
 /feed/                                 /blogs                            301
