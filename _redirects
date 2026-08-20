@@ -110,6 +110,49 @@
 /free-chatgpt-prompts.html             /free-chatgpt-prompts             301
 /monetize-tools.html                   /monetize-tools                   301
 
+# ---- Dev / internal paths: never serve source code or working docs ----
+# Repo root is the Pages output dir, so backend/, frontend/, scripts/, memory/
+# etc. were publicly reachable (e.g. /backend/server.py, /memory/PRD.md).
+# No site page links to any of these — redirect them all to home.
+/backend/*                              /                                   301
+/backend                                /                                   301
+/frontend/*                             /                                   301
+/frontend                               /                                   301
+/scripts/*                              /                                   301
+/scripts                                /                                   301
+/test_reports/*                         /                                   301
+/test_reports                           /                                   301
+/memory/*                               /                                   301
+/memory                                 /                                   301
+/tests/*                                /                                   301
+/tests                                  /                                   301
+/data/*                                 /                                   301
+/data                                   /                                   301
+/.emergent/*                            /                                   301
+/.emergent                              /                                   301
+
+# ---- Orphan duplicate pages -> canonical (SEO duplicate-content fix) ----
+# Old tool slugs still shipped 200 as static files with canonical to the new
+# page -> duplicate content risk. 301 to the canonical slug (single hop).
+/home.html                              /                                   301
+/search.html                            /tools                              301
+/tools/chat                             /tools/ai-chat                      301
+/tools/chat.html                        /tools/ai-chat                      301
+/tools/writer                           /tools/ai-writer                    301
+/tools/writer.html                      /tools/ai-writer                    301
+/tools/pdf                              /tools/pdf-converter                301
+/tools/pdf.html                         /tools/pdf-converter                301
+/tools/qr                               /tools/qr-generator                 301
+/tools/qr.html                          /tools/qr-generator                 301
+/tools/resume                           /tools/resume-builder               301
+/tools/resume.html                      /tools/resume-builder               301
+/tools/compressor                       /tools/image-compressor             301
+/tools/compressor.html                  /tools/image-compressor             301
+/tools/bg-remover                       /tools/background-remover           301
+/tools/bg-remover.html                  /tools/background-remover           301
+/tools/remove-bg                        /tools/background-remover           301
+/tools/remove-bg.html                   /tools/background-remover           301
+
 # Blog / tools / stories / compare .html → extensionless
 /blog/*.html                           /blog/:splat                      301
 /tools/*.html                          /tools/:splat                     301
