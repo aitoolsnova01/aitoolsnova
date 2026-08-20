@@ -11,6 +11,12 @@ Disallow: /config/
 Disallow: /functions/
 Disallow: /frontend/
 Disallow: /backend/
+Disallow: /scripts/
+Disallow: /test_reports/
+Disallow: /memory/
+Disallow: /tests/
+Disallow: /data/
+Disallow: /.emergent/
 
 # ---- Google AdSense (AdsBot ignores User-agent: *) ----
 User-agent: Mediapartners-Google
