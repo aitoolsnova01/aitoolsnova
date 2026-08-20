@@ -136,6 +136,7 @@
 # page -> duplicate content risk. 301 to the canonical slug (single hop).
 /home.html                              /                                   301
 /search.html                            /tools                              301
+/blog.html                              /blogs                              301
 /tools/chat                             /tools/ai-chat                      301
 /tools/chat.html                        /tools/ai-chat                      301
 /tools/writer                           /tools/ai-writer                    301
