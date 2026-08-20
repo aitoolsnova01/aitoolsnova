@@ -1,4 +1,4 @@
-Contact: mailto:support@aitoolsnova.com
+Contact: mailto:aitoolsnova01@gmail.com
 Preferred-Languages: en
 Canonical: https://aitoolsnova.com/.well-known/security.txt
 Policy: https://aitoolsnova.com/privacy-policy

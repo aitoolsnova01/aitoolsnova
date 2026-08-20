@@ -295,7 +295,7 @@ def fix_index() -> None:
         r'<li><a href="#" rel="noopener">YouTube</a></li>\s*'
         r'<li><a href="#" rel="noopener">X \(Twitter\)</a></li>\s*'
         r'<li><a href="#" rel="noopener">LinkedIn</a></li>',
-        '<li><a href="mailto:support@aitoolsnova.com">Email</a></li>\n'
+        '<li><a href="mailto:aitoolsnova01@gmail.com">Email</a></li>\n'
         '                        <li><a href="contact">Contact / Feedback</a></li>\n'
         '                        <li><a href="blogs">Latest Articles</a></li>',
         t,
@@ -464,7 +464,7 @@ def fix_single_html(path: Path) -> None:
         r'<li><a href="#" rel="noopener">YouTube</a></li>\s*'
         r'<li><a href="#" rel="noopener">X \(Twitter\)</a></li>\s*'
         r'<li><a href="#" rel="noopener">LinkedIn</a></li>',
-        '<li><a href="mailto:support@aitoolsnova.com">Email Support</a></li>\n'
+        '<li><a href="mailto:aitoolsnova01@gmail.com">Email Support</a></li>\n'
         '                        <li><a href="/contact">Contact</a></li>\n'
         '                        <li><a href="/blogs">Blog</a></li>',
         t,
@@ -577,7 +577,7 @@ def boost_about() -> None:
                         <li><strong>Hands-on testing:</strong> We prefer workflows we can reproduce in a browser without paid accounts.</li>
                         <li><strong>No fake claims:</strong> We do not invent traffic numbers, guaranteed income or medical/financial promises.</li>
                         <li><strong>Clear monetisation:</strong> The site is free because of advertising (Google AdSense) and occasional affiliate links marked with <code>rel="sponsored"</code>.</li>
-                        <li><strong>Corrections:</strong> If something is outdated, email <a href="mailto:support@aitoolsnova.com">support@aitoolsnova.com</a> and we will update the page.</li>
+                        <li><strong>Corrections:</strong> If something is outdated, email <a href="mailto:aitoolsnova01@gmail.com">aitoolsnova01@gmail.com</a> and we will update the page.</li>
                         <li><strong>Privacy:</strong> Browser-based tools process files locally whenever possible. See our <a href="privacy-policy">Privacy Policy</a>.</li>
                     </ul>
 
@@ -585,7 +585,7 @@ def boost_about() -> None:
                     <p>Students, freelancers, marketers, developers and small businesses who need fast, free utilities — image tools, PDF helpers, SEO generators, calculators and AI writing assistants — without creating yet another account.</p>
 
                     <h2>Contact the team</h2>
-                    <p>Business, partnership or content questions: <a href="contact">Contact page</a> or <a href="mailto:support@aitoolsnova.com">support@aitoolsnova.com</a>.</p>
+                    <p>Business, partnership or content questions: <a href="contact">Contact page</a> or <a href="mailto:aitoolsnova01@gmail.com">aitoolsnova01@gmail.com</a>.</p>
 '''
     # Insert before closing content-box if possible
     if "Who We Are" in t and "Editorial standards" not in t:

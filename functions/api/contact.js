@@ -65,7 +65,7 @@ export async function onRequestPost(context) {
     return json({ ok: true, message: 'Thanks — your message has been received. We reply within 24-48 hours.' }, 200);
   } catch (err) {
     console.error('contact endpoint error:', err && err.message);
-    return json({ ok: false, detail: 'Server error. Please email support@aitoolsnova.com directly.' }, 500);
+    return json({ ok: false, detail: 'Server error. Please email aitoolsnova01@gmail.com directly.' }, 500);
   }
 }
 
