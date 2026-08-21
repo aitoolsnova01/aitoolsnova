@@ -319,6 +319,14 @@
                 statusMsg.setAttribute('role', 'status');
             }
 
+            function friendlyError(err) {
+                const raw = String((err && err.message) || err || '');
+                if (/no available backend found|err\s*\[wasm\]|failed to initialize wasm|onnxruntime.*wasm|could not (create|init).*session|wasm.*backend|backend.*wasm/i.test(raw)) {
+                    return "Couldn't start the AI engine in this browser (WASM). Update your browser, turn Battery Saver / Low Power mode off, then reload the page.";
+                }
+                return raw || 'Background removal failed. Try Wi-Fi or another browser.';
+            }
+
             // ---- Speed: downscale huge photos before AI (quality stays print-OK at 1600px) ----
             async function prepareImage(file, maxSide = 1600) {
                 // HEIC / odd types: let browser try
@@ -342,7 +350,7 @@
             }
 
             // ---- Primary engine: @imgly/background-removal (WASM, private, accurate) ----
-            // Use isnet_fp16 (faster) and device: 'cpu' with proxy for non-blocking UI.
+            // First attempt: isnet_fp16 (default). On fail: isnet_quint8 + proxyToWorker:false (phones).
             // publicPath MUST point at IMG.LY data CDN (weights are not on jsDelivr).
             const LIB_VERSION = '1.5.8';
             const LIB_SOURCES = [
@@ -385,14 +393,10 @@
                 setTimeout(() => { loadImgly().catch(() => {}); }, 1500);
             }
 
-            async function removeWithImgly(file) {
-                const removeBg = await loadImgly();
-                setStatus('Removing background… first run downloads the model (~once).');
-                const config = {
+            function imglyBaseConfig() {
+                return {
                     // Official data host for model weights
                     publicPath: `https://staticimgly.com/@imgly/background-removal-data/${LIB_VERSION}/dist/`,
-                    // isnet_fp16 ≈ same quality, much faster than full isnet; falls back internally if needed
-                    model: 'isnet_fp16',
                     output: { format: 'image/png', quality: 0.92, type: 'foreground' },
                     progress: (key, current, total) => {
                         if (total && String(key).includes('fetch')) {
@@ -402,9 +406,29 @@
                         }
                     },
                 };
-                const blob = await removeBg(file, config);
-                if (!blob || !blob.size) throw new Error('Empty result from primary engine');
-                return blob;
+            }
+
+            async function removeWithImgly(file) {
+                const removeBg = await loadImgly();
+                const base = imglyBaseConfig();
+                setStatus('Removing background… first run downloads the model (~once).');
+                try {
+                    // Default: isnet_fp16 (quality/speed trade-off). Worker proxy stays on.
+                    const blob = await removeBg(file, { ...base, model: 'isnet_fp16' });
+                    if (!blob || !blob.size) throw new Error('Empty result from primary engine');
+                    return blob;
+                } catch (err) {
+                    // Phones often fail here (WASM worker / fp16). Retry lighter model on the main thread.
+                    console.warn('isnet_fp16 failed → retry isnet_quint8, proxyToWorker:false', err);
+                    setStatus('Retrying with a lighter on-device model…');
+                    const blob = await removeBg(file, {
+                        ...base,
+                        model: 'isnet_quint8',
+                        proxyToWorker: false,
+                    });
+                    if (!blob || !blob.size) throw new Error('Empty result from primary engine');
+                    return blob;
+                }
             }
 
             // ---- Backup: transformers.js + RMBG-1.4 (quantized) ----
@@ -416,8 +440,19 @@
                 env.allowLocalModels = false;
                 env.useBrowserCache = true;
                 if (env.backends?.onnx?.wasm) {
-                    env.backends.onnx.wasm.proxy = true; // keep UI responsive
-                    env.backends.onnx.wasm.numThreads = Math.min(4, navigator.hardwareConcurrency || 2);
+                    // proxy:true is a common "no available backend found ERR [wasm]" source on phones
+                    env.backends.onnx.wasm.proxy = false;
+                    const ua = navigator.userAgent || '';
+                    const isPhone = /Android|iPhone|iPod|iPad|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua)
+                        || !!(navigator.userAgentData && navigator.userAgentData.mobile)
+                        || (window.matchMedia && window.matchMedia('(max-width: 768px) and (pointer: coarse)').matches);
+                    if (isPhone) {
+                        env.backends.onnx.wasm.numThreads = 1;
+                    } else if (typeof crossOriginIsolated !== 'undefined' && crossOriginIsolated) {
+                        env.backends.onnx.wasm.numThreads = Math.min(4, Math.max(1, navigator.hardwareConcurrency || 2));
+                    } else {
+                        env.backends.onnx.wasm.numThreads = 1;
+                    }
                 }
 
                 setStatus('Downloading backup model (cached after first run)…');
@@ -528,7 +563,7 @@
                     setStatus('Done in ' + sec + 's — download your transparent PNG.');
                 } catch (err) {
                     console.error(err);
-                    setStatus((err && err.message) ? err.message : 'Background removal failed. Try Wi-Fi or another browser.', true);
+                    setStatus(friendlyError(err), true);
                 } finally {
                     removeBtn.disabled = false;
                     removeBtn.innerHTML = originalText;
@@ -555,6 +590,11 @@
             });
 
             console.log('🎨 Background Remover v2 (fast path) ready');
+        });
+    </script>
+</body>
+</html>
+nd Remover v3 (mobile WASM path) ready');
         });
     </script>
 </body>
