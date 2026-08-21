@@ -3,20 +3,8 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-    <!-- FULL CANONICAL SITEMAP for GSC — 2026-08-17 -->
+    <!-- FULL CANONICAL SITEMAP for GSC — 2026-08-21 -->
     <!-- AUTO-BLOG-SITEMAP-START -->
-    <url>
-        <loc>https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business</loc>
-        <lastmod>2026-08-21</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business</loc>
-        <lastmod>2026-08-21</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
     <url>
         <loc>https://aitoolsnova.com/</loc>
         <lastmod>2026-08-21</lastmod>
@@ -77,7 +65,7 @@
             <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
         </image:image>
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/ec1ed1b1d78bf6ef.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/a5a5e3d5ee8b051f.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb.jpg</image:loc>
@@ -93,6 +81,21 @@
         </image:image>
     </url>
     <url>
+        <loc>https://aitoolsnova.com/tools/age-calculator</loc>
+        <lastmod>2026-08-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/age-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/age-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/age-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/age-calculator" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/age-calculator" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/age-calculator" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og/og-learning.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
         <loc>https://aitoolsnova.com/tools/ai-chat</loc>
         <lastmod>2026-08-21</lastmod>
         <changefreq>weekly</changefreq>
@@ -104,7 +107,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ai-chat" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ai-chat" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -119,7 +122,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ai-image-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ai-image-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-design.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -134,7 +137,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ai-writer" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ai-writer" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -149,7 +152,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/background-remover" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/background-remover" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-design.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -164,7 +167,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/email-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/email-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -179,7 +182,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/facebook-description" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/facebook-description" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -194,7 +197,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/hashtag-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/hashtag-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -209,7 +212,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/image-compressor" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/image-compressor" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-design.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -224,7 +227,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/image-converter" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/image-converter" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-design.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -239,7 +242,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/image-resizer" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/image-resizer" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-design.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -254,7 +257,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/instagram-caption" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/instagram-caption" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -269,7 +272,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/keyword-density" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/keyword-density" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-seo.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -284,7 +287,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/meta-tag-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/meta-tag-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-seo.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -299,7 +302,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/password-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/password-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-tools.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -313,6 +316,9 @@
         <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/pdf-converter" />
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/pdf-converter" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/pdf-converter" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og/og-tools.jpg</image:loc>
+        </image:image>
     </url>
     <url>
         <loc>https://aitoolsnova.com/tools/pdf-merger</loc>
@@ -325,6 +331,9 @@
         <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/pdf-merger" />
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/pdf-merger" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/pdf-merger" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og/og-tools.jpg</image:loc>
+        </image:image>
     </url>
     <url>
         <loc>https://aitoolsnova.com/tools/pdf-splitter</loc>
@@ -337,6 +346,9 @@
         <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/pdf-splitter" />
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/pdf-splitter" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/pdf-splitter" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/images/og/og-tools.jpg</image:loc>
+        </image:image>
     </url>
     <url>
         <loc>https://aitoolsnova.com/tools/qr-generator</loc>
@@ -350,7 +362,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/qr-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/qr-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-tools.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -365,7 +377,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/rain-calculator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/rain-calculator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-learning.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -380,7 +392,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/resume-builder" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/resume-builder" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -395,7 +407,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/robots-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/robots-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-seo.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -410,7 +422,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/sitemap-generator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/sitemap-generator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-seo.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -425,22 +437,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/sleep-calculator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/sleep-calculator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
-        </image:image>
-    </url>
-    <url>
-        <loc>https://aitoolsnova.com/tools/age-calculator</loc>
-        <lastmod>2026-08-21</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.85</priority>
-        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/age-calculator" />
-        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/age-calculator" />
-        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/age-calculator" />
-        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/age-calculator" />
-        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/age-calculator" />
-        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/age-calculator" />
-        <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-learning.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -455,7 +452,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/snow-calculator" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/snow-calculator" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-learning.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -470,7 +467,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/youtube-description" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/youtube-description" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -485,7 +482,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/youtube-kit" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/youtube-kit" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -500,7 +497,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/youtube-title" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/youtube-title" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/images/og/og-writing.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -515,7 +512,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-coding-assistants" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/0ace0eb3cb8a.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -665,7 +662,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-image-generator-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/c1c34819a5b3.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -710,7 +707,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-logo-maker-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/be4dc308646a.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -740,7 +737,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-presentation-maker-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/b67c7eb4eb1e.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -755,7 +752,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-productivity-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/3f4708d8a923.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -770,7 +767,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-prompt-generators" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/3789fe7bed83.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -785,7 +782,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-resume-builder-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/10f72c705fb2.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -815,7 +812,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-seo-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-seo-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/20d593d45b7d.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -830,7 +827,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-side-hustle-2026" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/cc9001a7dcb5.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -845,7 +842,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-coding-beginners" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/6536a738226a.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -860,7 +857,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-content-creators" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/77c0dc264242.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -875,7 +872,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-digital-marketing" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/504766e18b71.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -890,7 +887,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-ecommerce" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/01323bd66aa9.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -905,7 +902,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-email-writing" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/ac0d9908c17d.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -920,7 +917,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-for-students" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/52c9e2aa4b66.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -935,7 +932,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-for-youtubers" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/903737754d75.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -950,7 +947,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-freelancers" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/5f20418b474b.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -965,7 +962,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-research" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-research" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/90e811a7fd66.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -980,7 +977,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-small-businesses" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/74535fe79338.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -995,7 +992,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-tools-social-media" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/e2f114525b04.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1010,7 +1007,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-trends-2026" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-trends-2026" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/ac2403d51c53.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1025,7 +1022,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-video-generator-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/45fee4d2cf23.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1040,7 +1037,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-voice-generator-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/f395ee95472e.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1070,7 +1067,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-website-builder-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/f8ec9414c924.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1085,7 +1082,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/ai-writing-tools-bloggers" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/bf45ccd9aa72.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1100,7 +1097,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/beginners-guide-ai-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/ff8bd05bf22b.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1115,7 +1112,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/best-free-ai-tools-2026" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/50706d11cb30.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1130,7 +1127,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/chatgpt-alternatives" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/c25ddc99b9f8.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1145,7 +1142,22 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/choose-right-ai-tool" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/cf4fe07518e4.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business</loc>
+        <lastmod>2026-08-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/cutting-edge-ai-tools-small-business" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/f20f7eb7de54fa8c.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1160,7 +1172,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-online-image-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-online-image-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/f15d445706f8.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1175,7 +1187,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-pdf-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-pdf-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/0d6e0175db38.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1190,7 +1202,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-qr-code-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/8191de0898dd.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1205,7 +1217,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/free-seo-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/free-seo-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/53bbb5835cb2.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1220,7 +1232,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/how-to-make-money-ai-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/ff4546f60cc3.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1235,7 +1247,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/image-optimization" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/image-optimization" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/e8d3a0535fe6.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1250,7 +1262,22 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/monetize-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/monetize-tools" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/520e61daf181.jpg</image:loc>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business</loc>
+        <lastmod>2026-08-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/must-have-ai-tools-us-small-business" />
+        <image:image>
+            <image:loc>https://aitoolsnova.com/blog/img/0492b4d4df85b846.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1265,7 +1292,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/seo-guide" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/seo-guide" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/a02faa15b7a6.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1295,7 +1322,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/social-media-strategy" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/social-media-strategy" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/a01f375e6e94.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1310,7 +1337,7 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/blog/top-100-ai-tools-2026" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/images/og-image.webp</image:loc>
+            <image:loc>https://aitoolsnova.com/blog/img/dcbd4952f561.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1325,7 +1352,13 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/5-free-ai-tools-2026-hd" />
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/76ce39a2a909c2c2_5-free-ai-tools-2026-hd_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/76ce39a2a909c2c2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/76ce39a2a909c2c2_5-free-ai-tools-2026-hd_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/9c02e6a0954245c3.jpg</image:loc>
@@ -1335,12 +1368,6 @@
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/32a9c7fba8a0311e.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/883c2150cac67117.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/c45ccd321e28c590.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1358,19 +1385,19 @@
             <image:loc>https://aitoolsnova.com/web-stories/img/682e93251e719636.jpg</image:loc>
         </image:image>
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/682e93251e719636_5-free-ai-tools-blow-your-mind-2026_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/ed375b12c146a236.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/682e93251e719636_5-free-ai-tools-blow-your-mind-2026_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/54f1ff6dc0570424.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/cc40f33a3f8136a1.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/9adfe7aa2a709cf5.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/6f71902ab9529a95.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1385,7 +1412,13 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/free-qr-code-tools" />
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/82224e6ebda232c8_free-qr-code-tools_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/82224e6ebda232c8.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/82224e6ebda232c8_free-qr-code-tools_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/c1d7f72c5d0108b4.jpg</image:loc>
@@ -1395,12 +1428,6 @@
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/1467206bc9580f87.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/316094fd3b53f3f5.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/f033c8acbb0a2f0a.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1415,7 +1442,13 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/image-optimization" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/image-optimization" />
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/bc9e981f30683222_image-optimization_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/bc9e981f30683222.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/bc9e981f30683222_image-optimization_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/9bc0f40b8fc2d0c4.jpg</image:loc>
@@ -1425,12 +1458,6 @@
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/1dd6d7fa47555aeb.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/001bceb036b2e202.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/1a745db5280ea30d.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1445,7 +1472,13 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/monetize-tools" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/monetize-tools" />
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb_monetize-tools_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/f1b76876314d9efb_monetize-tools_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/55edc383f9a4b6cb.jpg</image:loc>
@@ -1456,11 +1489,35 @@
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/06a37b4a2f00c52b.jpg</image:loc>
         </image:image>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business</loc>
+        <lastmod>2026-08-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business" />
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/7ad371185ebab785.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/a5a5e3d5ee8b051f.jpg</image:loc>
         </image:image>
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/a92e76c64004667e.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/a5a5e3d5ee8b051f_must-have-ai-tools-us-small-business_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/a5a5e3d5ee8b051f_must-have-ai-tools-us-small-business_w2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/05afb64aeb4ef646.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/dfa4907720b2a4c6.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ff19eeb451b61b61.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1475,7 +1532,13 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/seo-guide" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/seo-guide" />
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0e0d62a59cebc29b_seo-guide_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/0e0d62a59cebc29b.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0e0d62a59cebc29b_seo-guide_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/0ef6efda96187a0e.jpg</image:loc>
@@ -1485,12 +1548,6 @@
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/bee3b057f5d3da43.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/fb8e04c3d38ce945.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/28fc434acc62291f.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1508,19 +1565,19 @@
             <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb.jpg</image:loc>
         </image:image>
         <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/ace7fbecc7a2ce7e.jpg</image:loc>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb_small-business-ai-chatbots-boost_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/0b2d02c6ee66d4cb_small-business-ai-chatbots-boost_w2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ace7fbecc7a2ce7e_small-business-ai-chatbots-boost_1.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/bcdfe6090d16717a.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/6981e5c6adc45866.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/ee88cfea7786f2be.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/4147e44cb8f2fb70.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1535,7 +1592,13 @@
         <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/web-stories/social-media-strategy" />
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2_social-media-strategy_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/adbe327c72e3e6d2_social-media-strategy_w2.jpg</image:loc>
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/47f0c12bcab194ee.jpg</image:loc>
@@ -1545,12 +1608,6 @@
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/2a07ae53a3ae41bb.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/60494c1d06fa5c08.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/8ec99de6b99094e4.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1568,6 +1625,12 @@
             <image:loc>https://aitoolsnova.com/web-stories/img/ec1ed1b1d78bf6ef.jpg</image:loc>
         </image:image>
         <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ec1ed1b1d78bf6ef_top-100-ai-tools-2026_w1.jpg</image:loc>
+        </image:image>
+        <image:image>
+            <image:loc>https://aitoolsnova.com/web-stories/img/ec1ed1b1d78bf6ef_top-100-ai-tools-2026_w2.jpg</image:loc>
+        </image:image>
+        <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/ec192c2628b2d3df.jpg</image:loc>
         </image:image>
         <image:image>
@@ -1575,12 +1638,6 @@
         </image:image>
         <image:image>
             <image:loc>https://aitoolsnova.com/web-stories/img/3c28523515c78e8d.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/26c6fa40ac4454ad.jpg</image:loc>
-        </image:image>
-        <image:image>
-            <image:loc>https://aitoolsnova.com/web-stories/img/cd1e598431975053.jpg</image:loc>
         </image:image>
     </url>
     <url>
@@ -1734,12 +1791,4 @@
         </image:image>
     </url>
     <!-- AUTO-BLOG-SITEMAP-END -->
-
-    <url>
-        <loc>https://aitoolsnova.com/web-stories/must-have-ai-tools-us-small-business</loc>
-        <lastmod>2026-08-21</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
 </urlset>
