@@ -346,7 +346,9 @@ async function callDeepSeekOnly(messages, opts = {}) {
 async function callAI(messages, opts = {}) {
     const order = [];
     // Prefer Gemini first if env AI_PROVIDER_ORDER=gemini,groq,deepseek
-    const pref = String(process.env.AI_PROVIDER_ORDER || 'groq,gemini,deepseek')
+    // Owner preference: DeepSeek writes first (human-style prose), then Gemini,
+    // then Groq. Override with AI_PROVIDER_ORDER env if ever needed.
+    const pref = String(process.env.AI_PROVIDER_ORDER || 'deepseek,gemini,groq')
         .toLowerCase().split(/[\s,]+/).filter(Boolean);
     for (const name of pref) {
         if (name === 'groq' && GROQ_KEY) order.push('groq');
@@ -380,52 +382,126 @@ async function callGroq(messages, opts = {}) {
     return callAI(messages, opts);
 }
 
-// JSON-validated call with parse fallback across providers/models
+// JSON-validated call with parse fallback across providers/models.
+// Owner preference: DeepSeek writes first, then Gemini, then Groq.
+// Override the order with AI_PROVIDER_ORDER env.
 async function callGroqForJson(messages, opts = {}) {
     let lastErr = null;
-    // Try Groq models one-by-one for JSON, then other providers
-    if (GROQ_KEY) {
-        for (const model of MODELS) {
+    const pref = String(process.env.AI_PROVIDER_ORDER || 'deepseek,gemini,groq')
+        .toLowerCase().split(/[\s,]+/).filter(Boolean);
+    for (const n of ['deepseek', 'gemini', 'groq']) if (!pref.includes(n)) pref.push(n);
+
+    const tryProvider = async (provider) => {
+        if (provider === 'deepseek' && DEEPSEEK_KEY) {
             try {
-                const reply = await callGroqOnly(messages, { ...opts, singleModel: model });
-                if (!reply) continue;
-                try {
-                    return { reply, parsed: extractJson(reply), model: `groq:${model}` };
-                } catch (parseErr) {
-                    lastErr = new Error(`[groq:${model}] JSON parse failed: ${parseErr.message}`);
-                    console.warn(`   ⚠️  ${lastErr.message}`);
+                const reply = await callDeepSeekOnly(messages, opts);
+                if (reply) {
+                    try { return { reply, parsed: extractJson(reply), model: 'deepseek-chat' }; }
+                    catch (parseErr) {
+                        lastErr = new Error(`[deepseek] JSON parse failed: ${parseErr.message}`);
+                        console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
+                    }
                 }
+            } catch (e) { lastErr = e; }
+        }
+        if (provider === 'gemini' && GEMINI_KEY) {
+            try {
+                const reply = await callGeminiOnly(messages, opts);
+                if (reply) {
+                    try { return { reply, parsed: extractJson(reply), model: `gemini:${GEMINI_MODEL}` }; }
+                    catch (parseErr) {
+                        lastErr = new Error(`[gemini] JSON parse failed: ${parseErr.message}`);
+                        console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
+                    }
+                }
+            } catch (e) { lastErr = e; }
+        }
+        if (provider === 'groq' && GROQ_KEY) {
+            for (const model of MODELS) {
+                try {
+                    const reply = await callGroqOnly(messages, { ...opts, singleModel: model });
+                    if (!reply) continue;
+                    try { return { reply, parsed: extractJson(reply), model: `groq:${model}` }; }
+                    catch (parseErr) {
+                        lastErr = new Error(`[groq:${model}] JSON parse failed: ${parseErr.message}`);
+                        console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
+                    }
+                } catch (e) { lastErr = e; }
+            }
+        }
+        return null;
+    };
+
+    for (const provider of pref) {
+        const result = await tryProvider(provider);
+        if (result) return result;
+        console.warn(`   \u21a9\ufe0e  ${provider} gave no valid JSON - trying next provider...`);
+    }
+
+    throw lastErr || new Error('All providers failed to return valid JSON');
+}
+
+// ---------- 3c. Gemini image generation ----------
+
+const GEMINI_IMAGE_MODELS = process.env.GEMINI_IMAGE_MODEL
+    ? [process.env.GEMINI_IMAGE_MODEL]
+    : ['gemini-2.5-flash-image', 'gemini-2.0-flash-preview-image-generation'];
+
+/**
+ * Generate one image with a Gemini image model and save it to destFile,
+ * normalized with sharp to an exact JPEG size (Discover/social friendly).
+ * Returns true on success; false means the caller should fall back to the
+ * Pollinations URL flow (which still gets localized after page build).
+ */
+async function generateGeminiImage(prompt, destFile, { aspect = '16:9', width = 1600, height = 900 } = {}) {
+    if (!GEMINI_KEY) return false;
+    const text = `Generate a single photorealistic image, ${aspect} aspect. ${String(prompt).replace(/\s+/g, ' ').trim().slice(0, 800)}`;
+    for (const model of GEMINI_IMAGE_MODELS) {
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            try {
+                const generationConfig = { responseModalities: ['TEXT', 'IMAGE'] };
+                // imageConfig.aspectRatio only exists on the newer image models
+                if (/^gemini-2\.5|^gemini-3/i.test(model)) generationConfig.imageConfig = { aspectRatio: aspect };
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text }] }], generationConfig })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const msg = data?.error?.message || `HTTP ${res.status}`;
+                    console.warn(`   \u26a0\ufe0f  [img:${model}] ${String(msg).slice(0, 180)}`);
+                    break; // 4xx/5xx on this model -> try the next model
+                }
+                const parts = data?.candidates?.[0]?.content?.parts || [];
+                const imgPart = parts.find(pt => pt.inlineData && pt.inlineData.data);
+                if (!imgPart) {
+                    console.warn(`   \u26a0\ufe0f  [img:${model}] no image part (attempt ${attempt}/2)`);
+                    await sleep(1200 * attempt);
+                    continue;
+                }
+                const raw = Buffer.from(imgPart.inlineData.data, 'base64');
+                if (raw.length < 8000) {
+                    console.warn(`   \u26a0\ufe0f  [img:${model}] tiny image ${raw.length}b (attempt ${attempt}/2)`);
+                    await sleep(1200 * attempt);
+                    continue;
+                }
+                const sharp = (await import('sharp')).default;
+                const out = await sharp(raw)
+                    .resize(width, height, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
+                    .jpeg({ quality: 90, progressive: true, mozjpeg: true })
+                    .toBuffer();
+                await fs.writeFile(destFile, out);
+                console.log(`   \u2714 Gemini image (${model}) -> ${path.basename(destFile)} (${(out.length / 1024).toFixed(0)} KB)`);
+                return true;
             } catch (e) {
-                lastErr = e;
+                console.warn(`   \u26a0\ufe0f  [img:${model}] ${e.message}`);
+                await sleep(1200 * attempt);
             }
         }
     }
-    // Gemini
-    try {
-        const reply = await callGeminiOnly(messages, opts);
-        if (reply) {
-            try {
-                return { reply, parsed: extractJson(reply), model: `gemini:${GEMINI_MODEL}` };
-            } catch (parseErr) {
-                lastErr = new Error(`[gemini] JSON parse failed: ${parseErr.message}`);
-                console.warn(`   ⚠️  ${lastErr.message}`);
-            }
-        }
-    } catch (e) { lastErr = e; }
-    // DeepSeek
-    try {
-        const reply = await callDeepSeekOnly(messages, opts);
-        if (reply) {
-            try {
-                return { reply, parsed: extractJson(reply), model: 'deepseek-chat' };
-            } catch (parseErr) {
-                lastErr = new Error(`[deepseek] JSON parse failed: ${parseErr.message}`);
-                console.warn(`   ⚠️  ${lastErr.message}`);
-            }
-        }
-    } catch (e) { lastErr = e; }
-
-    throw lastErr || new Error('All providers failed to return valid JSON');
+    return false;
 }
 
 // ---------- 3b. Robust JSON extractor ----------
@@ -763,7 +839,7 @@ function buildAffiliateSection(picks) {
 // ---------- 6. Build HTML from template ----------
 function esc(s = '') { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
-function buildHtml(topic, content, todayISO, todayHuman) {
+function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null) {
     // Cloudflare Pages serves these without the extension - a .html URL 308s,
     // and Google drops redirecting URLs from the index.
     const canonicalUrl = `https://aitoolsnova.com/blog/${topic.slug}`;
@@ -775,7 +851,11 @@ function buildHtml(topic, content, todayISO, todayHuman) {
     // width/height at 1600x900 (16:9) → downscaled by browsers cleanly, no pixelation.
     // model=flux + enhance=true + nologo=true + nofeed=true (private) + seed for stability
     const seed = Array.from(topic.slug).reduce((a, c) => a + c.charCodeAt(0), 0);
-    const heroImg = `https://image.pollinations.ai/prompt/${heroPromptEnc}?width=1600&height=900&seed=${seed}&model=flux&enhance=true&nologo=true&nofeed=true`;
+    const heroRemote = `https://image.pollinations.ai/prompt/${heroPromptEnc}?width=1600&height=900&seed=${seed}&model=flux&enhance=true&nologo=true&nofeed=true`;
+    // heroLocal = pre-generated Gemini hero { rel, abs }. Meta/schema tags need
+    // absolute URLs; the visible <img> uses the root-relative path.
+    const heroImg = heroLocal ? heroLocal.abs : heroRemote;
+    const heroImgSrc = heroLocal ? heroLocal.rel : heroRemote;
     const sectionsHtml = content.sections.map(s =>
         `<h2>${esc(s.h2)}</h2>\n${s.body_html}`
     ).join('\n\n');
@@ -966,7 +1046,7 @@ function buildHtml(topic, content, todayISO, todayHuman) {
 
     <div class="container">
         <article>
-            <img class="hero-image" src="${heroImg}" alt="${esc(topic.title)}" loading="eager" fetchpriority="high" decoding="async" width="1600" height="900">
+            <img class="hero-image" src="${heroImgSrc}" alt="${esc(topic.title)}" loading="eager" fetchpriority="high" decoding="async" width="1600" height="900">
             <div class="blog-header">
                 <h1>${esc(topic.title)}</h1>
                 <div class="blog-meta">
@@ -1148,8 +1228,23 @@ async function main() {
     }
     if (!content) throw lastContentErr || new Error('Content generation failed after 3 attempts');
 
+    console.log('\n🖼️  Generating hero image (Gemini AI first — Pollinations fallback)...');
+    let heroLocal = null;
+    try {
+        const heroPrompt = `${topic.hero_prompt || topic.title}, real photograph, shot on a DSLR camera, natural light, candid documentary style, shallow depth of field, ultra realistic, no CGI, no illustration, no cartoon, no text, no watermark`;
+        const heroDest = path.join(BLOG_DIR, 'img', `${topic.slug}-hero.jpg`);
+        await fs.mkdir(path.dirname(heroDest), { recursive: true });
+        if (existsSync(heroDest) || await generateGeminiImage(heroPrompt, heroDest, { aspect: '16:9', width: 1600, height: 900 })) {
+            heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` };
+        } else {
+            console.log('   ℹ️  Gemini image unavailable — Pollinations fallback (still localized after build).');
+        }
+    } catch (e) {
+        console.warn(`   ⚠️  Hero image step failed (${e.message}) — Pollinations fallback.`);
+    }
+
     console.log('\n📄 Building HTML file...');
-    let finalHtml = buildHtml(topic, content, todayISO, todayHuman);
+    let finalHtml = buildHtml(topic, content, todayISO, todayHuman, heroLocal);
     console.log('   🖼️  Localizing hero image (fast + reliable)...');
     finalHtml = await localizeBlogHero(finalHtml);
     const finalPath = path.join(BLOG_DIR, `${topic.slug}.html`);

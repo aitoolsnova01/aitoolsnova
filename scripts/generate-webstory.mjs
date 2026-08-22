@@ -102,10 +102,85 @@ async function pickSourceBlog() {
     };
 }
 
-// ---------- Multi-provider AI call (Groq → Gemini → DeepSeek) ----------
+// ---------- Multi-provider AI call (DeepSeek -> Gemini -> Groq) ----------
+// Owner preference: DeepSeek writes the story JSON first; Gemini and Groq are
+// fallbacks so the daily publish never dies. Override with AI_PROVIDER_ORDER.
 async function callGroq(messages) {
+    const pref = String(process.env.AI_PROVIDER_ORDER || 'deepseek,gemini,groq')
+        .toLowerCase().split(/[\s,]+/).filter(Boolean);
+    for (const n of ['deepseek', 'gemini', 'groq']) if (!pref.includes(n)) pref.push(n);
     let lastErr;
-    if (GROQ_KEY) {
+
+    const tryDeepSeek = async () => {
+        if (!DEEPSEEK_KEY) return null;
+        try {
+            const res = await fetch('https://api.deepseek.com/chat/completions', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'deepseek-chat',
+                    messages,
+                    temperature: 0.85,
+                    max_tokens: 1800,
+                    response_format: { type: 'json_object' },
+                }),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const content = data.choices?.[0]?.message?.content?.trim() || '';
+                if (content) {
+                    console.log('   \u2714 DeepSeek: deepseek-chat');
+                    return { content, model: 'deepseek-chat' };
+                }
+                throw new Error('Empty content');
+            }
+            const t = await res.text().catch(() => '');
+            throw new Error(`HTTP ${res.status}: ${t.slice(0, 200)}`);
+        } catch (e) {
+            lastErr = e;
+            console.warn(`   \u26a0\ufe0f  DeepSeek failed: ${e.message}`);
+            return null;
+        }
+    };
+
+    const tryGemini = async () => {
+        if (!GEMINI_KEY) return null;
+        try {
+            const sys = messages.find(m => m.role === 'system');
+            const user = messages.filter(m => m.role !== 'system');
+            const body = {
+                systemInstruction: sys ? { parts: [{ text: sys.content }] } : undefined,
+                contents: user.map(m => ({
+                    role: m.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: m.content }]
+                })),
+                generationConfig: {
+                    temperature: 0.85,
+                    maxOutputTokens: 2048,
+                    responseMimeType: 'application/json',
+                }
+            };
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
+            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok) {
+                const content = data?.candidates?.[0]?.content?.parts?.map(pp => pp.text).join('').trim() || '';
+                if (content) {
+                    console.log(`   \u2714 Gemini: ${GEMINI_MODEL}`);
+                    return { content, model: `gemini:${GEMINI_MODEL}` };
+                }
+                throw new Error('Empty content');
+            }
+            throw new Error(`HTTP ${res.status}: ${(data?.error?.message || '').slice(0, 200)}`);
+        } catch (e) {
+            lastErr = e;
+            console.warn(`   \u26a0\ufe0f  Gemini failed: ${e.message}`);
+            return null;
+        }
+    };
+
+    const tryGroq = async () => {
+        if (!GROQ_KEY) return null;
         for (const model of MODELS) {
             for (let attempt = 1; attempt <= 2; attempt++) {
                 try {
@@ -130,81 +205,25 @@ async function callGroq(messages) {
                     const j = await res.json();
                     const content = j.choices?.[0]?.message?.content;
                     if (!content) throw new Error('Empty content');
-                    console.log(`   ✔ Groq: ${model}`);
+                    console.log(`   \u2714 Groq: ${model}`);
                     return { content, model: `groq:${model}` };
                 } catch (e) {
                     lastErr = e;
-                    console.warn(`⚠️  groq:${model} attempt ${attempt} failed: ${e.message}`);
+                    console.warn(`\u26a0\ufe0f  groq:${model} attempt ${attempt} failed: ${e.message}`);
                     await sleep(1500 * attempt);
                 }
             }
         }
-    }
+        return null;
+    };
 
-    if (GEMINI_KEY) {
-        try {
-            console.warn('   ⚠️  Groq unavailable — trying Gemini');
-            const sys = messages.find(m => m.role === 'system');
-            const user = messages.filter(m => m.role !== 'system');
-            const body = {
-                systemInstruction: sys ? { parts: [{ text: sys.content }] } : undefined,
-                contents: user.map(m => ({
-                    role: m.role === 'assistant' ? 'model' : 'user',
-                    parts: [{ text: m.content }]
-                })),
-                generationConfig: {
-                    temperature: 0.85,
-                    maxOutputTokens: 2048,
-                    responseMimeType: 'application/json',
-                }
-            };
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
-            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-            const data = await res.json().catch(() => ({}));
-            if (res.ok) {
-                const content = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('').trim() || '';
-                if (content) {
-                    console.log(`   ✔ Gemini: ${GEMINI_MODEL}`);
-                    return { content, model: `gemini:${GEMINI_MODEL}` };
-                }
-            } else {
-                console.warn(`   ⚠️  Gemini ${res.status}: ${data?.error?.message || ''}`);
-            }
-        } catch (e) {
-            console.warn(`   ⚠️  Gemini error: ${e.message}`);
-            lastErr = e;
-        }
-    }
-
-    if (DEEPSEEK_KEY) {
-        try {
-            console.warn('   ⚠️  Falling back to DeepSeek');
-            const res = await fetch('https://api.deepseek.com/chat/completions', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    model: 'deepseek-chat',
-                    messages,
-                    temperature: 0.85,
-                    max_tokens: 1800,
-                    response_format: { type: 'json_object' },
-                }),
-            });
-            if (res.ok) {
-                const data = await res.json();
-                const content = data.choices?.[0]?.message?.content?.trim() || '';
-                if (content) {
-                    console.log('   ✔ DeepSeek: deepseek-chat');
-                    return { content, model: 'deepseek-chat' };
-                }
-            } else {
-                const t = await res.text().catch(() => '');
-                console.warn(`   ⚠️  DeepSeek ${res.status}: ${t.slice(0, 200)}`);
-            }
-        } catch (e) {
-            console.warn(`   ⚠️  DeepSeek error: ${e.message}`);
-            lastErr = e;
-        }
+    const fns = { deepseek: tryDeepSeek, gemini: tryGemini, groq: tryGroq };
+    for (const provider of pref) {
+        const fn = fns[provider];
+        if (!fn) continue;
+        const result = await fn();
+        if (result) return result;
+        console.warn(`   \u21a9\ufe0e  ${provider} unavailable - trying next provider...`);
     }
 
     throw lastErr || new Error('All AI providers failed');
@@ -292,6 +311,64 @@ const imgUrl = (prompt, seed) => {
     return `https://image.pollinations.ai/prompt/${p}?width=1080&height=1920&nologo=true&enhance=true&model=flux&seed=${seed}&safe=true`;
 };
 
+// ---------- Gemini image generation ----------
+// Owner preference: story images come from Gemini's image models. Each image
+// that Gemini cannot produce keeps its Pollinations URL and is localized later.
+
+const GEMINI_IMAGE_MODELS = process.env.GEMINI_IMAGE_MODEL
+    ? [process.env.GEMINI_IMAGE_MODEL]
+    : ['gemini-2.5-flash-image', 'gemini-2.0-flash-preview-image-generation'];
+
+async function generateGeminiImage(prompt, destFile, { aspect = '9:16', width = 1080, height = 1920 } = {}) {
+    if (!GEMINI_KEY) return false;
+    const text = `Generate a single photorealistic image, ${aspect} aspect. ${String(prompt).replace(/\s+/g, ' ').trim().slice(0, 800)}`;
+    for (const model of GEMINI_IMAGE_MODELS) {
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            try {
+                const generationConfig = { responseModalities: ['TEXT', 'IMAGE'] };
+                if (/^gemini-2\.5|^gemini-3/i.test(model)) generationConfig.imageConfig = { aspectRatio: aspect };
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text }] }], generationConfig })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const msg = data?.error?.message || `HTTP ${res.status}`;
+                    console.warn(`   \u26a0\ufe0f  [img:${model}] ${String(msg).slice(0, 180)}`);
+                    break;
+                }
+                const parts = data?.candidates?.[0]?.content?.parts || [];
+                const imgPart = parts.find(pt => pt.inlineData && pt.inlineData.data);
+                if (!imgPart) {
+                    console.warn(`   \u26a0\ufe0f  [img:${model}] no image part (attempt ${attempt}/2)`);
+                    await sleep(1200 * attempt);
+                    continue;
+                }
+                const raw = Buffer.from(imgPart.inlineData.data, 'base64');
+                if (raw.length < 8000) {
+                    console.warn(`   \u26a0\ufe0f  [img:${model}] tiny image ${raw.length}b (attempt ${attempt}/2)`);
+                    await sleep(1200 * attempt);
+                    continue;
+                }
+                const sharp = (await import('sharp')).default;
+                const out = await sharp(raw)
+                    .resize(width, height, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
+                    .jpeg({ quality: 90, progressive: true, mozjpeg: true })
+                    .toBuffer();
+                await fs.writeFile(destFile, out);
+                console.log(`   \u2714 Gemini image (${model}) -> ${path.basename(destFile)} (${(out.length / 1024).toFixed(0)} KB)`);
+                return true;
+            } catch (e) {
+                console.warn(`   \u26a0\ufe0f  [img:${model}] ${e.message}`);
+                await sleep(1200 * attempt);
+            }
+        }
+    }
+    return false;
+}
+
 // ---------- Localize images: download remote HD images into the repo ----------
 // Live-hotlinked images are slow, unreliable and bad for indexing. We download
 // each once into web-stories/img/ and serve it from our own domain.
@@ -357,17 +434,21 @@ async function localizeHtmlImages(html) {
 }
 
 // ---------- Build AMP Story HTML ----------
-function buildStoryHtml({ slug, story }) {
+function buildStoryHtml({ slug, story }, localImgs = {}) {
     // Extensionless - the .html form 308-redirects on Cloudflare Pages.
     const canonical = `${SITE}/web-stories/${slug}`;
     const publisherLogo = `${SITE}/images/publisher-logo.png`;
-    const coverImg = imgUrl(story.cover_image_prompt, 1000);
+    // Pre-generated Gemini images win; Pollinations URLs remain as fallback and
+    // get localized later by localizeHtmlImages().
+    const localSlides = localImgs.slides || {};
+    const coverImg = localImgs.cover || imgUrl(story.cover_image_prompt, 1000);
+    const coverImgAbs = localImgs.cover ? SITE + localImgs.cover : coverImg;
     const posterUrl = coverImg;
     const today = new Date().toISOString().split('T')[0];
 
     const slidesHtml = story.slides.map((s, i) => {
         const seed = 2000 + i * 137;
-        const src = imgUrl(s.image_prompt, seed);
+        const src = localSlides[i] || imgUrl(s.image_prompt, seed);
         return `
     <amp-story-page id="s-${i + 1}">
       <amp-story-grid-layer template="fill">
@@ -430,7 +511,7 @@ function buildStoryHtml({ slug, story }) {
         "@type": "Article",
         "headline": story.story_title,
         "description": story.meta_description,
-        "image": [coverImg],
+        "image": [coverImgAbs],
         "datePublished": today,
         "dateModified": today,
         "author": { "@type": "Organization", "name": "AIToolsNova" },
@@ -687,7 +768,28 @@ async function main() {
     console.log(`✍️  Title: ${story.story_title}`);
     console.log(`🖼️  Slides: ${story.slides.length}`);
 
-    const html = buildStoryHtml({ slug: src.slug, story });
+    // Generate every slide image with Gemini first (photorealistic, owned by
+    // us, no hot-linking). Anything Gemini cannot produce keeps its Pollinations
+    // URL and gets localized later by localizeHtmlImages().
+    const localImgs = { cover: null, slides: {} };
+    if (GEMINI_KEY) {
+        console.log('🎨 Generating story images with Gemini AI (fallback: Pollinations)...');
+        await fs.mkdir(IMG_DIR, { recursive: true });
+        const coverDest = path.join(IMG_DIR, `${src.slug}-cover.jpg`);
+        if (await generateGeminiImage(`${story.cover_image_prompt || story.story_title}${PHOTO_SUFFIX}`, coverDest, { aspect: '9:16', width: 1080, height: 1920 })) {
+            localImgs.cover = `/web-stories/img/${src.slug}-cover.jpg`;
+        }
+        for (let i = 0; i < story.slides.length; i++) {
+            const s = story.slides[i];
+            const dest = path.join(IMG_DIR, `${src.slug}-s${i + 1}.jpg`);
+            if (await generateGeminiImage(`${s.image_prompt || s.heading}${PHOTO_SUFFIX}`, dest, { aspect: '9:16', width: 1080, height: 1920 })) {
+                localImgs.slides[i] = `/web-stories/img/${src.slug}-s${i + 1}.jpg`;
+            }
+            await sleep(1200);
+        }
+    }
+
+    const html = buildStoryHtml({ slug: src.slug, story }, localImgs);
     console.log('🖼️  Downloading HD images locally (this makes stories fast + indexable)...');
     const localizedHtml = await localizeHtmlImages(html);
     const outFile = path.join(STORIES_DIR, `${src.slug}.html`);
