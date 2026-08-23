@@ -699,7 +699,7 @@ REQUIREMENTS:
 - Simple clear English (global US/UK/CA/India readers).
 - Fresh angle, written from a first-person "I actually tried this" perspective.
 - Body ~1900-2400 words total across intro+sections+conclusion.
-- Exactly 7 H2 sections (benefit-driven titles, no clickbait). The section set MUST include: (a) a hands-on walkthrough with real numbers, steps, and named tools; (b) an honest "Downsides / when it's NOT worth it" section; (c) a "Comparison verdict" section that picks a clear winner.
+- Exactly 6 H2 sections (benefit-driven titles, no clickbait). The section set MUST include: (a) a hands-on walkthrough with real numbers, steps, and named tools; (b) an honest "Downsides / when it's NOT worth it" section; (c) a "Comparison verdict" section that picks a clear winner.
 - Exactly 5 FAQs (question phrasing a real person would type).
 - 3 internal links using ONLY these slugs:
 ${existingSlugList || '- best-free-ai-tools-2026'}
@@ -756,7 +756,7 @@ HTML only: p ul ol li strong em h3. No script/style. Return ONLY JSON.`;
     parsed.related_tools = parsed.related_tools || ['ai-chat','ai-writer','ai-image-generator','youtube-kit'];
     parsed.related_blogs = parsed.related_blogs || ['best-free-ai-tools-2026','top-100-ai-tools-2026','ai-productivity-tools'];
     parsed.affiliate_picks = Array.isArray(parsed.affiliate_picks) ? parsed.affiliate_picks.slice(0, 3) : [];
-    if (parsed.sections.length < 7) throw new Error('Content too short (needs >=7 sections). Got: ' + parsed.sections.length);
+    if (parsed.sections.length < 6) throw new Error('Content too short (needs >=6 sections). Got: ' + parsed.sections.length);
     // Approximate word count across main fields — reject thin AI output before it ships
     const approxText = [
         parsed.intro_html, parsed.conclusion_html,
