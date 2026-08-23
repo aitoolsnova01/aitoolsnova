@@ -3,10 +3,12 @@ import os
 import re
 import subprocess
 import xml.etree.ElementTree as ET
+from pathlib import Path
 import pytest
 import requests
 
-BASE = "http://localhost:8888"
+ROOT = Path(__file__).resolve().parents[1]
+BASE = os.environ.get("TEST_BASE_URL", "http://localhost:8888")
 
 
 # ---------- robots.txt ----------
@@ -39,10 +41,10 @@ class TestSitemap:
         root = ET.fromstring(r.text)
         assert root.tag.endswith("urlset")
         text = r.text
-        assert "https://aitoolsnova.com/web-stories.html" in text
-        assert "https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026.html" in text
-        assert "https://aitoolsnova.com/tools.html" in text
-        assert "https://aitoolsnova.com/blogs.html" in text
+        assert "https://aitoolsnova.com/web-stories" in text
+        assert "https://aitoolsnova.com/web-stories/5-free-ai-tools-blow-your-mind-2026" in text
+        assert "https://aitoolsnova.com/tools" in text
+        assert "https://aitoolsnova.com/blogs" in text
         assert re.search(r"https://aitoolsnova\.com/blog/[^<]+", text), "no blog/ URL preserved"
 
 
@@ -97,7 +99,7 @@ class TestAmpStory:
 # ---------- GitHub Actions workflow ----------
 class TestWorkflow:
     def test_daily_webstory_yaml(self):
-        path = "/app/.github/workflows/daily-webstory.yml"
+        path = ROOT / ".github/workflows/daily-webstory.yml"
         assert os.path.exists(path)
         import yaml
         with open(path) as f:
@@ -118,7 +120,7 @@ class TestWorkflow:
         assert re.search(r"(indexnow|ping|google\.com/ping|bing\.com)", raw, re.I)
 
     def test_daily_blog_unchanged(self):
-        path = "/app/.github/workflows/daily-blog.yml"
+        path = ROOT / ".github/workflows/daily-blog.yml"
         assert os.path.exists(path)
         assert "Daily Blog Auto-Publish" in open(path).read()
 
@@ -126,13 +128,13 @@ class TestWorkflow:
 # ---------- Node script ----------
 class TestNodeScript:
     def test_node_check(self):
-        r = subprocess.run(["node", "--check", "/app/scripts/generate-webstory.mjs"],
+        r = subprocess.run(["node", "--check", str(ROOT / "scripts/generate-webstory.mjs")],
                            capture_output=True, text=True)
         assert r.returncode == 0, r.stderr
 
     def test_smoke(self):
         env = {**os.environ, "GROQ_API_KEY": "test"}
-        r = subprocess.run(["node", "/app/scripts/test-webstory-smoke.mjs"],
+        r = subprocess.run(["node", str(ROOT / "scripts/test-webstory-smoke.mjs")],
                            capture_output=True, text=True, env=env, timeout=60)
         assert r.returncode == 0, f"stdout: {r.stdout}\nstderr: {r.stderr}"
         assert "🎉 All smoke checks passed" in r.stdout
@@ -148,7 +150,7 @@ class TestNodeScript:
         )
         # Avoid passing the script as argv[1] (would trip main() guard). Inline import.
         inline = (
-            "import('/app/scripts/generate-webstory.mjs').then(m => {"
+            f"import('{(ROOT / 'scripts/generate-webstory.mjs').as_uri()}').then(m => {{"
             "const need=['buildStoryHtml','updateSitemap','rebuildStoriesIndex','pickSourceBlog'];"
             "const miss=need.filter(k=>typeof m[k] !== 'function');"
             "if(miss.length){console.error('MISSING:'+miss.join(','));process.exit(1)}"
@@ -166,18 +168,18 @@ class TestNodeScript:
 # ---------- Blog content unchanged ----------
 class TestBlogsPreserved:
     def test_blogs_dir(self):
-        files = [f for f in os.listdir("/app/blog") if f.endswith(".html")]
+        files = [f for f in os.listdir(ROOT / "blog") if f.endswith(".html")]
         assert len(files) > 40, f"only {len(files)} html files in /app/blog"
 
     def test_blogs_html_size(self):
-        size = os.path.getsize("/app/blogs.html")
+        size = os.path.getsize(ROOT / "blogs.html")
         assert size > 50 * 1024, f"blogs.html size {size} too small"
 
 
 # ---------- SEO helper doc ----------
 class TestSeoDoc:
     def test_content(self):
-        path = "/app/SEO_HEALTH.md"
+        path = ROOT / "SEO_HEALTH.md"
         assert os.path.exists(path)
         content = open(path).read()
         for keyword in ["Google Search Console", "Bing", "IndexNow", "sitemap"]:

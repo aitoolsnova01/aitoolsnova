@@ -79,15 +79,15 @@
                 <a href="../contact">Contact</a>
             </nav>
             <div class="header-right">
-                <button id="themeToggle" class="icon-btn">🌙</button>
+                <button id="themeToggle" class="icon-btn" type="button" aria-label="Switch color theme" title="Switch color theme">🌙</button>
                 <a href="../#donate" class="donate-btn">❤️ Donate</a>
-                <button class="menu-btn" id="menuBtn">☰</button>
+                <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation menu" aria-controls="mobileMenu" aria-expanded="false">☰</button>
             </div>
         </div>
     </header>
 
     <div class="mobile-menu" id="mobileMenu">
-        <button class="close-menu" id="closeMenuBtn">✕</button>
+        <button class="close-menu" id="closeMenuBtn" type="button" aria-label="Close navigation menu">✕</button>
         <a href="/">🏠 Home</a>
         <a href="../tools">🛠 Tools</a>
         <a href="../blogs">📝 Blogs</a>
@@ -261,7 +261,7 @@
 
     <a href="https://paypal.me/mohd0787" target="_blank" rel="noopener noreferrer" style="position:fixed;right:16px;bottom:80px;background:linear-gradient(135deg,#ff4d4d,#ff7b00);color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(255,77,77,.3);z-index:999;text-decoration:none;">❤️ Donate</a>
     <a href="../contact" style="position:fixed;right:16px;bottom:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:12px 18px;border-radius:50px;font-weight:700;font-size:.85rem;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;text-decoration:none;">💬 Support</a>
-    <button id="backToTop" style="position:fixed;left:16px;bottom:20px;width:46px;height:46px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;cursor:pointer;">↑</button>
+    <button id="backToTop" type="button" aria-label="Back to top" title="Back to top" style="position:fixed;left:16px;bottom:20px;width:46px;height:46px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 8px 25px rgba(79,70,229,.3);z-index:999;cursor:pointer;">↑</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -279,19 +279,19 @@
             const mobileMenu = document.getElementById('mobileMenu');
             if (menuBtn) {
                 menuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.add('active');
+                    mobileMenu.classList.add('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'true');
                     document.body.style.overflow = 'hidden';
                 });
             }
             if (closeMenuBtn) {
                 closeMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
+                    mobileMenu.classList.remove('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
                     document.body.style.overflow = '';
                 });
             }
             document.addEventListener('click', function(e) {
                 if (mobileMenu && mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
-                    mobileMenu.classList.remove('active');
+                    mobileMenu.classList.remove('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
                     document.body.style.overflow = '';
                 }
             });

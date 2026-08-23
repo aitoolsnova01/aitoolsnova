@@ -290,8 +290,8 @@
             const menuBtn = document.getElementById('menuBtn');
             const closeMenuBtn = document.getElementById('closeMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
-            menuBtn && menuBtn.addEventListener('click', ()=>{ mobileMenu.classList.add('active'); });
-            closeMenuBtn && closeMenuBtn.addEventListener('click', ()=>{ mobileMenu.classList.remove('active'); });
+            menuBtn && menuBtn.addEventListener('click', ()=>{ mobileMenu.classList.add('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'true'); });
+            closeMenuBtn && closeMenuBtn.addEventListener('click', ()=>{ mobileMenu.classList.remove('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'false'); });
 
             const topic = document.getElementById('ytkTopic');
             const niche = document.getElementById('ytkNiche');

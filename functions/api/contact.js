@@ -6,10 +6,9 @@
  * users and everyone on webmail - the browser either does nothing or offers to
  * pick an app the visitor does not have. Messages were being silently lost.
  *
- * Submissions are stored in the CONTACT KV namespace when it is bound. If it is
- * not bound yet the request still succeeds so the visitor is not shown an error
- * for a configuration gap on our side, but it is logged loudly so the missing
- * binding is visible in the deployment logs.
+ * Submissions are stored in the CONTACT KV namespace. If the binding is
+ * missing, return an honest error with the support email instead of claiming a
+ * message was received and silently discarding it.
  */
 
 const MAX = { name: 120, email: 200, subject: 200, message: 5000 };
@@ -55,12 +54,16 @@ export async function onRequestPost(context) {
       created_at: new Date().toISOString(),
     };
 
-    if (context.env.CONTACT) {
-      const key = `msg:${Date.now()}:${crypto.randomUUID()}`;
-      await context.env.CONTACT.put(key, JSON.stringify(record));
-    } else {
-      console.warn('CONTACT KV namespace not bound - message not persisted:', JSON.stringify(record));
+    if (!context.env.CONTACT) {
+      console.error('CONTACT KV namespace is not bound; refusing to discard contact submission.');
+      return json({
+        ok: false,
+        detail: 'The contact form is temporarily unavailable. Please email aitoolsnova01@gmail.com directly.',
+      }, 503);
     }
+
+    const key = `msg:${Date.now()}:${crypto.randomUUID()}`;
+    await context.env.CONTACT.put(key, JSON.stringify(record));
 
     return json({ ok: true, message: 'Thanks — your message has been received. We reply within 24-48 hours.' }, 200);
   } catch (err) {
