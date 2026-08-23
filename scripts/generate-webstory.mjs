@@ -564,6 +564,8 @@ ${slidesHtml}
           <h2 class="cta-title">Try 100+ Free AI Tools</h2>
           <p class="cta-desc">${esc(story.cta_line)}</p>
           <a class="cta-cta" href="${SITE}/tools">Explore Tools →</a>
+          <a class="cta-cta" style="margin-left:8px;background:#fff" href="https://www.amazon.in/s?k=ai+productivity+books&tag=aitoolsnova-21" rel="sponsored nofollow noopener">Recommended products →</a>
+          <small style="display:block;color:#f2f2f2;margin-top:12px;font-size:11px">Affiliate link, at no extra cost to you.</small>
         </div>
       </amp-story-grid-layer>
       <amp-story-page-outlink layout="nodisplay">

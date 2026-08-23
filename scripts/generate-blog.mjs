@@ -834,8 +834,11 @@ HTML allowed: p ul ol li strong em h3.`;
 
 // ---------- 6a. Build affiliate section HTML ----------
 function buildAffiliateSection(picks) {
-    if (!Array.isArray(picks) || picks.length === 0) return '';
-    const items = picks.map(p => {
+    const safePicks = Array.isArray(picks) && picks.length ? picks : [
+        { name: 'AI productivity books', why: 'A practical starting point for learning responsible AI workflows.', amazon_query: 'ai productivity books' },
+        { name: 'USB microphone for online meetings', why: 'Useful for clearer classes, calls and creator work.', amazon_query: 'usb microphone for online meetings' },
+    ];
+    const items = safePicks.slice(0, 3).map(p => {
         const aQ = encodeURIComponent(p.amazon_query || p.name || '');
         const fQ = encodeURIComponent(p.flipkart_query || p.name || '');
         // Amazon India affiliate link (auto-tagged when AMAZON_TAG is set)
