@@ -402,7 +402,10 @@ function gtag(){ dataLayer.push(arguments); }
                         copyBtn.style.display = 'inline-block';
                         if (window.gtag) gtag('event','blog_widget_generate',{topic_length: topic.length});
                     } else {
-                        out.textContent = '❌ AI unavailable right now. Try AI Writer tool.';
+                        // Show the server's already-sanitized reason (never a raw
+                        // internal detail) so users know it is safe to retry.
+                        var reason = (data.error && String(data.error).replace(/[<>`*]/g, '').slice(0, 160)) || '';
+                        out.textContent = '❌ ' + (reason || 'AI is busy right now.') + ' Please wait a moment and try again, or use the AI Writer tool.';
                     }
                 } catch(err) {
                     out.textContent = '❌ Network error. Try again.';
