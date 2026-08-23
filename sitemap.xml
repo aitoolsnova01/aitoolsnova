@@ -6,6 +6,12 @@
     <!-- FULL CANONICAL SITEMAP for GSC — 2026-08-21 -->
     <!-- AUTO-BLOG-SITEMAP-START -->
     <url>
+        <loc>https://aitoolsnova.com/blog/ai-tool-privacy-checklist-before-upload</loc>
+        <lastmod>2026-08-23</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://aitoolsnova.com/</loc>
         <lastmod>2026-08-21</lastmod>
         <changefreq>daily</changefreq>
@@ -1791,4 +1797,12 @@
         </image:image>
     </url>
     <!-- AUTO-BLOG-SITEMAP-END -->
+
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/ai-upload-privacy-checks</loc>
+        <lastmod>2026-08-23</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>
