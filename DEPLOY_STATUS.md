@@ -53,3 +53,58 @@ PR #5 sirf **scripts** (daily blog/webstory helper) — homepage ka look change 
 PR #3 (`consent.js` analytics default) **tab** dikhega jab Pages rebuild + cache purge ho.
 
 Is PR me cache-bust + `_headers` fix hai — merge + Cloudflare Retry ke baad View Source me `?v=20260819c` dikhega.
+
+---
+
+# 23 Aug 2026 update — paste-ready honest deploy workflow
+
+Is session me **search box bada + clearly visible** kar diya gaya hai
+(index/tools/blogs). Workflow file (`.github/workflows/…`) ko Arena ke
+GitHub App token ke paas `workflows` permission nahi hai, isliye wo
+change push nahi hua — **neeche ka code apne computer se khud replace
+karo** (ya repo UI me edit → commit):
+
+.Apne repo me `.github/workflows/cloudflare-pages-deploy.yml` ka purana
+content delete karke ye paste karo:
+
+```yaml
+name: Deploy to Cloudflare Pages
+# Green tick = live site really updated. Missing secrets = red X (honest),
+# kyunki skip+success wala fake-green hi confusion tha.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check deploy credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error title=Deploy skipped - live site NOT updated::Missing CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID secrets."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Deploy with Wrangler
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ secrets.CF_PAGES_PROJECT }}
+        run: |
+          PROJECT_NAME="${PROJECT:-aitoolsnova}"
+          npm install -g wrangler@3
+          npx wrangler pages deploy . \
+            --project-name="$PROJECT_NAME" \
+            --branch=main \
+            --commit-dirty=true
+```
+
+Iske baad: **red X = deploy nahi hua, green = deploy hua** — kabhi dhokha nahi.
