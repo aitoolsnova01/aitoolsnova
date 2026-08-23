@@ -12,18 +12,30 @@ SITE_HOSTS = {"aitoolsnova.com", "www.aitoolsnova.com"}
 def is_external(u):
     return u.startswith(("http://", "https://", "//", "mailto:", "tel:", "javascript:", "data:", "#"))
 
-def to_path(link, base_dir):
+def candidate_paths(link, base_dir):
+    """Return files that can satisfy a public URL on Cloudflare Pages.
+
+    The site intentionally uses extensionless canonical URLs (``/tools`` and
+    ``/blog/slug``), while the checked-in files end in ``.html``.  Treating a
+    real directory such as ``/tools`` as ``tools/index.html`` also gives a
+    false 404 because Cloudflare's clean-URL lookup correctly serves
+    ``tools.html`` first.
+    """
     link = ihtml.unescape(link).split("#")[0].split("?")[0].strip()
-    if not link:
-        return None
+    if not link or any(marker in link for marker in ("${", "+t.")):
+        return []
     link = unquote(link)
     if link.startswith("/"):
         p = os.path.join(ROOT, link.lstrip("/"))
     else:
         p = os.path.normpath(os.path.join(base_dir, link))
+
+    candidates = [p]
+    if not os.path.splitext(p)[1]:
+        candidates.append(p + ".html")
     if link.endswith("/") or os.path.isdir(p):
-        p = os.path.join(p, "index.html")
-    return p
+        candidates.append(os.path.join(p, "index.html"))
+    return list(dict.fromkeys(candidates))
 
 def check_internal_host(u):
     """For absolute URLs to our own domain, return the path part; else None."""
@@ -44,17 +56,16 @@ for f in files:
         html = fh.read()
     for m in ATTR_RE.finditer(html):
         raw = m.group(1).strip()
+        link = raw
         if is_external(raw):
-            path = check_internal_host(raw)
-            if not path:
+            link = check_internal_host(raw)
+            if not link:
                 continue
-            target = to_path(path, base)
-        else:
-            target = to_path(raw, base)
-        if not target:
+        candidates = candidate_paths(link, base)
+        if not candidates:
             continue
-        if not os.path.exists(target):
-            rel = os.path.relpath(target, ROOT)
+        if not any(os.path.exists(candidate) for candidate in candidates):
+            rel = os.path.relpath(candidates[0], ROOT)
             missing[rel].append(os.path.relpath(f, ROOT))
 
 print("=== MISSING INTERNAL TARGETS (404 sources) ===")
@@ -70,11 +81,11 @@ if os.path.exists(smap):
     bad = []
     for loc in locs:
         path = urlparse(loc).path
-        p = os.path.join(ROOT, path.lstrip("/"))
-        if path.endswith("/"):
-            p = os.path.join(p, "index.html")
-        if not os.path.exists(p):
+        if not any(os.path.exists(p) for p in candidate_paths(path, ROOT)):
             bad.append(path)
     print(f"\n=== SITEMAP URLs with no matching file: {len(bad)} ===")
     for b in bad:
         print("  ", b)
+
+if missing or bad:
+    raise SystemExit(1)

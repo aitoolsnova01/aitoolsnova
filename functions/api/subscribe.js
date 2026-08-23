@@ -1,5 +1,5 @@
 // Cloudflare Pages Function - Newsletter subscribe endpoint.
-// Stores subscribers in Cloudflare KV if bound as SUBSCRIBERS, else no-op success.
+// Stores subscribers in Cloudflare KV. Never report success unless persisted.
 export async function onRequestPost(context) {
     try {
         const body = await context.request.json();
@@ -14,22 +14,25 @@ export async function onRequestPost(context) {
             });
         }
 
-        // Store in KV if available
-        if (context.env.SUBSCRIBERS) {
-            const key = `sub:${Date.now()}:${crypto.randomUUID()}`;
-            await context.env.SUBSCRIBERS.put(key, JSON.stringify({
-                email, source, created_at: new Date().toISOString()
-            }));
+        if (!context.env.SUBSCRIBERS) {
+            console.error('SUBSCRIBERS KV namespace is not bound; refusing to discard signup.');
+            return new Response(JSON.stringify({
+                ok: false,
+                detail: 'Newsletter signup is temporarily unavailable. Please try again later.'
+            }), {
+                status: 503,
+                headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+            });
         }
 
-        // Report whether the write actually persisted so a missing binding is
-        // visible instead of looking like a successful signup.
-        const stored = Boolean(context.env.SUBSCRIBERS);
-        if (!stored) console.warn('SUBSCRIBERS KV not bound - subscriber not persisted:', email);
+        const key = `sub:${Date.now()}:${crypto.randomUUID()}`;
+        await context.env.SUBSCRIBERS.put(key, JSON.stringify({
+            email, source, created_at: new Date().toISOString()
+        }));
 
-        return new Response(JSON.stringify({ ok: true, stored, message: 'Subscribed successfully' }), {
+        return new Response(JSON.stringify({ ok: true, stored: true, message: 'Subscribed successfully' }), {
             status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
         });
     } catch (err) {
         return new Response(JSON.stringify({ ok: false, detail: 'Server error' }), {

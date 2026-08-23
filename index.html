@@ -991,19 +991,19 @@ function gtag(){ dataLayer.push(arguments); }
             const mobileMenu = document.getElementById('mobileMenu');
             if (menuBtn) {
                 menuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.add('active');
+                    mobileMenu.classList.add('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'true');
                     document.body.style.overflow = 'hidden';
                 });
             }
             if (closeMenuBtn) {
                 closeMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
+                    mobileMenu.classList.remove('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
                     document.body.style.overflow = '';
                 });
             }
             document.addEventListener('click', function(e) {
                 if (mobileMenu && mobileMenu.classList.contains('active') && !mobileMenu.contains(e.target) && e.target !== menuBtn) {
-                    mobileMenu.classList.remove('active');
+                    mobileMenu.classList.remove('active'); menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
                     document.body.style.overflow = '';
                 }
             });
