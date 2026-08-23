@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
+
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#4F46E5">
     <link rel="canonical" href="https://aitoolsnova.com/contact">
 
-    
+
     <meta property="og:title" content="Contact Us - AIToolsNova | Free AI Tools & Online Utilities">
     <meta property="og:description" content="Contact AIToolsNova for support, suggestions, business enquiries or collaborations. We'd love to hear from you.">
     <meta property="og:url" content="https://aitoolsnova.com/contact">
@@ -30,7 +30,7 @@
     <meta name="twitter:title" content="Contact Us - AIToolsNova | Free AI Tools & Online Utilities">
     <meta name="twitter:description" content="Contact AIToolsNova for support, suggestions, business enquiries or collaborations. We'd love to hear from you.">
 
-    
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -51,7 +51,7 @@
     }
     </script>
 
-    
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -63,7 +63,7 @@
     }
     </script>
 
-    
+
     <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
@@ -75,7 +75,7 @@
       });
     </script>
 
-    
+
     <script src="/js/consent.js?v=20260819c"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ0WTD0R0M"></script>
     <script>
@@ -200,7 +200,7 @@
             </div>
         </section>
 
-        
+
         <section style="padding-top:0;">
             <div class="container">
                 <div style="max-width:850px;margin:auto;">
@@ -225,7 +225,7 @@
             </div>
         </section>
 
-        
+
         <section style="background:linear-gradient(135deg,#0F172A,#1E293B);padding:50px 0;">
             <div class="container">
                 <div style="max-width:780px;margin:auto;padding:40px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:24px;">
@@ -242,7 +242,7 @@
     <div class="depth-block"><h2>What to Expect When You Write to Us</h2><p>We read every message that arrives at aitoolsnova01@gmail.com. Most enquiries are answered within 24 to 48 hours on working days; if you write over a weekend the reply usually lands on Monday. If you have not heard back after three working days, it is worth checking your spam folder before writing again, as automated filters sometimes catch our replies.</p><h3>Reporting a problem with a tool</h3><p>Bug reports are the most useful messages we receive, and a few details make them far easier to act on. Tell us which tool you were using, what you were trying to do, what happened instead, and which browser and device you were on. If the tool produced an error message, quoting it exactly usually points straight at the cause. Screenshots help, but please avoid sending files that contain personal or client information.</p><h3>Suggesting a new tool</h3><p>Many of the tools on this site exist because someone asked for them. If there is something you find yourself doing manually every week, describe the task rather than the solution you have in mind. Knowing the underlying problem often leads to something more useful than the feature originally requested. We prioritise suggestions that can run entirely in the browser, since that keeps the tools free, fast and private.</p><h3>Business, advertising and partnerships</h3><p>For sponsorship, advertising or collaboration enquiries, please include your company, the nature of the proposal and any relevant timelines in the first message. We do not publish paid links inside editorial content, and we do not accept guest posts written primarily to place a backlink. Genuine partnership proposals are welcome and are answered individually.</p><h3>Corrections and content feedback</h3><p>If you spot something inaccurate or out of date in a guide, tell us which article and which claim. Pricing and feature details change frequently across the tools we write about, and reader corrections are the fastest way we learn that something needs updating. We correct errors promptly and note significant changes in the article itself.</p><h3>Privacy of your message</h3><p>Messages you send are used only to respond to your enquiry. We do not add correspondents to a mailing list, and we do not share contact details with third parties. Please do not send passwords, financial information or confidential documents by email; if a support question requires sensitive data, we will tell you how to proceed safely.</p></div>
                 </main>
 
-    
+
 <section data-atn-newsletter aria-label="Newsletter signup" style="padding:44px 20px;background:#F8FAFC;border-top:1px solid #E2E8F0"></section>
 <footer class="footer">
         <div class="container">
@@ -376,6 +376,7 @@
                     if (res.ok && data.ok) {
                         say(data.message || 'Thanks - your message has been received.', true);
                         form.reset();
+                        if (window.gtag) gtag('event', 'form_submission', {form_name: 'contact', page_location: location.pathname});
                     } else {
                         say(data.detail || 'Could not send. Please email aitoolsnova01@gmail.com directly.', false);
                     }
