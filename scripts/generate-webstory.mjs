@@ -121,7 +121,7 @@ async function callGroq(messages) {
                     model: 'deepseek-chat',
                     messages,
                     temperature: 0.85,
-                    max_tokens: 1800,
+                    max_tokens: 2600,
                     response_format: { type: 'json_object' },
                 }),
             });
@@ -194,7 +194,7 @@ async function callGroq(messages) {
                             model,
                             messages,
                             temperature: 0.85,
-                            max_tokens: 1800,
+                            max_tokens: 2600,
                             response_format: { type: 'json_object' },
                         }),
                     });
@@ -251,7 +251,7 @@ Schema:
   "slides": [
     {
       "heading": "Big 3-5 word slide heading",
-      "caption": "Exactly 2-3 short lines (about 18-30 words), plain spoken English, no hashtags, no emoji",
+      "caption": "Exactly 2-4 short lines (30-45 words), plain spoken English, no hashtags, no emoji",
       "image_prompt": "photorealistic prompt for portrait 9:16, no text overlay"
     }
     // EXACTLY 8 content slides (so the story is cover + 8 + cta = 10 total)
@@ -260,7 +260,7 @@ Schema:
 }
 Rules:
 - Never include quotation marks inside string values.
-- Return EXACTLY 8 slides. Each slide caption must be 2-3 short, punchy lines of plain English (18-30 words), no emojis, no hashtags, no ALL CAPS.
+- Return EXACTLY 8 slides. Each slide caption must be 2-4 short, punchy lines of plain English (30-45 words), no emojis, no hashtags, no ALL CAPS.
 - Every image_prompt MUST describe a REAL photograph, not an illustration: "a real photo of ..." with a concrete subject, setting, lighting and camera feel (e.g. shot on a DSLR, natural window light, candid documentary style, shallow depth of field). NEVER cartoons, 3D renders, CGI, clipart, or text overlays.`;
 
     const user = `Blog title: "${title}"
@@ -283,7 +283,7 @@ Create an 8-11 slide web story (cover + 6-9 tips + cta) for mobile readers in th
     }
     // Cap at 9 content slides max (cover + 9 + cta = 11 total, still inside 8-11).
     data.slides = data.slides.slice(0, 9);
-    // Enforce 2-3 line captions: collapse whitespace and make sure every caption reads short.
+    // Enforce short 30-45 word captions: collapse whitespace and make sure every caption reads short.
     data.slides = data.slides.map(s => ({
         ...s,
         heading: String(s.heading).replace(/\s+/g, ' ').trim(),
