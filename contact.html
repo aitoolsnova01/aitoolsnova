@@ -376,6 +376,7 @@
                     if (res.ok && data.ok) {
                         say(data.message || 'Thanks - your message has been received.', true);
                         form.reset();
+                        if (window.gtag) gtag('event', 'form_submission', {form_name: 'contact', page_location: location.pathname});
                     } else {
                         say(data.detail || 'Could not send. Please email aitoolsnova01@gmail.com directly.', false);
                     }

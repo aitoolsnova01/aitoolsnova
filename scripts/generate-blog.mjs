@@ -858,7 +858,7 @@ function buildAffiliateSection(picks) {
 // ---------- 6. Build HTML from template ----------
 function esc(s = '') { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
-function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null) {
+function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null, sectionLocals = {}) {
     // Cloudflare Pages serves these without the extension - a .html URL 308s,
     // and Google drops redirecting URLs from the index.
     const canonicalUrl = `https://aitoolsnova.com/blog/${topic.slug}`;
@@ -875,9 +875,10 @@ function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null) {
     // absolute URLs; the visible <img> uses the root-relative path.
     const heroImg = heroLocal ? heroLocal.abs : heroRemote;
     const heroImgSrc = heroLocal ? heroLocal.rel : heroRemote;
-    const sectionsHtml = content.sections.map(s =>
-        `<h2>${esc(s.h2)}</h2>\n${s.body_html}`
-    ).join('\n\n');
+    const sectionsHtml = content.sections.map((s, i) => {
+        const image = sectionLocals[i] || `/blog/img/${topic.slug}-section-${i + 1}.jpg`;
+        return `<section class="blog-section">\n<h2>${esc(s.h2)}</h2>\n<img class="section-image" src="${image}" alt="${esc(s.h2)}" loading="lazy" decoding="async" width="1600" height="900">\n${s.body_html}\n</section>`;
+    }).join('\n\n');
     const faqsHtml = content.faqs.map((f, i) =>
         `<div class="faq-box"><h4>Q${i+1}: ${esc(f.q)}</h4><p>${esc(f.a)}</p></div>`
     ).join('\n');
@@ -1043,7 +1044,7 @@ function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null) {
         .footer a{color:#94A3B8;text-decoration:none}
         .footer a:hover{color:#fff}
         .footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:16px;text-align:center;font-size:.85rem;color:#94A3B8}
-        @media(max-width:768px){body{padding-top:60px}.blog-header h1{font-size:1.6rem}.header{height:60px}}
+        .blog-section{margin:0 0 34px}.section-image{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:14px;margin:0 0 18px;background:#EEF2FF}@media(max-width:1100px){.container{width:min(900px,94%)}.blog-content{max-width:100%}}@media(max-width:768px){body{padding-top:60px}.blog-header h1{font-size:1.6rem}.header{height:60px}.container{width:calc(100% - 28px);padding-left:0;padding-right:0}.blog-content{font-size:.98rem}.blog-content h2{font-size:1.35rem;margin-top:26px}.section-image{border-radius:10px;margin-bottom:14px}}@media(max-width:430px){.container{width:calc(100% - 20px)}.blog-header h1{font-size:1.42rem}.blog-meta{gap:8px;font-size:.78rem}.blog-content p{font-size:.94rem}.blog-content ul,.blog-content ol{padding-left:18px}}@media(max-width:360px){.blog-header h1{font-size:1.28rem}.blog-content h2{font-size:1.18rem}.back-btn{padding:7px 12px;font-size:.78rem}}
     </style>
 </head>
 <body>
@@ -1143,7 +1144,7 @@ async function updateBlogsList(topic, content, todayHuman) {
     const cardCategory = ['ai','seo','social','productivity','coding','image','writing'].includes(topic.category) ? topic.category : 'ai';
     const shortDesc = (content.meta_description || '').replace(/"/g, '&quot;');
     const card = `                    <article class="blog-card" data-category="${cardCategory}">
-                        <div class="blog-img">${topic.emoji || '🤖'}</div>
+                        <div class="blog-img"><img src="blog/img/${topic.slug}-hero.jpg" alt="${esc(topic.title)}" loading="lazy" decoding="async" width="1600" height="900"></div>
                         <div class="blog-content">
                             <span class="blog-tag">${(topic.category || 'ai').toUpperCase()}</span>
                             <h3>${esc(topic.title)}</h3>
@@ -1256,14 +1257,35 @@ async function main() {
         if (existsSync(heroDest) || await generateGeminiImage(heroPrompt, heroDest, { aspect: '16:9', width: 1600, height: 900 })) {
             heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` };
         } else {
-            console.log('   ℹ️  Gemini image unavailable — Pollinations fallback (still localized after build).');
+            // Never publish a hotlink: use a bundled local image if Gemini is unavailable.
+            const fallback = readdirSync(path.join(BLOG_DIR, 'img')).find(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
+            if (fallback) { await fs.copyFile(path.join(BLOG_DIR, 'img', fallback), heroDest); heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` }; }
+            console.log('   ℹ️  Gemini image unavailable — bundled local fallback used.');
         }
     } catch (e) {
-        console.warn(`   ⚠️  Hero image step failed (${e.message}) — Pollinations fallback.`);
+        const fallback = readdirSync(path.join(BLOG_DIR, 'img')).find(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
+        if (fallback) { const heroDest = path.join(BLOG_DIR, 'img', `${topic.slug}-hero.jpg`); await fs.copyFile(path.join(BLOG_DIR, 'img', fallback), heroDest); heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` }; }
+        console.warn(`   ⚠️  Hero image step failed (${e.message}) — bundled local fallback used.`);
+    }
+
+    console.log('\n🖼️  Generating 3–4 section images (Gemini first, local fallback)...');
+    const sectionLocals = {};
+    const sectionPrompts = content.sections.slice(0, 4);
+    const existingFallbacks = readdirSync(path.join(BLOG_DIR, 'img')).filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
+    for (let i = 0; i < sectionPrompts.length; i++) {
+        const dest = path.join(BLOG_DIR, 'img', `${topic.slug}-section-${i + 1}.jpg`);
+        const prompt = `${sectionPrompts[i].h2 || topic.title}, relevant editorial photograph, real people and setting, natural light, no text, no watermark`;
+        let ok = existsSync(dest) || await generateGeminiImage(prompt, dest, { aspect: '16:9', width: 1600, height: 900 });
+        if (!ok) {
+            // Deterministic local fallback: copy a bundled image rather than leaving a hotlink.
+            const fallback = existingFallbacks[i % Math.max(existingFallbacks.length, 1)];
+            if (fallback) { await fs.copyFile(path.join(BLOG_DIR, 'img', fallback), dest); ok = true; }
+        }
+        if (ok) sectionLocals[i] = `/blog/img/${topic.slug}-section-${i + 1}.jpg`;
     }
 
     console.log('\n📄 Building HTML file...');
-    let finalHtml = buildHtml(topic, content, todayISO, todayHuman, heroLocal);
+    let finalHtml = buildHtml(topic, content, todayISO, todayHuman, heroLocal, sectionLocals);
     console.log('   🖼️  Localizing hero image (fast + reliable)...');
     finalHtml = await localizeBlogHero(finalHtml);
     const finalPath = path.join(BLOG_DIR, `${topic.slug}.html`);

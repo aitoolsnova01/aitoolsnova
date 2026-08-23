@@ -3,8 +3,8 @@
  * AIToolsNova - Daily Web Story Auto Generator
  * ---------------------------------------------
  * - Reads the most recently added/updated blog post
- * - Generates a Google Web Story (AMP Story) with 8–11 slides:
- *      Cover + 8–9 tip slides + CTA  (10–11 pages total)
+ * - Generates a Google Web Story (AMP Story) with 12 pages:
+ *      Cover + exactly 10 content slides + CTA (12 pages total)
  * - Uses HD portrait images from Pollinations.ai (free, no key), forced
  *   photorealistic so they read as real photos, not AI renders
  * - Each image slide has 2-3 readable caption lines beneath the image
@@ -254,18 +254,18 @@ Schema:
       "caption": "Exactly 2-4 short lines (30-45 words), plain spoken English, no hashtags, no emoji",
       "image_prompt": "photorealistic prompt for portrait 9:16, no text overlay"
     }
-    // EXACTLY 8 content slides (so the story is cover + 8 + cta = 10 total)
+    // EXACTLY 10 content slides (so the story is cover + 10 + cta = 12 total)
   ],
   "cta_line": "Short CTA line, 8-14 words, benefit-led"
 }
 Rules:
 - Never include quotation marks inside string values.
-- Return EXACTLY 8 slides. Each slide caption must be 2-4 short, punchy lines of plain English (30-45 words), no emojis, no hashtags, no ALL CAPS.
+- Return EXACTLY 10 slides. Each slide caption must be 2-4 short, punchy lines of plain English (30-45 words), no emojis, no hashtags, no ALL CAPS.
 - Every image_prompt MUST describe a REAL photograph, not an illustration: "a real photo of ..." with a concrete subject, setting, lighting and camera feel (e.g. shot on a DSLR, natural window light, candid documentary style, shallow depth of field). NEVER cartoons, 3D renders, CGI, clipart, or text overlays.`;
 
     const user = `Blog title: "${title}"
 Blog description: "${description}"
-Create an 8-11 slide web story (cover + 6-9 tips + cta) for mobile readers in the US, UK, Canada, India and worldwide. Make the cover title irresistible (curiosity + benefit + number when natural). Keywords must be search-friendly, not stuffed. Captions in clear global English.`;
+Create a 12-page web story (cover + exactly 10 tips + cta) for mobile readers in the US, UK, Canada, India and worldwide. Make the cover title irresistible (curiosity + benefit + number when natural). Keywords must be search-friendly, not stuffed. Captions in clear global English.`;
 
     const { content } = await callGroq([
         { role: 'system', content: sys },
@@ -278,11 +278,11 @@ Create an 8-11 slide web story (cover + 6-9 tips + cta) for mobile readers in th
     // Normalize: keep only well-formed slides (heading + caption + image_prompt).
     data.slides = data.slides.filter(s => s && typeof s.heading === 'string' && typeof s.caption === 'string' && typeof s.image_prompt === 'string');
     // REQUIRE the full 8 content slides -> cover + 8 + cta = 10 total (within the 8-11 range).
-    if (data.slides.length < 8) {
-        throw new Error(`Too few slides: got ${data.slides.length}, need exactly 8 content slides (cover + 8 + cta = 10 total)`);
+    if (data.slides.length < 10) {
+        throw new Error(`Too few slides: got ${data.slides.length}, need exactly 10 content slides (cover + 10 + cta = 12 total)`);
     }
-    // Cap at 9 content slides max (cover + 9 + cta = 11 total, still inside 8-11).
-    data.slides = data.slides.slice(0, 9);
+    // Keep exactly 10 content slides for the AMP contract.
+    data.slides = data.slides.slice(0, 10);
     // Enforce short 30-45 word captions: collapse whitespace and make sure every caption reads short.
     data.slides = data.slides.map(s => ({
         ...s,
@@ -786,6 +786,17 @@ async function main() {
                 localImgs.slides[i] = `/web-stories/img/${src.slug}-s${i + 1}.jpg`;
             }
             await sleep(1200);
+        }
+    }
+    // A story must never ship an external image URL. If Gemini is unavailable,
+    // copy a checked-in portrait asset for each missing page; localization is
+    // still attempted below for any legacy remote URLs.
+    const bundled = readdirSync(IMG_DIR).find(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
+    if (bundled) {
+        const fallback = path.join(IMG_DIR, bundled);
+        if (!localImgs.cover) { await fs.copyFile(fallback, path.join(IMG_DIR, `${src.slug}-cover.jpg`)); localImgs.cover = `/web-stories/img/${src.slug}-cover.jpg`; }
+        for (let i = 0; i < story.slides.length; i++) {
+            if (!localImgs.slides[i]) { await fs.copyFile(fallback, path.join(IMG_DIR, `${src.slug}-s${i + 1}.jpg`)); localImgs.slides[i] = `/web-stories/img/${src.slug}-s${i + 1}.jpg`; }
         }
     }
 

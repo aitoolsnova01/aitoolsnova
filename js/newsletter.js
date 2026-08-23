@@ -8,9 +8,9 @@
   function markup() {
     return '' +
       '<div style="max-width:560px;margin:0 auto;text-align:center">' +
-        '<h2 style="font-size:1.5rem;margin:0 0 8px">Get the best free AI tools in your inbox</h2>' +
+        '<h2 style="font-size:1.5rem;margin:0 0 8px">AI se Society kaise badal rahi hai?</h2>' +
         '<p style="color:#64748B;margin:0 0 18px;font-size:.95rem">' +
-          'One short email a week: new tools we have tested, and the guides worth your time. No spam, unsubscribe anytime.' +
+          'Har week one useful AI story, one practical tool and one honest limitation. No spam, unsubscribe anytime.' +
         '</p>' +
         '<form class="atn-sub-form" novalidate style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">' +
           '<label for="atn-sub-email" style="position:absolute;left:-9999px">Email address</label>' +
@@ -19,7 +19,7 @@
             'style="flex:1 1 260px;min-width:0;padding:12px 14px;border:1px solid #E2E8F0;border-radius:10px;font-size:1rem;font-family:inherit">' +
           '<button type="submit" ' +
             'style="padding:12px 24px;border:0;border-radius:10px;background:#6366F1;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit">' +
-            'Subscribe</button>' +
+            'Get weekly insights</button>' +
         '</form>' +
         '<p class="atn-sub-msg" role="status" aria-live="polite" style="margin:12px 0 0;font-size:.9rem;min-height:1.2em"></p>' +
       '</div>';
@@ -59,6 +59,7 @@
           if (d && d.ok) {
             msg.style.color = '#16A34A';
             msg.textContent = 'Thanks — you are subscribed.';
+            if (window.gtag) gtag('event', 'form_submission', {form_name: 'newsletter', page_location: location.pathname});
             form.reset();
           } else {
             msg.style.color = '#DC2626';
