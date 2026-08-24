@@ -6,7 +6,7 @@
   "scripts": {
     "build": "python3 scripts/audit-broken-links.py",
     "audit": "python3 scripts/audit-broken-links.py",
-    "test": "npm run audit && node scripts/test-dry-run.mjs && node scripts/test-e2e-mock.mjs && GROQ_API_KEY=test node scripts/test-webstory-smoke.mjs"
+    "test": "npm run audit && node scripts/test-gemini-fallback.mjs && node scripts/test-dry-run.mjs && node scripts/test-e2e-mock.mjs && GROQ_API_KEY=test node scripts/test-webstory-smoke.mjs"
   },
   "engines": {
     "node": ">=20"

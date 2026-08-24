@@ -2,14 +2,22 @@
 // Cloudflare Pages Function: AI API for all AIToolsNova tools
 // File: functions/api/gemini.js
 //
-// v3 — global-ready, faster, higher-quality answers:
+// v4 — resilient multi-provider fallback:
 //  - Strong specialist system prompts per tool
 //  - Higher max tokens for long-form tools (writer/resume)
 //  - CORS for same-site + preview; OPTIONS preflight
 //  - Light per-IP rate limit (in-memory, best-effort on Workers)
-//  - Provider order: Gemini (fast) → Groq large → DeepSeek → CF
+//  - Provider order: Gemini (model chain) → Groq (model chain)
+//    → DeepSeek → Cloudflare Workers AI
+//  - EVERY provider/model call is isolated in try/catch: a
+//    timeout, DNS failure, invalid model or network exception on
+//    one call can never abort the whole request — the next
+//    model/provider is always tried
+//  - Gemini model fallback chain: env.GEMINI_MODEL (if set) →
+//    gemini-2.5-flash → gemini-2.0-flash → gemini-flash-latest
 //  - Abort/timeouts so hung providers don't stall the user
 //  - Language mirroring for UK/US/CA/global visitors
+//  - Errors sanitized: keys, bearer tokens and secrets redacted
 // ============================================================
 
 const BASE_RULES = `You are the AI engine behind AIToolsNova (https://aitoolsnova.com), a professional free-tools website used worldwide (US, UK, Canada, India, EU and beyond).
@@ -149,11 +157,13 @@ function corsHeaders(request) {
 }
 
 // Strip anything that could leak a credential into a client-visible error:
-// query-string API keys, bearer tokens, and long key-looking blobs.
+// query-string API keys, bearer tokens, "token <value>" phrases, and long
+// key-looking blobs (AIza…/gsk_…/sk-…).
 function redactSecrets(s) {
   return String(s || '')
     .replace(/([?&](?:key|api_key|apikey|token|access_token)=)[^&\s"']+/gi, '$1[redacted]')
     .replace(/Bearer\s+[A-Za-z0-9._~+\/-]+=*/gi, 'Bearer [redacted]')
+    .replace(/\b(token|secret|password)\b(\s*[:=]?\s*)[A-Za-z0-9._~+\/-]{12,}/gi, '$1$2[redacted]')
     .replace(/\b(AIza[0-9A-Za-z_-]{20,}|gsk_[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{20,})\b/g, '[redacted]');
 }
 
@@ -171,6 +181,34 @@ async function fetchWithTimeout(url, init, ms = 28000) {
     return await fetch(url, { ...init, signal: ctrl.signal });
   } finally {
     clearTimeout(t);
+  }
+}
+
+// Classify a thrown exception (timeout vs network vs other) so the error list
+// stays short and never echoes a raw stack/URL back to the client.
+function classifyError(e) {
+  const name = e?.name || '';
+  const msg = String(e?.message || e || '');
+  if (name === 'AbortError' || name === 'TimeoutError' || /timeout|timed out|aborted/i.test(msg)) {
+    return 'timeout';
+  }
+  if (/dns|getaddrinfo|enotfound|eai_again|econnrefused|econnreset|enotfound|network|fetch failed|socket/i.test(msg)) {
+    return 'network error';
+  }
+  return 'exception';
+}
+
+// THE core resilience wrapper: every provider/model call goes through this.
+// An exception (timeout, DNS, TLS reset, invalid model, bug in parsing) is
+// converted into {ok:false} so the orchestrator can simply try the next
+// model/provider instead of the whole request dying in the outer catch.
+async function tryCall(fn) {
+  try {
+    return await fn();
+  } catch (e) {
+    const kind = classifyError(e);
+    const extra = redactSecrets(String(e?.message || e || '')).slice(0, 160);
+    return { ok: false, error: extra && kind !== 'exception' ? `${kind}` : `${kind} (${extra})` };
   }
 }
 
@@ -231,11 +269,31 @@ export async function onRequest(context) {
     const geminiKey = env.GEMINI_API_KEY || env.Gemini_API_key;
 
     const cfModel = env.CLOUDFLARE_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
-    const groqChain = env.GROQ_MODEL
-      // llama-3.3-70b-versatile is retired and llama-3.1-8b-instant returns 404
-      // for this org, so both only added latency before the Gemini fallback.
-      ? [env.GROQ_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']
-      : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
+
+    // Gemini model fallback chain. env.GEMINI_MODEL first (explicit pin),
+    // then the two stable versioned models, then the rolling alias — the
+    // single-model "gemini-flash-latest" alias proved unreliable (it can
+    // 404/timeout while the pinned models still answer).
+    const geminiChain = [
+      ...new Set(
+        [env.GEMINI_MODEL, 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest']
+          .filter(Boolean)
+          .map((m) => String(m).trim())
+          .filter(Boolean)
+      ),
+    ];
+
+    // Groq model fallback chain: two live gpt-oss models, then any explicitly
+    // configured GROQ_MODEL. llama-3.3-70b-versatile is retired and
+    // llama-3.1-8b-instant returns 404 for this org.
+    const groqChain = [
+      ...new Set(
+        ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', env.GROQ_MODEL || null]
+          .filter(Boolean)
+          .map((m) => String(m).trim())
+          .filter(Boolean)
+      ),
+    ];
 
     async function callCloudflare() {
       if (!cfToken || !cfAccountId) return { ok: false, error: 'Cloudflare env vars missing' };
@@ -277,11 +335,10 @@ export async function onRequest(context) {
       return { ok: true, reply: reply.trim() };
     }
 
-    async function callGemini() {
+    async function callGemini(gmModel) {
       if (!geminiKey) return { ok: false, error: 'Gemini env var missing' };
       const sys = messages.find((m) => m.role === 'system');
       const turns = messages.filter((m) => m.role !== 'system');
-      const gmModel = env.GEMINI_MODEL || 'gemini-flash-latest';
       const res = await fetchWithTimeout(
         `https://generativelanguage.googleapis.com/v1beta/models/${gmModel}:generateContent?key=${geminiKey}`,
         {
@@ -300,7 +357,7 @@ export async function onRequest(context) {
             },
           }),
         },
-        30000
+        20000
       );
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return { ok: false, error: data?.error?.message || `Gemini error (${res.status})` };
@@ -333,43 +390,65 @@ export async function onRequest(context) {
 
     const errors = [];
 
-    // 1) Gemini first — usually lowest latency + strong quality for free tools UX
-    {
-      const gemini = await callGemini();
-      if (gemini.ok) return json({ reply: gemini.reply, provider: 'gemini' }, 200, request);
-      errors.push(`gemini: ${gemini.error}`);
+    // 1) Gemini first — full model fallback chain. Every call is isolated:
+    //    HTTP error, timeout, empty response or network exception moves on
+    //    to the next Gemini model, never to the outer catch.
+    if (geminiKey) {
+      for (const gmModel of geminiChain) {
+        const gemini = await tryCall(() => callGemini(gmModel));
+        if (gemini.ok) return json({ reply: gemini.reply, provider: `gemini:${gmModel}` }, 200, request);
+        errors.push(`gemini/${gmModel}: ${gemini.error}`);
+        // A bad or permissionless key fails identically for every model —
+        // stop burning calls and drop through to the next provider.
+        if (/api key|unauthorized|authentication|permission/i.test(gemini.error || '')) break;
+      }
+    } else {
+      errors.push('gemini: env var missing');
     }
 
-    // 2) Groq large models
-    for (const model of groqChain) {
-      let r = await callGroq(model);
-      if (!r.ok && /rate limit|429/i.test(r.error || '')) {
-        const m = /try again in ([\d.]+)s/i.exec(r.error || '');
-        const waitMs = Math.min(m ? Math.ceil(parseFloat(m[1]) * 1000) + 400 : 2500, 6000);
-        await new Promise((res) => setTimeout(res, waitMs));
-        r = await callGroq(model);
+    // 2) Groq model chain — each model call isolated in tryCall.
+    if (groqKey) {
+      for (const model of groqChain) {
+        let r = await tryCall(() => callGroq(model));
+        if (!r.ok && /rate limit|429/i.test(r.error || '')) {
+          const m = /try again in ([\d.]+)s/i.exec(r.error || '');
+          const waitMs = Math.min(m ? Math.ceil(parseFloat(m[1]) * 1000) + 400 : 2500, 6000);
+          await new Promise((res) => setTimeout(res, waitMs));
+          r = await tryCall(() => callGroq(model));
+        }
+        if (r.ok) return json({ reply: r.reply, provider: `groq:${model}` }, 200, request);
+        errors.push(`${model}: ${r.error}`);
+        if (/invalid api key|no api key|unauthorized|authentication/i.test(r.error || '')) break;
       }
-      if (r.ok) return json({ reply: r.reply, provider: `groq:${model}` }, 200, request);
-      errors.push(`${model}: ${r.error}`);
-      if (/invalid api key|no api key|unauthorized|authentication/i.test(r.error || '')) break;
+    } else {
+      errors.push('groq: env var missing');
     }
 
     // 3) DeepSeek
     {
-      const deepseek = await callDeepSeek();
+      const deepseek = await tryCall(() => callDeepSeek());
       if (deepseek.ok) return json({ reply: deepseek.reply, provider: 'deepseek' }, 200, request);
       errors.push(`deepseek: ${deepseek.error}`);
     }
 
     // 4) Cloudflare Workers AI
     {
-      const cloudflare = await callCloudflare();
+      const cloudflare = await tryCall(() => callCloudflare());
       if (cloudflare.ok) return json({ reply: cloudflare.reply, provider: 'cloudflare' }, 200, request);
       errors.push(`cloudflare: ${cloudflare.error}`);
     }
 
-    return json({ error: 'All AI providers failed. Please try again in a moment.', details: errors.map(redactSecrets) }, 500, request);
+    return json(
+      {
+        error: 'All AI providers failed. Please try again in a moment.',
+        details: errors.map((e) => redactSecrets(String(e)).slice(0, 200)),
+      },
+      500,
+      request
+    );
   } catch (error) {
+    // Last-resort net (e.g. malformed JSON body). Provider network failures
+    // never reach here anymore — tryCall() absorbs them above.
     const msg = error?.message || String(error);
     if (/timeout|aborted/i.test(msg)) {
       return json({ error: 'AI took too long. Please try a shorter prompt.' }, 504, request);
