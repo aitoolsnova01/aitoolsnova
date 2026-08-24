@@ -150,6 +150,13 @@ export async function commitAndPush({
     remote = 'origin',
     branch = 'main',
 } = {}) {
+    // The daily-webstory workflow sets SKIP_AUTO_PUBLISH=1 so the commit/push
+    // is owned by the workflow's guarded "Commit and push" step (which fails
+    // RED when nothing was published). Keeps one auditable publish path.
+    if (process.env.SKIP_AUTO_PUBLISH === '1') {
+        console.log('ℹ️  SKIP_AUTO_PUBLISH=1 — leaving commit/push to the workflow step.');
+        return false;
+    }
     if (!inActions()) {
         console.log('ℹ️  Not in GitHub Actions — skip auto commit/push (set FORCE_PUBLISH=1 to override).');
         return false;
