@@ -130,6 +130,7 @@ const MODELS = process.env.GROQ_MODEL
 if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
     console.error('❌ No AI key found. Add at least one GitHub secret:');
     console.error('   GROQ_API_KEY  and/or  GEMINI_API_KEY  and/or  DEEPSEEK_API_KEY');
+    console.error('::error title=No AI key found::None of GROQ_API_KEY / GEMINI_API_KEY / DEEPSEEK_API_KEY is configured (missing).');
     process.exit(1);
 }
 console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'}  Gemini=${GEMINI_KEY ? 'yes' : 'no'}  DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'}`);
@@ -1322,6 +1323,8 @@ async function main() {
 
 main().catch(err => {
     console.error('\n❌ FATAL:', err.message);
+    const annotation = String(err && err.message ? err.message : err).replace(/\s+/g, ' ').slice(0, 400);
+    console.error(`::error title=Blog generation failed::${annotation}`);
     if (err.stack) console.error(err.stack);
     process.exit(1);
 });

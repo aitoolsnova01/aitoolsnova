@@ -59,6 +59,7 @@ const MODELS = process.env.GROQ_MODEL
 
 if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
     console.error('❌ Need GROQ_API_KEY and/or GEMINI_API_KEY and/or DEEPSEEK_API_KEY');
+    console.error('::error title=No AI key found::None of GROQ_API_KEY / GEMINI_API_KEY / DEEPSEEK_API_KEY is configured (missing).');
     process.exit(1);
 }
 console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'} Gemini=${GEMINI_KEY ? 'yes' : 'no'} DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'}`);
@@ -838,6 +839,8 @@ import { fileURLToPath } from 'node:url';
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
     main().catch(err => {
         console.error('❌ Failed:', err);
+        const annotation = String(err && err.message ? err.message : err).replace(/\s+/g, ' ').slice(0, 400);
+        console.error(`::error title=Web story generation failed::${annotation}`);
         process.exit(1);
     });
 }
