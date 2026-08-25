@@ -26,6 +26,13 @@
  * CLI:
  *   node scripts/daily-publish-helper.mjs status
  *   node scripts/daily-publish-helper.mjs validate
+ *   node scripts/daily-publish-helper.mjs apply
+ *      Copy scripts/workflow-fixes/*.fixed over .github/workflows/* locally so the
+ *      repaired anti-"green-but-empty" YAML is staged in one step. This repo's
+ *      GitHub App token cannot push .github/workflows/* (no `workflows` permission),
+ *      so `apply` is how the fix is staged here; commit/push it from an account or
+ *      Actions run that has the `workflows` scope (or set the WORKFLOW_PAT secret and
+ *      let the web-story job self-heal).
  */
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -255,6 +262,15 @@ if (isMain) {
             process.exit(1);
         }
         console.log('✅ All workflow files look valid');
+    } else if (cmd === 'apply') {
+        const changed = await selfHealWorkflows();
+        if (!changed.length) {
+            console.log('ℹ️  Workflows already match scripts/workflow-fixes/*.fixed — nothing to apply.');
+        } else {
+            console.log(`✅ Applied repaired YAML to: ${changed.join(', ')}`);
+            console.log('   Next: commit + push .github/workflows from an account/Actions run with the `workflows`');
+            console.log('   scope (this token cannot push workflow files), or set WORKFLOW_PAT and let CI self-heal.');
+        }
     } else {
         const broken = await isBlogWorkflowBroken();
         const errors = await validateWorkflows();

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "python3 scripts/audit-broken-links.py",
     "audit": "python3 scripts/audit-broken-links.py",
-    "test": "npm run audit && node scripts/test-gemini-fallback.mjs && node scripts/test-dry-run.mjs && node scripts/test-e2e-mock.mjs && GROQ_API_KEY=test node scripts/test-webstory-smoke.mjs"
+    "audit-seo": "python3 scripts/audit-seo-assets.py",
+    "test": "npm run audit && npm run audit-seo && node scripts/test-publish-helper.mjs && node scripts/test-gemini-fallback.mjs && node scripts/test-dry-run.mjs && node scripts/test-e2e-mock.mjs && GROQ_API_KEY=test node scripts/test-webstory-smoke.mjs"
   },
   "engines": {
     "node": ">=20"
