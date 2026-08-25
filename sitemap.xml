@@ -387,6 +387,18 @@
         </image:image>
     </url>
     <url>
+        <loc>https://aitoolsnova.com/tools/ats-resume-checker</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+    </url>
+    <url>
         <loc>https://aitoolsnova.com/tools/resume-builder</loc>
         <lastmod>2026-08-21</lastmod>
         <changefreq>weekly</changefreq>
