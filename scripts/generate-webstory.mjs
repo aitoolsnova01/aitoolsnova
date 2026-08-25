@@ -301,6 +301,16 @@ const esc = s => String(s || '')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// HTML <title>/<meta> values we read back are ALREADY entity-escaped (e.g.
+// "&amp;"). Re-escaping them with esc() double-encodes ("&amp;amp;"). Decode the
+// five common entities first so esc() round-trips to the intended single escape.
+const unesc = s => String(s || '')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<')
+    .replace(/&amp;/g, '&');
+
 // Force every generated image to read as a genuine photograph. We append a
 // strong photorealism suffix so even a weak model prompt still comes back as a
 // real-looking photo rather than an obvious AI render.
@@ -609,8 +619,8 @@ async function rebuildStoriesIndex() {
 
     const cards = await Promise.all(files.map(async f => {
         const html = await fs.readFile(path.join(STORIES_DIR, f), 'utf-8');
-        const t = (html.match(/<title>([^<]+)<\/title>/i)?.[1] || f).trim();
-        const d = (html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1] || '').trim();
+        const t = unesc((html.match(/<title>([^<]+)<\/title>/i)?.[1] || f).trim());
+        const d = unesc((html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1] || '').trim());
         const img = html.match(/poster-portrait-src="([^"]+)"/i)?.[1] || `${SITE}/images/publisher-logo.png`;
         const url = `/web-stories/${f.replace(/\.html$/, '')}`;
         return `

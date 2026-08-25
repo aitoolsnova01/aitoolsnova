@@ -114,8 +114,18 @@ if (mockFile) {
     mockChecks = [['Generated blog file NOT found — pipeline broken!', false]];
 }
 
-// Cleanup: remove mock file + restore blogs.html + sitemap + history
+// Cleanup: remove mock file + its generated images + restore blogs.html + sitemap + history
+// generate-blog.mjs writes blog/img/<slug>-hero.jpg and <slug>-section-N.jpg next to
+// the post. Removing only the HTML left those JPEGs behind as untracked files, which
+// the auto-publish job then committed to main on every CI run.
 if (mockFile) await fs.unlink(path.join(ROOT, 'blog', mockFile)).catch(() => {});
+{
+    const imgDir = path.join(ROOT, 'blog', 'img');
+    const leftovers = (await fs.readdir(imgDir).catch(() => []))
+        .filter(f => f.startsWith('mock-test-post-'));
+    for (const f of leftovers) await fs.unlink(path.join(imgDir, f)).catch(() => {});
+    if (leftovers.length) console.log(`🧹 Removed ${leftovers.length} mock image(s) from blog/img/`);
+}
 await fs.writeFile(BLOGS_HTML, blogsBackup);
 await fs.writeFile(SITEMAP_XML, sitemapBackup);
 await fs.writeFile(HISTORY_FILE, historyBackup);
