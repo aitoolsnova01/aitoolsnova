@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free ATS Resume Checker — Score Your Resume Online</title>
+  <meta name="description" content="Check your resume against Applicant Tracking Systems for free. Get an ATS score, missing keywords from the job description, and concrete fixes — no signup, runs in your browser." />
+  <meta name="keywords" content="ATS resume checker, applicant tracking system, resume score, keyword scanner, ATS friendly resume" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#059669" />
+  <link rel="canonical" href="https://aitoolsnova.com/tools/ats-resume-checker" />
+  <meta property="og:title" content="Free ATS Resume Checker — Score Your Resume Online" />
+  <meta property="og:description" content="Score your resume against ATS rules and the job description. Free, private, in-browser." />
+  <meta property="og:url" content="https://aitoolsnova.com/tools/ats-resume-checker" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://aitoolsnova.com/images/og/og-tools.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://aitoolsnova.com/images/og/og-tools.jpg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ATS Resume Checker",
+    "description": "Free in-browser ATS resume scanner with score, keyword match and fixes.",
+    "url": "https://aitoolsnova.com/tools/ats-resume-checker",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Is the ATS Resume Checker free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with unlimited checks and no signup." } },
+      { "@type": "Question", "name": "Does my resume get uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The analysis runs entirely in your browser; your resume never leaves your device." } },
+      { "@type": "Question", "name": "What is a good ATS score?", "acceptedAnswer": { "@type": "Answer", "text": "80+ is excellent, 65-79 is good. Below 65, follow the suggestions before applying." } }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type":"ListItem","position":1,"name":"Home","item":"https://aitoolsnova.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://aitoolsnova.com/tools"},{"@type":"ListItem","position":3,"name":"ATS Resume Checker","item":"https://aitoolsnova.com/tools/ats-resume-checker"}]}</script>
+  <script src="/js/consent.js?v=20260819c"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}:root{--primary:#059669;--secondary:#10B981;--light:#F8FAFC;--border:#E2E8F0;--text:#0F172A;--text2:#64748B;--shadow:0 12px 35px rgba(15,23,42,.08);--radius:18px}
+    html{scroll-behavior:smooth}body{font-family:"Inter",system-ui,sans-serif;background:var(--light);color:var(--text);line-height:1.8}
+    .container{width:min(1100px,92%);margin:auto}a{text-decoration:none;color:inherit}button{font-family:inherit;cursor:pointer;border:none}
+    h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.2}h2{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;margin:28px 0 10px}p{color:var(--text2);margin-bottom:14px}
+    .header{position:sticky;top:0;height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:999;display:flex;align-items:center}
+    .header .container{display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:1.25rem;font-weight:800}.logo span{color:var(--primary)}
+    .nav{display:flex;gap:20px;font-weight:600;color:var(--text2)}.nav a:hover{color:var(--primary)}
+    .hero{padding:80px 0 26px;text-align:center;background:linear-gradient(180deg,#fff,#F0FDF4)}.hero p{max-width:620px;margin:10px auto 0;font-size:1.05rem}
+    .tool-area{padding:26px 0 50px}.tool-box{max-width:900px;margin:auto;background:#fff;border-radius:var(--radius);padding:34px;box-shadow:var(--shadow);border:1px solid var(--border)}
+    label{font-weight:600;display:block;margin:14px 0 4px;font-size:.92rem}
+    textarea{width:100%;min-height:170px;padding:12px 16px;border:2px solid var(--border);border-radius:12px;font-size:.93rem;font-family:inherit;background:var(--light);resize:vertical}
+    textarea:focus{outline:none;border-color:var(--primary)}
+    .btn{padding:13px 30px;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-weight:700;margin:8px 6px 0 0}
+    .btn.ghost{background:var(--light);color:var(--text);border:1px solid var(--border)}
+    .ats-result{margin-top:24px;padding:24px;border-radius:14px;border:1px solid var(--border);background:var(--light);display:none}
+    .ats-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.ats-score{font-size:2.4rem;font-weight:800}.ats-grade{color:var(--text2);font-size:.95rem;max-width:420px}
+    .ats-bar{height:10px;border-radius:6px;background:var(--border);overflow:hidden;margin:16px 0 6px}.ats-bar>span{display:block;height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b,#10b981)}
+    .ats-cat{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;padding:7px 0;border-bottom:1px dashed var(--border)}.ats-cat .v{color:var(--text2);white-space:nowrap}
+    .ats-sub{margin:16px 0 8px;font-weight:700}.ats-chips{display:flex;flex-wrap:wrap;gap:8px}
+    .ats-chip{background:#ECFDF5;color:#047857;border:1px solid var(--border);padding:4px 12px;border-radius:50px;font-size:.8rem;font-weight:600}
+    .ats-chip.miss{background:#FEF2F2;color:#DC2626}
+    .ats-sug{margin:6px 0 6px 18px;color:var(--text2);font-size:.92rem}
+    .content{max-width:860px;margin:0 auto;padding:10px 16px 60px}
+    .faq{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0}.faq h4{margin-bottom:6px}
+    .footer{background:#020617;padding:40px 0 14px;color:#94A3B8;text-align:center}.footer a{margin:0 12px}.footer p{margin-top:12px;font-size:.85rem;color:#64748B}
+    body.dark{--light:#020617;--border:#1E293B;--text:#F8FAFC;--text2:#CBD5E1;background:#020617;color:#F8FAFC}
+    body.dark .header{background:rgba(15,23,42,.92)}body.dark .tool-box,body.dark .faq{background:#0F172A}
+    body.dark textarea{background:#020617;color:#F8FAFC}body.dark .hero{background:linear-gradient(180deg,#0F172A,#020617)}
+    body.dark .ats-chip{background:#1E293B}body.dark .ats-chip.miss{background:#3f1d1d;color:#fca5a5}
+    @media(max-width:768px){.nav{display:none}.tool-box{padding:22px}}
+  </style>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
+</head>
+<body>
+  <header class="header"><div class="container">
+    <a href="/" class="logo">🤖 <span>AIToolsNova</span></a>
+    <nav class="nav"><a href="/">Home</a><a href="../tools">Tools</a><a href="../blogs">Blogs</a><a href="../contact">Contact</a></nav>
+    <button id="themeToggle" type="button" aria-label="Switch color theme" style="width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--border);font-size:17px">🌙</button>
+  </div></header>
+
+  <main>
+    <section class="hero"><div class="container">
+      <h1>🎯 ATS Resume Checker</h1>
+      <p>Paste your resume and the job description. Get an ATS score, the keywords you're missing, and concrete fixes — free, private, and instant.</p>
+    </div></section>
+
+    <section class="tool-area"><div class="container"><div class="tool-box">
+      <label for="resumeText">Your Resume (paste full text)</label>
+      <textarea id="resumeText" placeholder="Paste your resume text here — name, contact, summary, experience, education, skills..."></textarea>
+      <label for="jdText">Job Description (optional — for keyword match)</label>
+      <textarea id="jdText" placeholder="Paste the job ad to see which required keywords your resume is missing..."></textarea>
+      <div>
+        <button class="btn" id="runAts">🎯 Check ATS Score</button>
+        <button class="btn ghost" id="sampleAts">✨ Load Sample</button>
+        <button class="btn ghost" id="clearAts">🗑️ Clear</button>
+      </div>
+      <div class="ats-result" id="atsResult"></div>
+    </div></div></section>
+
+    <section class="content">
+      <h2>What this checker looks at</h2>
+      <p>It scores seven things real Applicant Tracking Systems and recruiters care about: contact information, standard section headings, length, quantified achievements, strong action verbs, parse-safe formatting, and — when you add a job description — keyword match against the ad.</p>
+      <h2>How to get a higher score</h2>
+      <p>Use standard headings (Summary, Work Experience, Education, Skills), put numbers in your bullets, start bullets with action verbs, and mirror the job ad's exact vocabulary for skills you genuinely have. Keep it to one or two pages and skip tables, icons and photos.</p>
+      <div class="faq"><h4>Q: Is it free?</h4><p>Yes — unlimited checks, no signup.</p></div>
+      <div class="faq"><h4>Q: Is my resume uploaded?</h4><p>No. Everything runs in your browser; nothing is sent to a server.</p></div>
+      <div class="faq"><h4>Q: What's a good score?</h4><p>80+ excellent, 65-79 good. Below 65, apply the suggestions first.</p></div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container">
+    <a href="/">Home</a><a href="../tools">Tools</a><a href="../blogs">Blogs</a><a href="../about">About</a><a href="../privacy-policy">Privacy</a>
+    <p>&copy; 2026 AIToolsNova. All rights reserved.</p>
+  </div></footer>
+
+  <script src="/js/ats-checker.js?v=20260825a" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var t = document.getElementById('themeToggle');
+      t && t.addEventListener('click', function () {
+        document.body.classList.toggle('dark');
+        t.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+      });
+      var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+      var color = function (s) { return s >= 80 ? '#10B981' : s >= 65 ? '#F59E0B' : '#EF4444'; };
+      var box = document.getElementById('atsResult');
+
+      function render(rep) {
+        var h = '<div class="ats-head"><div class="ats-score" style="color:' + color(rep.score) + '">' + rep.score + '/100</div>'
+          + '<div class="ats-grade">' + esc(rep.grade) + ' &nbsp;·&nbsp; ' + rep.wordCount + ' words</div></div>'
+          + '<div class="ats-bar"><span style="width:' + rep.score + '%"></span></div>';
+        rep.categories.forEach(function (c) { h += '<div class="ats-cat"><b>' + esc(c.name) + '</b><span class="v">' + c.got + '/' + c.max + '</span></div>'; });
+        if (rep.matchedKeywords.length || rep.missingKeywords.length) {
+          h += '<div class="ats-sub">✅ Matched</div><div class="ats-chips">' + (rep.matchedKeywords.map(function (k) { return '<span class="ats-chip">' + esc(k) + '</span>'; }).join('') || '<span class="ats-chip">none</span>') + '</div>';
+          if (rep.missingKeywords.length) h += '<div class="ats-sub">⚠️ Missing</div><div class="ats-chips">' + rep.missingKeywords.map(function (k) { return '<span class="ats-chip miss">' + esc(k) + '</span>'; }).join('') + '</div>';
+        }
+        if (rep.suggestions.length) h += '<div class="ats-sub">💡 Fixes</div>' + rep.suggestions.map(function (s) { return '<div class="ats-sug">• ' + esc(s) + '</div>'; }).join('');
+        box.innerHTML = h; box.style.display = 'block';
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      document.getElementById('runAts').addEventListener('click', function () {
+        if (!window.ATS) { box.style.display = 'block'; box.textContent = '❌ ATS engine failed to load.'; return; }
+        render(window.ATS.analyze(document.getElementById('resumeText').value, document.getElementById('jdText').value));
+      });
+      document.getElementById('clearAts').addEventListener('click', function () {
+        document.getElementById('resumeText').value = ''; document.getElementById('jdText').value = ''; box.style.display = 'none'; box.innerHTML = '';
+      });
+      document.getElementById('sampleAts').addEventListener('click', function () {
+        document.getElementById('resumeText').value = 'Aisha Khan\naisha.khan@example.com | +91 90000 11111 | linkedin.com/in/aishakhan\nPROFESSIONAL SUMMARY\nProduct engineer with 4 years building data-heavy web apps.\nWORK EXPERIENCE\n- Led migration to React and cut page load time 40% across 12 pages.\n- Increased trial-to-paid conversion 18% by redesigning onboarding.\nEDUCATION\nB.E. Computer Engineering, XYZ University (2017-2021)\nSKILLS\nJavaScript, React, Node.js, SQL, AWS, Docker, communication';
+        document.getElementById('jdText').value = 'Looking for a frontend engineer with JavaScript, React, Node.js, SQL, AWS and Docker. Strong communication and CI/CD experience a plus.';
+      });
+    });
+  </script>
+</body>
+</html>
