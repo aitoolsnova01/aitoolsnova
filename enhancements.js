@@ -52,6 +52,18 @@
     { name: "PDF Converter", url: "tools/pdf-converter", icon: "📚", tag: "🔥 Hot", desc: "Convert PDF to any format" }
   ];
 
+  // Rotating "Tool of the Day" picks — deterministic daily rotation.
+  const TOOL_OF_THE_DAY = [
+    { name: "AI Image Generator", url: "tools/ai-image-generator", icon: "🎨", desc: "Turn text into images — free, unlimited, no watermark" },
+    { name: "ATS Resume Checker", url: "tools/ats-resume-checker", icon: "🎯", desc: "Score your resume before the robots do" },
+    { name: "Background Remover", url: "tools/background-remover", icon: "✂️", desc: "Remove image backgrounds in one click" },
+    { name: "AI Chat", url: "tools/ai-chat", icon: "💬", desc: "Free AI assistant for questions, writing and ideas" },
+    { name: "Image Compressor", url: "tools/image-compressor", icon: "🖼️", desc: "Shrink image size without losing quality" },
+    { name: "QR Generator", url: "tools/qr-generator", icon: "📱", desc: "Create custom QR codes for links, Wi-Fi and more" },
+    { name: "Email Generator", url: "tools/email-generator", icon: "📧", desc: "Write professional emails in seconds" },
+    { name: "Keyword Density", url: "tools/keyword-density", icon: "📊", desc: "Analyze on-page SEO keyword usage" }
+  ];
+
   // ---------- Inject Styles ----------
   const style = document.createElement("style");
   style.textContent = `
@@ -142,6 +154,24 @@
       .floating-donate:active, .floating-support:active {
         opacity: 1 !important;
       }
+    }
+
+    /* Tool of the Day banner (home + tools hub) */
+    .atn-totd { max-width:1280px; width:92%; margin:18px auto 0; padding:0 8px }
+    .atn-totd a { display:flex; align-items:center; gap:14px; padding:14px 20px; background:linear-gradient(135deg,#4F46E5 0%,#06B6D4 100%); color:#fff; border-radius:16px; text-decoration:none; box-shadow:0 10px 26px rgba(79,70,229,.28); transition:transform .2s, box-shadow .2s }
+    .atn-totd a:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(79,70,229,.38) }
+    .atn-totd-label { font-size:.68rem; font-weight:800; letter-spacing:1.5px; background:rgba(255,255,255,.18); padding:5px 10px; border-radius:50px; white-space:nowrap }
+    .atn-totd-icon { font-size:1.7rem; line-height:1 }
+    .atn-totd-body { flex:1; min-width:0 }
+    .atn-totd-name { font-size:1.02rem; font-weight:800; line-height:1.3 }
+    .atn-totd-desc { font-size:.85rem; opacity:.92; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .atn-totd-cta { font-weight:700; font-size:.88rem; white-space:nowrap }
+    @media (max-width:640px) {
+      .atn-totd a { padding:12px 14px; gap:10px }
+      .atn-totd-label { font-size:.6rem; padding:4px 8px }
+      .atn-totd-name { font-size:.95rem }
+      .atn-totd-desc { display:none }
+      .atn-totd-cta { font-size:.8rem }
     }
 `;
   document.head.appendChild(style);
@@ -323,6 +353,33 @@
     insertBeforeFooter(section);
   }
 
+  // ---------- Tool of the Day (home + tools hub) ----------
+  function buildToolOfDay() {
+    if (!isHome && !isToolsHub) return;
+    if (document.getElementById("atn-tool-of-day")) return; // inject once
+    // Deterministic pick: same tool all day, rotates daily.
+    const tool = TOOL_OF_THE_DAY[Math.floor(Date.now() / 86400000) % TOOL_OF_THE_DAY.length];
+    const banner = document.createElement("section");
+    banner.className = "atn-totd atn-fade-in";
+    banner.id = "atn-tool-of-day";
+    banner.setAttribute("aria-label", "Tool of the day");
+    banner.innerHTML = `
+      <a href="${BASE}${tool.url}">
+        <span class="atn-totd-label">⭐ TOOL OF THE DAY</span>
+        <span class="atn-totd-icon" aria-hidden="true">${tool.icon}</span>
+        <span class="atn-totd-body">
+          <span class="atn-totd-name">${tool.name}</span>
+          <span class="atn-totd-desc">${tool.desc}</span>
+        </span>
+        <span class="atn-totd-cta">Try free →</span>
+      </a>
+    `;
+    // Insert right after the hero/header section.
+    const hero = document.querySelector(".hero, .page-hero");
+    if (hero) hero.insertAdjacentElement("afterend", banner);
+    else insertBeforeFooter(banner);
+  }
+
   // ---------- Mid-article ad injection for blog posts ----------
   function buildMidArticleAd() {
     if (!isBlog) return;
@@ -365,6 +422,7 @@
     try { buildRelated(); } catch (e) {}
     try { buildFreebieBanner(); } catch (e) {}
     try { buildTrending(); } catch (e) {}
+    try { buildToolOfDay(); } catch (e) {}
     try { buildMidArticleAd(); } catch (e) {}
   }
   function scheduleInit() {
