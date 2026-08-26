@@ -86,3 +86,7 @@ android-sdk/
 credentials.json
 *.key
 .credentials
+
+# User data (PII) — never commit or deploy
+**/subscribers*.jsonl
+backend/subscribers.jsonl

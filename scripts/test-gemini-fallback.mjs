@@ -246,15 +246,16 @@ function installFetch(handler) {
   const empty = await run('10.0.0.5', { message: '', tool: 'chat' }, makeEnv());
   check('empty message -> 400', empty.res.status === 400, `got ${empty.res.status}`);
 
-  // Rate limit: 45/min per IP. 1 request already consumed above for this IP
-  // (the empty-message one), so 44 more pass, then the 46th is blocked.
+  // Rate limit: 30/min per IP (tightened Aug 2026 — a human clicking tools
+  // needs ~3/min). 1 request already consumed above for this IP (the
+  // empty-message one), so 29 more pass, then the 31st is blocked.
   installFetch(() => geminiOk('ok'));
-  for (let i = 0; i < 44; i++) {
+  for (let i = 0; i < 29; i++) {
     const r = await run('10.0.0.5', { message: 'ping', tool: 'chat' }, makeEnv());
     if (r.res.status !== 200) { check('rate limit not tripped early', false, `req ${i + 2} -> ${r.res.status}`); break; }
   }
   const limited = await run('10.0.0.5', { message: 'ping', tool: 'chat' }, makeEnv());
-  check('46th request in window -> 429 rate limited', limited.res.status === 429, `got ${limited.res.status}`);
+  check('31st request in window -> 429 rate limited', limited.res.status === 429, `got ${limited.res.status}`);
   const other = await run('10.0.0.6', { message: 'ping', tool: 'chat' }, makeEnv());
   check('different IP unaffected by rate limit', other.res.status === 200, `got ${other.res.status}`);
 }

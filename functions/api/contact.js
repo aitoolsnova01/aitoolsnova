@@ -9,9 +9,19 @@
  * Submissions are stored in the CONTACT KV namespace. If the binding is
  * missing, return an honest error with the support email instead of claiming a
  * message was received and silently discarding it.
+ *
+ * Security (Aug 2026 hardening):
+ *   - Per-IP rate limit: 5 submissions / 10 minutes. Without it a bot could
+ *     flood the KV namespace, burying real messages and burning storage quota.
+ *   - Origin check: only same-site / preview origins may post cross-site, so
+ *     another website's JavaScript cannot drive submissions from a visitor's
+ *     browser.
+ *   - Request body size cap before parsing.
+ *   - Strict field caps + email format check + honeypot (already in place).
  */
 
 const MAX = { name: 120, email: 200, subject: 200, message: 5000 };
+const MAX_BODY_BYTES = 64 * 1024; // generous ceiling for the longest legit form
 
 function json(data, status) {
   return new Response(JSON.stringify(data), {
@@ -20,8 +30,74 @@ function json(data, status) {
   });
 }
 
+// Best-effort in-memory rate limit (per isolate), same approach as gemini.js.
+const hits = new Map();
+function rateLimit(ip, limit, windowMs) {
+  const now = Date.now();
+  const row = hits.get(ip) || { n: 0, t: now };
+  if (now - row.t > windowMs) {
+    row.n = 0;
+    row.t = now;
+  }
+  row.n += 1;
+  hits.set(ip, row);
+  if (hits.size > 5000) {
+    for (const [k, v] of hits) {
+      if (now - v.t > windowMs) hits.delete(k);
+    }
+  }
+  return row.n <= limit;
+}
+
+function clientIp(request) {
+  return (
+    request.headers.get('CF-Connecting-IP') ||
+    (request.headers.get('X-Forwarded-For') || '').split(',')[0].trim() ||
+    'unknown'
+  );
+}
+
+// A browser form always sends Origin on a cross-origin/fetch POST. Accept our
+// production host, our Pages previews, and sandbox previews. An absent Origin
+// (curl, server-to-server health checks) is allowed — CORS does not apply to
+// non-browsers anyway.
+function originAllowed(request) {
+  const origin = request.headers.get('Origin');
+  if (!origin) return true;
+  try {
+    const host = new URL(origin).hostname.toLowerCase();
+    return (
+      host === 'aitoolsnova.com' ||
+      host === 'www.aitoolsnova.com' ||
+      /\.aitoolsnova\.pages\.dev$/i.test(host) ||
+      host === 'aitoolsnova.pages.dev' ||
+      /\.e2b\.app$/i.test(host)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function onRequestPost(context) {
   try {
+    const ip = clientIp(context.request);
+
+    if (!rateLimit(ip, 5, 10 * 60_000)) {
+      return json(
+        { ok: false, detail: 'Too many messages from your network. Please try again later.' },
+        429
+      );
+    }
+
+    if (!originAllowed(context.request)) {
+      return json({ ok: false, detail: 'Invalid request origin.' }, 403);
+    }
+
+    const len = Number(context.request.headers.get('Content-Length') || 0);
+    if (len > MAX_BODY_BYTES) {
+      return json({ ok: false, detail: 'Request too large.' }, 413);
+    }
+
     const body = await context.request.json().catch(() => ({}));
 
     const name = String(body.name || '').trim().slice(0, MAX.name);
@@ -49,7 +125,7 @@ export async function onRequestPost(context) {
       email,
       subject,
       message,
-      ip: context.request.headers.get('CF-Connecting-IP') || '',
+      ip,
       country: context.request.headers.get('CF-IPCountry') || '',
       created_at: new Date().toISOString(),
     };

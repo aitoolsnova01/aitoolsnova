@@ -223,12 +223,30 @@ export async function onRequest(context) {
     return json({ error: 'Method not allowed' }, 405, request);
   }
 
+  // Body size ceiling — 64 KB is far beyond any legit prompt + short history,
+  // and blocks anyone trying to use the endpoint as a data relay.
+  const len = Number(request.headers.get('Content-Length') || 0);
+  if (len > 64 * 1024) {
+    return json({ error: 'Request too large.' }, 413, request);
+  }
+
+  // Browser POSTs must come from our own pages, not another site's JS.
+  // corsHeaders() already validates the Origin allowlist, so if it did not
+  // set the ACAO header the origin is foreign → reject.
+  {
+    const origin = request.headers.get('Origin');
+    if (origin && !corsHeaders(request)['Access-Control-Allow-Origin']) {
+      return json({ error: 'Invalid request origin.' }, 403, request);
+    }
+  }
+
   const ip =
     request.headers.get('CF-Connecting-IP') ||
     request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
     'unknown';
 
-  if (!rateLimit(ip, 45, 60_000)) {
+  // 30 AI generations/min/IP is ~10x what a human clicking tools needs.
+  if (!rateLimit(ip, 30, 60_000)) {
     return json({ error: 'Too many requests. Please wait a minute and try again.' }, 429, request);
   }
 

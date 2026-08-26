@@ -1,0 +1,52 @@
+# ============================================================
+# .assetsignore — files EXCLUDED from Cloudflare Pages uploads.
+#
+# The Pages build output is the repo root (wrangler.toml:
+# pages_build_output_dir = "."), which meant the ENTIRE repo was
+# deployed as publicly downloadable static assets: internal notes
+# (SESSION_NOTES.md, DEPLOYMENT.md …), the legacy FastAPI backend
+# (backend/server.py), automation scripts with their topic history,
+# test reports and CI config. Classic information disclosure —
+# exactly what an attacker enumerating a static site looks for.
+#
+# Everything below stays in the repo (CI/dev still use it) but is
+# never uploaded to Cloudflare. Gitignore syntax, relative to root.
+#
+# NOTE: functions/ must NOT be listed — Cloudflare compiles it into
+# Pages Functions separately.
+# ============================================================
+
+# --- Internal documentation / notes (never public) ---
+*.md
+
+# --- Legacy backend + preview-only frontend source ---
+/backend/
+/frontend/
+
+# --- Build & automation scripts, tests, reports ---
+/scripts/
+/tests/
+/test_reports/
+
+# --- Internal metadata & planning files ---
+/design_guidelines.json
+/gsc-priority-urls.txt
+/gsc-url-list.txt
+/memory/
+/data/
+
+# --- Repo/CI tooling config (not site content) ---
+/.github/
+/.emergent/
+/.gitconfig
+/.gitignore
+/.deploy-trigger
+/wrangler.toml
+/package.json
+/pytest.ini
+
+# --- Backup / scratch files anywhere in the tree ---
+*.bak
+*.bak.*
+*.log
+*.csv
