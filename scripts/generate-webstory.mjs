@@ -21,7 +21,7 @@
  */
 
 import fs from 'node:fs/promises';
-import { readdirSync, existsSync, statSync } from 'node:fs';
+import { readdirSync, existsSync, statSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {
@@ -31,17 +31,42 @@ import {
     runBlogGenerator,
     git,
 } from './daily-publish-helper.mjs';
+import {
+    readKeys, noKeyGuidance, annotate, stepSummary, describeError, PublishError,
+    parseJsonLoose, fetchWithTimeout, isoDate, addDays, daysBetween,
+    appendLedger, planGaps, publishedDates, publishContent, writePublishStatus,
+    isCI, parseArgs, CONTENT_PATHS, callSiteApi, siteApiAllowed,
+} from './lib/publish-core.mjs';
+
+// ---- CLI -----------------------------------------------------------------
+//   node scripts/generate-webstory.mjs                  one story for today
+//   node scripts/generate-webstory.mjs --backfill=3     fill missing days
+//   node scripts/generate-webstory.mjs --date=2026-08-24
+//   node scripts/generate-webstory.mjs --check          diagnostics only
+const ARGS = parseArgs();
+const DRY_RUN = ARGS.bool('dry-run', process.env.DRY_RUN === '1');
+// Backfill is ON by default: a bare `node scripts/generate-blog.mjs` publishes
+// today AND catches up up to 2 skipped days (oldest first). That is what makes
+// the outage self-healing even if nobody edits the schedule YAML or passes a
+// flag. `--backfill=0` (or BACKFILL_MAX=0) turns catch-up off.
+const BACKFILL_MAX = ARGS.num('backfill', process.env.BACKFILL_MAX ? Number(process.env.BACKFILL_MAX) : 2);
+const TARGET_DATE = ARGS.get('date', process.env.PUBLISH_DATE || '') || '';
+const BACKFILL_WINDOW = Number(process.env.BACKFILL_WINDOW || 10);
+const MIN_SLIDES = Number(process.env.MIN_SLIDES || 6);
+const WANT_SLIDES = 10;
 
 const ROOT = path.resolve(process.cwd());
 const BLOG_DIR = path.join(ROOT, 'blog');
 const STORIES_DIR = path.join(ROOT, 'web-stories');
 const SITEMAP_XML = path.join(ROOT, 'sitemap.xml');
 const STORIES_INDEX = path.join(ROOT, 'web-stories.html');
+const WF_DIR = path.join(ROOT, '.github', 'workflows');
 const SITE = 'https://aitoolsnova.com';
 
-const GROQ_KEY = process.env.GROQ_API_KEY || process.env.GROQ_KEY || '';
-const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || process.env.Deepseek_API_key || '';
-const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.Gemini_API_key || process.env.GOOGLE_GEMINI_API_KEY || '';
+const KEYS = readKeys();
+const GROQ_KEY = KEYS.groq;
+const DEEPSEEK_KEY = KEYS.deepseek;
+const GEMINI_KEY = KEYS.gemini;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
     try {
@@ -57,49 +82,88 @@ const MODELS = process.env.GROQ_MODEL
     ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']
     : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
 
-if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
-    console.error('❌ Need GROQ_API_KEY and/or GEMINI_API_KEY and/or DEEPSEEK_API_KEY');
-    console.error('::error title=No AI key found::None of GROQ_API_KEY / GEMINI_API_KEY / DEEPSEEK_API_KEY is configured (missing).');
+if (!KEYS.any && !siteApiAllowed()) {
+    // Same lesson as the blog job: this must be loud AND recorded, not a silent
+    // exit that the workflow's continue-on-error turns into a green tick.
+    const msg = noKeyGuidance(KEYS.missing);
+    annotate('error', 'No AI key found', `${msg} SITE_API_FALLBACK=0 disables the last-resort provider.`);
+    console.error(`❌ ${msg}`);
+    try {
+        await appendLedger(ROOT, { kind: 'webstory', date: isoDate(), slug: '', status: 'fail', reason: msg, code: 'no-ai-key' });
+        await writePublishStatus(ROOT, { kind: 'webstory', ok: false, reason: `no-ai-key: ${msg}`, pushed: false });
+        if (isCI() && process.env.SKIP_AUTO_PUBLISH !== '1') {
+            await publishContent({
+                root: ROOT,
+                include: ['scripts/publish-log.json', 'publish-status.json'],
+                message: 'chore(webstory): publish failure status (no-ai-key)',
+            }).catch(() => {});
+        }
+    } catch { /* keep the original error visible */ }
     process.exit(1);
 }
-console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'} Gemini=${GEMINI_KEY ? 'yes' : 'no'} DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'}`);
+if (!KEYS.any) console.warn(`⚠️  ${noKeyGuidance(KEYS.missing)}`);
+console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'} Gemini=${GEMINI_KEY ? 'yes' : 'no'} DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'} SiteAPI=${siteApiAllowed() ? 'yes' : 'no'}`);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ---------- Pick source blog ----------
-async function pickSourceBlog() {
+async function pickSourceBlog(preferDate = '') {
+    /**
+     * Sort by the article's OWN publish date, not by file mtime.
+     * In a fresh CI checkout every file has the same mtime (the checkout time),
+     * so the old mtime sort picked a "latest blog" at random - which is how the
+     * story job re-picked the same post over and over.
+     */
     const files = readdirSync(BLOG_DIR)
         .filter(f => f.endsWith('.html'))
-        .map(f => ({ f, mtime: statSync(path.join(BLOG_DIR, f)).mtimeMs }))
-        .sort((a, b) => b.mtime - a.mtime);
+        .map(f => ({ f, date: blogDate(path.join(BLOG_DIR, f)) }))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.f.localeCompare(a.f));
 
-    // Skip blogs that already have a matching web story
-    for (const { f } of files) {
+    // Blogs that already have a story are skipped, newest first.
+    for (const { f, date } of files) {
         const slug = f.replace(/\.html$/, '');
-        const storyPath = path.join(STORIES_DIR, `${slug}.html`);
-        if (!existsSync(storyPath)) {
-            const html = await fs.readFile(path.join(BLOG_DIR, f), 'utf-8');
-            const titleMatch = html.match(/<title>([^<|]+)/i);
-            const h1Match = html.match(/<h1[^>]*>([^<]+)/i);
-            const descMatch = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
-            const title = (h1Match?.[1] || titleMatch?.[1] || slug.replace(/-/g, ' ')).trim();
-            const description = (descMatch?.[1] || '').trim();
-            return { slug, title, description, sourceFile: f };
-        }
+        if (existsSync(path.join(STORIES_DIR, `${slug}.html`))) continue;
+        const html = await fs.readFile(path.join(BLOG_DIR, f), 'utf-8');
+        return describeSource(slug, html, date);
     }
-    // Fallback: use the most recent blog even if a story exists (regenerate with -v2 suffix)
-    if (files.length === 0) throw new Error('No blog posts found in blog/');
-    const { f } = files[0];
-    const slug = `${f.replace(/\.html$/, '')}-v${Date.now().toString(36).slice(-4)}`;
-    const html = await fs.readFile(path.join(BLOG_DIR, f), 'utf-8');
+    // Every blog already has a story: make a "part 2" of the newest one (or of
+    // the article published on the date we are catching up), instead of failing.
+    if (!files.length) throw new PublishError('No blog posts found in blog/ - cannot build a story', { code: 'no-source' });
+    const chosen = (preferDate ? files.find(x => x.date === preferDate) : null) || files[0];
+    const html = await fs.readFile(path.join(BLOG_DIR, chosen.f), 'utf-8');
+    const src = describeSource(`${chosen.f.replace(/\.html$/, '')}-story`, html, chosen.date || isoDate());
+    src.slug = `${src.slug}-${Date.now().toString(36).slice(-4)}`;
+    return src;
+}
+
+/** datePublished from the article itself; falls back to the sitemap/HEAD-free null. */
+function blogDate(file) {
+    try {
+        const html = readFileSync(file, 'utf8').slice(0, 20_000);
+        const m = html.match(/"datePublished"\s*:\s*"?(\d{4}-\d{2}-\d{2})/) || html.match(/article:published_time"\s+content="(\d{4}-\d{2}-\d{2})/);
+        return m ? m[1] : '';
+    } catch { return ''; }
+}
+
+function describeSource(slug, html, date) {
     const titleMatch = html.match(/<title>([^<|]+)/i);
     const h1Match = html.match(/<h1[^>]*>([^<]+)/i);
     const descMatch = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i);
+    // The article's own sections are the safety net for a short story answer.
+    const sourceSections = [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>([\s\S]*?)(?=<h2|$)/g)]
+        .map((m) => ({
+            h2: m[1].replace(/<[^>]+>/g, '').trim(),
+            body_html: m[2].split('</section>')[0].trim(),
+        }))
+        .filter(x => x.h2)
+        .slice(0, 14);
     return {
         slug,
-        title: (h1Match?.[1] || titleMatch?.[1] || slug).trim(),
+        title: (h1Match?.[1] || titleMatch?.[1] || slug.replace(/-/g, ' ')).trim(),
         description: (descMatch?.[1] || '').trim(),
-        sourceFile: f,
+        sourceFile: `${slug}.html`,
+        date: date || '',
+        sourceSections,
     };
 }
 
@@ -115,15 +179,16 @@ async function callGroq(messages) {
     const tryDeepSeek = async () => {
         if (!DEEPSEEK_KEY) return null;
         try {
-            const res = await fetch('https://api.deepseek.com/chat/completions', {
+            const res = await fetchWithTimeout('https://api.deepseek.com/chat/completions', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     model: 'deepseek-chat',
                     messages,
                     temperature: 0.85,
-                    max_tokens: 2600,
+                    max_tokens: 3600,
                     response_format: { type: 'json_object' },
+                    timeoutMs: 120_000,
                 }),
             });
             if (res.ok) {
@@ -157,12 +222,12 @@ async function callGroq(messages) {
                 })),
                 generationConfig: {
                     temperature: 0.85,
-                    maxOutputTokens: 2048,
+                    maxOutputTokens: 3600,
                     responseMimeType: 'application/json',
                 }
             };
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
-            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const res = await fetchWithTimeout(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), timeoutMs: 120_000 });
             const data = await res.json().catch(() => ({}));
             if (res.ok) {
                 const content = data?.candidates?.[0]?.content?.parts?.map(pp => pp.text).join('').trim() || '';
@@ -185,7 +250,7 @@ async function callGroq(messages) {
         for (const model of MODELS) {
             for (let attempt = 1; attempt <= 2; attempt++) {
                 try {
-                    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    const res = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
                         method: 'POST',
                         headers: {
                             Authorization: `Bearer ${GROQ_KEY}`,
@@ -195,8 +260,9 @@ async function callGroq(messages) {
                             model,
                             messages,
                             temperature: 0.85,
-                            max_tokens: 2600,
+                            max_tokens: 3600,
                             response_format: { type: 'json_object' },
+                            timeoutMs: 120_000,
                         }),
                     });
                     if (!res.ok) {
@@ -218,7 +284,23 @@ async function callGroq(messages) {
         return null;
     };
 
-    const fns = { deepseek: tryDeepSeek, gemini: tryGemini, groq: tryGroq };
+    // Last resort: the site's own /api/gemini proxy. It holds the same keys the
+    // site tools use, so a missing GitHub secret no longer means no stories.
+    const trySiteApi = async () => {
+        if (!siteApiAllowed()) return null;
+        try {
+            const flat = messages.map(m => `${m.role === 'system' ? 'SYSTEM' : m.role === 'assistant' ? 'ASSISTANT' : 'USER'}:\n${m.content}`).join('\n\n');
+            const { content, provider } = await callSiteApi(flat, { tool: 'seo', timeoutMs: 120_000 });
+            console.log(`   ✔ Site API (${provider})`);
+            return { content, model: provider };
+        } catch (e) {
+            lastErr = e;
+            console.warn(`   ⚠️  [siteapi] ${describeError(e)}`);
+            return null;
+        }
+    };
+
+    const fns = { deepseek: tryDeepSeek, gemini: tryGemini, groq: tryGroq, siteapi: trySiteApi };
     for (const provider of pref) {
         const fn = fns[provider];
         if (!fn) continue;
@@ -227,19 +309,16 @@ async function callGroq(messages) {
         console.warn(`   \u21a9\ufe0e  ${provider} unavailable - trying next provider...`);
     }
 
-    throw lastErr || new Error('All AI providers failed');
+    throw new PublishError(describeError(lastErr || 'All AI providers failed (Groq / Gemini / DeepSeek / site API)'), { code: 'provider-failure', retryable: true });
 }
 
+/** publish-core's parser + repair (a reply cut off by a token limit still works). */
 function extractJson(text) {
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start === -1 || end === -1) throw new Error('No JSON found');
-    const raw = text.slice(start, end + 1);
-    return JSON.parse(raw);
+    return parseJsonLoose(text).data;
 }
 
 // ---------- Generate story content ----------
-async function generateStoryContent({ title, description }) {
+async function generateStoryContent({ title, description, sourceSections = [] }) {
     const sys = `You are a viral Google Web Story writer for AIToolsNova.com.
 Return STRICT JSON only.
 Schema:
@@ -278,12 +357,21 @@ Create a 12-page web story (cover + exactly 10 tips + cta) for mobile readers in
     }
     // Normalize: keep only well-formed slides (heading + caption + image_prompt).
     data.slides = data.slides.filter(s => s && typeof s.heading === 'string' && typeof s.caption === 'string' && typeof s.image_prompt === 'string');
-    // REQUIRE the full 8 content slides -> cover + 8 + cta = 10 total (within the 8-11 range).
-    if (data.slides.length < 10) {
-        throw new Error(`Too few slides: got ${data.slides.length}, need exactly 10 content slides (cover + 10 + cta = 12 total)`);
+    // A short answer used to kill the whole run over one or two missing slides.
+    // Anything from MIN_SLIDES up is completed from the SOURCE ARTICLE (real
+    // headings, no invented facts); below the floor it is a hard failure.
+    if (data.slides.length < MIN_SLIDES) {
+        throw new PublishError(`Too few slides: got ${data.slides.length}, need >= ${MIN_SLIDES}`, { code: 'thin-story', retryable: true });
+    }
+    if (data.slides.length < WANT_SLIDES) {
+        const fillers = storyFillersFromBlog(sourceSections, data.slides);
+        if (fillers.length) {
+            console.log(`   ➕ Story had ${data.slides.length} slides - padded to ${Math.min(WANT_SLIDES, data.slides.length + fillers.length)} from the source article.`);
+            data.slides.push(...fillers);
+        }
     }
     // Keep exactly 10 content slides for the AMP contract.
-    data.slides = data.slides.slice(0, 10);
+    data.slides = data.slides.slice(0, WANT_SLIDES);
     // Enforce short 30-45 word captions: collapse whitespace and make sure every caption reads short.
     data.slides = data.slides.map(s => ({
         ...s,
@@ -291,6 +379,30 @@ Create a 12-page web story (cover + exactly 10 tips + cta) for mobile readers in
         caption: String(s.caption).replace(/\s+/g, ' ').trim(),
     }));
     return data;
+}
+
+/**
+ * Derive extra slides from the blog's own H2 sections so a story is always
+ * completed with real article content instead of a hard failure.
+ */
+function storyFillersFromBlog(sections = [], existing = []) {
+    const used = new Set(existing.map(s => String(s.heading || '').toLowerCase().trim()));
+    const out = [];
+    for (const sec of sections) {
+        const heading = String(sec.h2 || sec.heading || '').replace(/<[^>]+>/g, '').trim();
+        if (!heading || used.has(heading.toLowerCase())) continue;
+        const text = String(sec.body_html || sec.body || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        if (!text) continue;
+        const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3).join(' ');
+        out.push({
+            heading: heading.length > 42 ? heading.slice(0, 40).replace(/[,:;]?\s*$/, '') + '…' : heading,
+            caption: sentences.slice(0, 260),
+            image_prompt: `a real photo illustrating ${heading.toLowerCase()}, natural light, documentary style, no text`,
+        });
+        used.add(heading.toLowerCase());
+        if (out.length >= WANT_SLIDES - existing.length) break;
+    }
+    return out;
 }
 
 // ---------- Helpers ----------
@@ -445,7 +557,7 @@ async function localizeHtmlImages(html) {
 }
 
 // ---------- Build AMP Story HTML ----------
-function buildStoryHtml({ slug, story }, localImgs = {}) {
+function buildStoryHtml({ slug, story }, localImgs = {}, dateISO = '') {
     // Extensionless - the .html form 308-redirects on Cloudflare Pages.
     const canonical = `${SITE}/web-stories/${slug}`;
     const publisherLogo = `${SITE}/images/publisher-logo.png`;
@@ -455,7 +567,13 @@ function buildStoryHtml({ slug, story }, localImgs = {}) {
     const coverImg = localImgs.cover || imgUrl(story.cover_image_prompt, 1000);
     const coverImgAbs = localImgs.cover ? SITE + localImgs.cover : coverImg;
     const posterUrl = coverImg;
-    const today = new Date().toISOString().split('T')[0];
+    // The CTA page used to hard-code a Pollinations URL, so every story shipped
+    // with one third-party hot link (slow, and it breaks when that service is
+    // down). Reuse a local frame instead - the story already owns these images.
+    const ctaImg = localSlides[story.slides.length - 1] || localImgs.cover || coverImg;
+    // Backfilled stories keep the date they stand for; schema + article tags
+    // must agree with the blog they were derived from.
+    const today = dateISO || new Date().toISOString().split('T')[0];
 
     const slidesHtml = story.slides.map((s, i) => {
         const seed = 2000 + i * 137;
@@ -565,7 +683,7 @@ ${slidesHtml}
     <!-- CTA -->
     <amp-story-page id="cta">
       <amp-story-grid-layer template="fill">
-        <amp-img src="${imgUrl('a real photo of a person using a laptop and smartphone at a clean desk, bright daylight, candid', 9000)}" width="1080" height="1920" layout="responsive" alt="Explore more"></amp-img>
+        <amp-img src="${ctaImg}" width="1080" height="1920" layout="responsive" alt="Explore more"></amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="fill">
         <div class="scrim"></div>
@@ -592,12 +710,12 @@ ${slidesHtml}
 }
 
 // ---------- Update sitemap.xml ----------
-async function updateSitemap({ slug, title }) {
+async function updateSitemap({ slug, title }, lastmodISO = '') {
     let xml = await fs.readFile(SITEMAP_XML, 'utf-8');
     const url = `${SITE}/web-stories/${slug}`;
     if (xml.includes(url)) return false;
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = lastmodISO || new Date().toISOString().split('T')[0];
     const block = `
     <url>
         <loc>${url}</loc>
@@ -613,12 +731,19 @@ async function updateSitemap({ slug, title }) {
 
 // ---------- Rebuild web-stories.html index ----------
 async function rebuildStoriesIndex() {
-    const files = readdirSync(STORIES_DIR).filter(f => f.endsWith('.html')).sort((a, b) =>
-        statSync(path.join(STORIES_DIR, b)).mtimeMs - statSync(path.join(STORIES_DIR, a)).mtimeMs
-    );
-
-    const cards = await Promise.all(files.map(async f => {
+    const files = readdirSync(STORIES_DIR).filter(f => f.endsWith('.html'));
+    const parsed = [];
+    for (const f of files) {
         const html = await fs.readFile(path.join(STORIES_DIR, f), 'utf-8');
+        const d = (html.match(/"datePublished"\s*:\s*"?(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
+        parsed.push({ f, d, html });
+    }
+    // Newest story first, decided by the page itself. mtime is meaningless in a
+    // fresh CI checkout (every file shares the checkout timestamp), which made
+    // the index reshuffle on every run and produced noisy diff-only commits.
+    parsed.sort((a, b) => (b.d || '').localeCompare(a.d || '') || b.f.localeCompare(a.f));
+
+    const cards = await Promise.all(parsed.map(async ({ f, html }) => {
         const t = unesc((html.match(/<title>([^<]+)<\/title>/i)?.[1] || f).trim());
         const d = unesc((html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1] || '').trim());
         const img = html.match(/poster-portrait-src="([^"]+)"/i)?.[1] || `${SITE}/images/publisher-logo.png`;
@@ -736,44 +861,98 @@ async function pingIndexNow(urls) {
 }
 
 // ---------- Main ----------
-async function main() {
-    console.log('🚀 AIToolsNova - Web Story Generator');
+// Which days still need a story? (same catch-up idea as the blog job)
+async function resolveDates() {
+    const today = isoDate();
+    if (TARGET_DATE) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(TARGET_DATE)) {
+            throw new PublishError(`--date must be YYYY-MM-DD (got "${TARGET_DATE}")`, { code: 'bad-args' });
+        }
+        return [TARGET_DATE];
+    }
+    const planned = await planGaps(ROOT, { kind: 'webstory', days: BACKFILL_WINDOW, max: Math.max(1, BACKFILL_MAX), today });
+    if (BACKFILL_MAX > 0) {
+        if (planned.gaps.length) {
+            console.log(`\n🧾 Catch-up: ${planned.gaps.length} day(s) without a story -> ${planned.gaps.join(', ')}`);
+            return planned.gaps;
+        }
+        console.log(`\n✅ Nothing to catch up: every day since ${planned.earliest} has a story.`);
+        return [];
+    }
+    const have = await publishedDates(ROOT, 'webstory');
+    if (have.has(today) && process.env.ALLOW_DUPLICATE_DAY !== '1') {
+        console.log(`\n✅ Today (${today}) already has ${(have.get(today) || []).length} story(ies) - nothing to do.`);
+        return [];
+    }
+    return [today];
+}
+
+/**
+ * Workflow-file self-heal, done SAFELY.
+ *
+ * The previous version wrote scripts/workflow-fixes/*.fixed over
+ * .github/workflows/*.yml, committed, failed to push (GitHub refuses workflow
+ * writes from a job token) and left the changes STAGED in the index. The next
+ * step - the workflow's own "Commit and push new web story" - then committed
+ * those staged workflow files, got rejected again, and the actual story was
+ * never published. That is exactly the red run this job had for days.
+ *
+ * So: only touch workflow files when a WORKFLOW_PAT exists (that is the only
+ * token allowed to push them). Otherwise report the drift and move on.
+ */
+async function healWorkflowsIfAllowed() {
+    if (process.env.HEAL_WORKFLOWS === '0') return 'disabled';
+    const pat = process.env.WORKFLOW_PAT || process.env.GH_WORKFLOW_TOKEN || '';
+    const drift = await selfHealWorkflows();
+    if (!drift.length) return 'clean';
+    if (!pat) {
+        // Undo what selfHealWorkflows() wrote, so no workflow edit can leak
+        // into a content commit or a rejected push.
+        await git(['checkout', '--', '.github/workflows']).catch(() => {});
+        await git(['reset', '-q', '--', '.github/workflows']).catch(() => {});
+        const msg = `Live workflow YAML differs from scripts/workflow-fixes/*.fixed (${drift.join(', ')}). `
+            + 'Applying it needs the GitHub web UI or a secret named WORKFLOW_PAT (classic PAT with the "workflow" scope).';
+        console.warn(`🩹 ${msg}`);
+        annotate('warning', 'Workflow YAML drift not applied', msg);
+        return 'blocked-no-pat';
+    }
+    try {
+        const pushed = await commitAndPush({ message: 'ci: self-heal workflow files', onlyWorkflows: true });
+        console.log(pushed ? '🩹 Workflow fix pushed to main' : '🩹 No workflow changes to push');
+        return pushed ? 'pushed' : 'noop';
+    } catch (err) {
+        await git(['checkout', '--', '.github/workflows']).catch(() => {});
+        await git(['reset', '-q', '--', '.github/workflows']).catch(() => {});
+        console.warn(`⚠️  Workflow fix push failed: ${describeError(err)}`);
+        return 'push-failed';
+    }
+}
+
+/**
+ * While daily-blog.yml is broken (or simply off-schedule) this job also
+ * produces the blog post, so the site never loses a day twice.
+ */
+async function maybeCoverBlog() {
+    if (process.env.AUTO_BLOG_FALLBACK === '0') {
+        console.log('ℹ️  AUTO_BLOG_FALLBACK=0 → not generating a blog from this job.');
+        return false;
+    }
+    const broken = await isBlogWorkflowBroken();
+    const planned = await planGaps(ROOT, { kind: 'blog', days: 3, max: 1 });
+    if (broken || planned.gaps.length) {
+        console.log(`📝 Blog ${broken ? 'workflow is broken' : `is missing ${planned.gaps[0]}`} → generating it from the story job too...`);
+        await runBlogGenerator();
+        return true;
+    }
+    console.log('✅ Blog is current and its workflow is valid → leaving the blog to its own schedule.');
+    return false;
+}
+
+async function publishForDate(dateISO) {
+    console.log(`\n${'='.repeat(60)}\n📅 Publishing web story for ${dateISO}\n${'='.repeat(60)}`);
     await fs.mkdir(STORIES_DIR, { recursive: true });
 
-    // ---- Resilience layer ----
-    // 1) Check BEFORE healing: is daily-blog.yml still invalid? If yes, this
-    //    run must also generate today's blog (its own workflow can't run).
-    const blogWorkflowBroken = await isBlogWorkflowBroken();
-
-    // 2) SELF-HEAL broken workflow files from scripts/workflow-fixes/*.fixed.
-    //    GITHUB_TOKEN usually cannot push workflow files; WORKFLOW_PAT can.
-    //    Best-effort: content continues either way.
-    const healed = await selfHealWorkflows();
-    if (healed.length) {
-        console.log(`🩹 Repaired workflow files: ${healed.join(', ')} — pushing fix commit...`);
-        try {
-            const pushed = await commitAndPush({
-                message: 'ci: self-heal broken workflow files',
-                onlyWorkflows: true,
-            });
-            console.log(pushed ? '🩹 Workflow fix pushed to main' : '🩹 No workflow changes to push');
-        } catch (err) {
-            console.warn(`⚠️  Workflow fix push failed: ${err.message}`);
-            await git(['restore', '--staged', '--worktree', '.github/workflows']).catch(() => {});
-            await git(['reset', '--soft', 'HEAD~1']).catch(() => {});
-            console.warn('   → reverted workflow files and commit; continuing with content generation.');
-        }
-    }
-
-    // 3) Combined content: while daily-blog.yml is broken, generate the blog here.
-    if (blogWorkflowBroken) {
-        console.log('📝 daily-blog workflow is broken → generating today\'s blog from here too...');
-        await runBlogGenerator();
-    } else {
-        console.log('✅ daily-blog workflow is healthy → blog handled by its own schedule.');
-    }
-
-    const src = await pickSourceBlog();
+    const src = await pickSourceBlog(dateISO);
     console.log(`📖 Source blog: ${src.sourceFile}`);
     console.log(`🎯 Slug: ${src.slug}`);
 
@@ -813,14 +992,14 @@ async function main() {
         }
     }
 
-    const html = buildStoryHtml({ slug: src.slug, story }, localImgs);
+    const html = buildStoryHtml({ slug: src.slug, story }, localImgs, dateISO);
     console.log('🖼️  Downloading HD images locally (this makes stories fast + indexable)...');
     const localizedHtml = await localizeHtmlImages(html);
     const outFile = path.join(STORIES_DIR, `${src.slug}.html`);
     await fs.writeFile(outFile, localizedHtml);
     console.log(`💾 Saved: ${path.relative(ROOT, outFile)}`);
 
-    const sitemapUpdated = await updateSitemap({ slug: src.slug, title: story.story_title });
+    const sitemapUpdated = await updateSitemap({ slug: src.slug, title: story.story_title }, dateISO);
     console.log(sitemapUpdated ? '🗺️  sitemap.xml updated' : '🗺️  sitemap.xml unchanged');
 
     await rebuildStoriesIndex();
@@ -832,17 +1011,138 @@ async function main() {
         `${SITE}/sitemap.xml`,
     ]);
 
-    // ---- AUTO-PUBLISH: commit + push everything generated this run ----
-    console.log('📦 Committing and pushing today\'s content...');
-    const pushed = await commitAndPush({
-        message: `content(day): ${src.slug} web story${blogWorkflowBroken ? ' + blog' : ''}`,
-    });
-    console.log(pushed ? '📦 Content pushed to main' : '📦 No content changes to push');
 
-    console.log('✅ Done');
+    // ---- AUTO-PUBLISH: commit + push everything generated this run ----
+    return { slug: src.slug, title: story.story_title, slides: story.slides.length, date: dateISO };
 }
 
-export { buildStoryHtml, updateSitemap, rebuildStoriesIndex, pickSourceBlog };
+async function runCheck() {
+    const keys = readKeys();
+    const today = isoDate();
+    const have = await publishedDates(ROOT, 'webstory');
+    const newest = have.size ? [...have.keys()].sort().at(-1) : null;
+    const planned = await planGaps(ROOT, { kind: 'webstory', days: BACKFILL_WINDOW, max: 10, today });
+    const blogPlanned = await planGaps(ROOT, { kind: 'blog', days: BACKFILL_WINDOW, max: 10, today });
+    const lines = [
+        '### Web story pipeline check',
+        '',
+        '| Check | Result |',
+        '|---|---|',
+        `| AI keys visible | ${keys.any ? keys.present.join(', ') : '**none**'} |`,
+        `| Site API fallback | ${siteApiAllowed() ? 'enabled' : 'disabled'} |`,
+        `| Stories on disk | ${readdirSync(STORIES_DIR).filter(f => f.endsWith('.html')).length} |`,
+        `| Newest story | ${newest || 'none'} (${newest ? daysBetween(newest, today) : '?'} days ago) |`,
+        `| Missing story days | ${planned.gaps.length ? planned.gaps.join(', ') : 'none'} |`,
+        `| Missing blog days | ${blogPlanned.gaps.length ? blogPlanned.gaps.join(', ') : 'none'} |`,
+        `| daily-blog.yml | ${await isBlogWorkflowBroken() ? 'BROKEN' : 'valid'} |`,
+        `| Workflow YAML drift | ${await driftCount()} |`,
+    ];
+    if (!keys.any) lines.push('', `> ⚠️ ${noKeyGuidance(keys.missing)}`);
+    console.log(lines.join('\n'));
+    await stepSummary(lines);
+    return 0;
+}
+
+async function driftCount() {
+    const names = ['daily-blog.yml', 'daily-webstory.yml'];
+    let n = 0;
+    for (const name of names) {
+        const fixed = path.join(ROOT, 'scripts', 'workflow-fixes', `${name}.fixed`);
+        const live = path.join(WF_DIR, name);
+        if (!existsSync(fixed)) continue;
+        const a = await fs.readFile(fixed, 'utf8').catch(() => '');
+        const b = await fs.readFile(live, 'utf8').catch(() => '');
+        if (a !== b) n++;
+    }
+    return n ? `**${n} file(s) not applied**` : 'none';
+}
+
+async function main() {
+    console.log('🚀 AIToolsNova - Web Story Auto-Publish');
+    if (ARGS.flags.check) return runCheck();
+
+    const heal = await healWorkflowsIfAllowed();
+    if (heal === 'pushed') console.log('🩹 Workflow files healed and pushed.');
+
+    // A story is built from the newest article, so make sure the article exists first.
+    await maybeCoverBlog();
+
+    const dates = await resolveDates();
+    if (!dates.length) {
+        await stepSummary(['### Web story auto-publish', '', '✅ Already up to date — no missing story day, nothing to publish.']);
+        console.log('✅ Up to date. Exiting 0.');
+        return 0;
+    }
+
+    const results = [];
+    for (const d of dates) {
+        try {
+            const r = await publishForDate(d);
+            results.push({ ...r, ok: true });
+            await appendLedger(ROOT, { kind: 'webstory', date: d, slug: r.slug, status: 'ok' });
+        } catch (err) {
+            const reason = describeError(err);
+            results.push({ date: d, ok: false, error: reason });
+            await appendLedger(ROOT, { kind: 'webstory', date: d, slug: '', status: 'fail', reason });
+            annotate('error', `Web story failed for ${d}`, reason + (err?.hint ? ` — ${err.hint}` : ''));
+            console.error(`❌ ${d}: ${reason}`);
+            if (err instanceof PublishError && (err.code === 'no-source' || err.code === 'bad-args')) break;
+        }
+    }
+
+    const okOnes = results.filter(r => r.ok);
+    let pushErr = null, pushed = false;
+    const selfPublish = !DRY_RUN && process.env.SKIP_AUTO_PUBLISH !== '1' && process.env.NO_PUBLISH !== '1'
+        && (isCI() || process.env.FORCE_PUBLISH === '1');
+    try {
+        await writePublishStatus(ROOT, {
+            kind: 'webstory',
+            ok: okOnes.length > 0,
+            date: okOnes.at(-1)?.date || isoDate(),
+            slug: okOnes.map(r => r.slug).join(','),
+            reason: okOnes.length ? '' : (results.find(r => !r.ok)?.error || ''),
+        });
+    } catch (e) { console.warn(`   ⚠️  could not write publish-status.json: ${e.message}`); }
+    if (selfPublish) {
+        try {
+            const res = await publishContent({
+                root: ROOT,
+                include: CONTENT_PATHS.webstory,
+                message: okOnes.length
+                    ? `content(webstory): auto-publish ${okOnes.map(r => r.slug).join(', ').slice(0, 70)}`
+                    : 'chore(webstory): record publish failure status',
+            });
+            pushed = res.pushed;
+            if (res.committed) console.log(`📦 ${pushed ? 'Pushed' : 'Committed'} ${res.files.length} file(s) to main`);
+        } catch (err) {
+            pushErr = err;
+            annotate('error', 'Web story auto-commit failed', describeError(err) + (err.hint ? ` — ${err.hint}` : ''));
+        }
+    } else {
+        console.log('ℹ️  Skipping in-script publish (workflow step owns the commit).');
+    }
+
+    await stepSummary([
+        '### Web story auto-publish',
+        '',
+        '| Date | Status | Story | Slides |',
+        '|---|---|---|---|',
+        ...results.map(r => `| ${r.date} | ${r.ok ? '✅ published' : '❌ failed'} | ${r.slug || '-'} | ${r.slides || '-'}${r.ok ? '' : ` — ${r.error}`.slice(0, 160)} |`),
+        '',
+        `Pushed to main: ${pushed ? 'yes' : 'no'} · Workflow heal: ${heal}`,
+    ]);
+
+    if (!okOnes.length) {
+        const why = results[0]?.error || 'unknown';
+        annotate('error', 'No web story published', `${why} — recorded in scripts/publish-log.json + publish-status.json`);
+        throw new PublishError(`Web story run published nothing. First error: ${why}`, { code: 'nothing-published' });
+    }
+    if (pushErr) throw pushErr;
+    console.log(`\n✅ Done: ${okOnes.length} story(ies)${pushed ? ' pushed to main' : ' written locally'}.`);
+    return 0;
+}
+
+export { buildStoryHtml, updateSitemap, rebuildStoriesIndex, pickSourceBlog, main, resolveDates, storyFillersFromBlog };
 
 // Only auto-run when executed directly (not when imported for testing)
 import { fileURLToPath } from 'node:url';

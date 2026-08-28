@@ -20,6 +20,11 @@ const HISTORY_FILE = path.join(ROOT, 'scripts', 'topic-history.json');
 const blogsBackup = await fs.readFile(BLOGS_HTML, 'utf-8');
 const sitemapBackup = await fs.readFile(SITEMAP_XML, 'utf-8');
 const historyBackup = await fs.readFile(HISTORY_FILE, 'utf-8').catch(() => '{"topics":[]}');
+const LEDGER_FILE = path.join(ROOT, 'scripts', 'publish-log.json');
+const STATUS_FILE = path.join(ROOT, 'publish-status.json');
+const readOr = async (f) => (await fs.readFile(f, 'utf-8').catch(() => null));
+const ledgerBackup = await readOr(LEDGER_FILE);
+const statusBackup = await readOr(STATUS_FILE);
 console.log('📦 Backups taken.');
 
 // Create a fetch-mock wrapper module
@@ -77,7 +82,10 @@ await import('./generate-blog.mjs');
 
 // Run the mock loader as an ESM script
 const r = spawnSync('node', ['scripts/_mock-loader.mjs'], {
-    env: { ...process.env, GROQ_API_KEY: 'mock-key-for-test' },
+    // BACKFILL_MAX=0 -> exactly one post per run, so the assertions below stay
+    // deterministic. Catch-up planning itself is covered by
+    // scripts/test-publish-core.mjs (planGaps) and scripts/test-site-health.mjs.
+    env: { ...process.env, GROQ_API_KEY: 'mock-key-for-test', BACKFILL_MAX: '0' },
     encoding: 'utf-8',
     cwd: ROOT
 });
@@ -110,6 +118,23 @@ if (mockFile) {
     // Sitemap now uses extensionless URLs (the .html form 308-redirects).
     const mockSlug = mockFile.replace(/\.html$/, '');
     mockChecks.push(['sitemap.xml URL injected', newSitemap.includes('/blog/' + mockSlug)]);
+
+    // --- publish bookkeeping: the run must be auditable, not silently green ---
+    const ledgerRaw = await readOr(LEDGER_FILE);
+    mockChecks.push(['publish-log.json written by the run', !!ledgerRaw]);
+    let ledgerOk = false, ledgerDate = '';
+    try {
+        const entries = JSON.parse(ledgerRaw || '{}').entries || [];
+        const mine = entries.find(e => e.slug === mockFile.replace(/\.html$/, '') || (e.kind === 'blog' && e.status === 'ok'));
+        ledgerOk = !!mine && mine.status === 'ok';
+        ledgerDate = mine?.date || '';
+    } catch { /* assertion below fails */ }
+    mockChecks.push(['ledger records an ok blog entry', ledgerOk]);
+    mockChecks.push(['ledger entry is dated', /^\d{4}-\d{2}-\d{2}$/.test(ledgerDate)]);
+    const statusRaw = await readOr(STATUS_FILE);
+    mockChecks.push(['publish-status.json written', !!statusRaw]);
+    mockChecks.push(['publish-status.json says ok', /"ok": true/.test(statusRaw || '')]);
+    mockChecks.push(['publish-status.json leaks no API keys', !/mock-key-for-test|gsk_/.test(statusRaw || '')]);
 } else {
     mockChecks = [['Generated blog file NOT found — pipeline broken!', false]];
 }
@@ -129,6 +154,11 @@ if (mockFile) await fs.unlink(path.join(ROOT, 'blog', mockFile)).catch(() => {})
 await fs.writeFile(BLOGS_HTML, blogsBackup);
 await fs.writeFile(SITEMAP_XML, sitemapBackup);
 await fs.writeFile(HISTORY_FILE, historyBackup);
+// ledger/status are real repo files - restore them exactly as they were
+for (const [file, backup] of [[LEDGER_FILE, ledgerBackup], [STATUS_FILE, statusBackup]]) {
+    if (backup === null) await fs.unlink(file).catch(() => {});
+    else await fs.writeFile(file, backup);
+}
 await fs.unlink(mockLoader).catch(() => {});
 console.log('\n🧹 Cleanup done. Repo restored to pre-test state.\n');
 

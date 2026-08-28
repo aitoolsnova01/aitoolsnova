@@ -26,17 +26,46 @@ import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
 import crypto from 'node:crypto';
+import {
+    readKeys, noKeyGuidance, annotate, stepSummary, describeError, PublishError,
+    parseJsonLoose, isTransientStatus, fetchWithTimeout, retry as withRetry,
+    isoDate, addDays, daysBetween, readLedger, appendLedger, planGaps, publishedDates,
+    publishContent, writePublishStatus, visibleWords, isCI, parseArgs, dedupeBy,
+    callSiteApi, siteApiAllowed, CONTENT_PATHS,
+} from './lib/publish-core.mjs';
 
-const ROOT = path.resolve(process.cwd());
+const ROOT = path.resolve(process.env.REPO_ROOT || process.cwd());
 const BLOG_DIR = path.join(ROOT, 'blog');
 const BLOGS_HTML = path.join(ROOT, 'blogs.html');
 const SITEMAP_XML = path.join(ROOT, 'sitemap.xml');
 const HISTORY_FILE = path.join(ROOT, 'scripts', 'topic-history.json');
 
+// ---- CLI + quality knobs -------------------------------------------------
+//   node scripts/generate-blog.mjs                      publish today
+//   node scripts/generate-blog.mjs --backfill=3         fill up to 3 missing days
+//   node scripts/generate-blog.mjs --date=2026-08-24    one specific day
+//   node scripts/generate-blog.mjs --dry-run            generate, write nothing to git
+//   node scripts/generate-blog.mjs --check              diagnostics only
+const ARGS = parseArgs();
+const DRY_RUN = ARGS.bool('dry-run', process.env.DRY_RUN === '1');
+const FORCE = ARGS.bool('force', false);
+const BACKFILL_MAX = ARGS.num('backfill', process.env.BACKFILL_MAX ? Number(process.env.BACKFILL_MAX) : 0);
+const TARGET_DATE = ARGS.get('date', process.env.PUBLISH_DATE || '') || '';
+const COUNT = Math.max(1, ARGS.num('count', 1));
+// Quality bar. A hard 1500-word gate with a 4500-token cap is how a run dies
+// every single day while the job still looks green: the model simply cannot
+// return that much in one reply. Target stays high, the floor is where we
+// actually stop, and expansion passes bridge the gap.
+const MIN_WORDS = Number(process.env.MIN_WORDS || 1000);
+const TARGET_WORDS = Number(process.env.TARGET_WORDS || 1600);
+const MIN_SECTIONS = Number(process.env.MIN_SECTIONS || 5);
+const EXPANSION_PASSES = Number(process.env.EXPANSION_PASSES || 3);
+const CONTENT_ATTEMPTS = Number(process.env.CONTENT_ATTEMPTS || 3);
+
 // Download the hero image locally so blog pages load fast (no slow live
 // hot-linking). Visible <img> uses a root-relative path (works in preview +
 // production); social/schema tags get the absolute URL (required by FB/Twitter).
-const SITE_URL = 'https://aitoolsnova.com';
+const SITE_URL = process.env.SITE_URL || 'https://aitoolsnova.com';
 async function localizeBlogHero(html) {
     const re = /https?:\/\/image\.pollinations\.ai\/prompt\/[^"'\\\s)]+/g;
     const urls = [...new Set(html.match(re) || [])];
@@ -69,7 +98,7 @@ async function localizeBlogHero(html) {
         let ok = existsSync(dest);
         if (!ok) {
             try {
-                const res = await fetch(u);
+                const res = await fetchWithTimeout(u, {}, 30_000);
                 if (res.ok) {
                     const b = Buffer.from(await res.arrayBuffer());
                     if (b.length > 1500) {
@@ -87,12 +116,10 @@ async function localizeBlogHero(html) {
     }
     return html;
 }
-const GROQ_KEY = process.env.GROQ_API_KEY || process.env.GROQ_KEY || '';
-// Accept common name variants so a differently-cased secret still works.
-const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || process.env.Deepseek_API_key
-    || process.env.DEEPSEEK_API_key || process.env.deepseek_api_key || '';
-const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.Gemini_API_key
-    || process.env.GOOGLE_GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+const KEYS = readKeys();
+const GROQ_KEY = KEYS.groq;
+const DEEPSEEK_KEY = KEYS.deepseek;
+const GEMINI_KEY = KEYS.gemini;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 // IndexNow key: use env var OR auto-detect the .txt key file at repo root
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || (() => {
@@ -125,15 +152,27 @@ const FLIPKART_AFFID = process.env.FLIPKART_AFFID || '';
 // that needs three retries and burns the same budget.
 const MODELS = process.env.GROQ_MODEL
     ? [process.env.GROQ_MODEL, 'openai/gpt-oss-120b', 'openai/gpt-oss-20b']
-    : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
-
-if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
-    console.error('❌ No AI key found. Add at least one GitHub secret:');
-    console.error('   GROQ_API_KEY  and/or  GEMINI_API_KEY  and/or  DEEPSEEK_API_KEY');
-    console.error('::error title=No AI key found::None of GROQ_API_KEY / GEMINI_API_KEY / DEEPSEEK_API_KEY is configured (missing).');
-    process.exit(1);
+    : ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'meta-llama/llama-4-scout-17b-16e-instruct'];
+// Any model that 404s here is simply skipped, so the list may be generous.
+for (const extra of ['llama-3.3-70b-versatile']) {
+    if (process.env.GROQ_MODELS_EXTRA?.split(',').includes(extra) && !MODELS.includes(extra)) MODELS.push(extra);
 }
-console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'}  Gemini=${GEMINI_KEY ? 'yes' : 'no'}  DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'}`);
+
+if (!KEYS.any) {
+    // Historically this was `process.exit(1)`, which - combined with
+    // `continue-on-error: true` in .github/workflows/daily-blog.yml - produced
+    // a GREEN run that published nothing for days. Now: say exactly what is
+    // missing, record it in the ledger + publish-status.json, and only give up
+    // if even the site's own /api/gemini proxy cannot be used.
+    annotate('warning', 'No AI key in GitHub secrets', noKeyGuidance(KEYS.missing));
+    console.warn(`⚠️  ${noKeyGuidance(KEYS.missing)}`);
+    if (!siteApiAllowed()) {
+        annotate('error', 'No AI key and no fallback', `${noKeyGuidance(KEYS.missing)} SITE_API_FALLBACK=0 disables the site API fallback.`);
+        await failFast('no-ai-key', noKeyGuidance(KEYS.missing));
+    }
+    console.warn('   → Falling back to the site API (https://aitoolsnova.com/api/gemini). It uses the same keys the site tools already use, so daily publishing continues.');
+}
+console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'}  Gemini=${GEMINI_KEY ? 'yes' : 'no'}  DeepSeek=${DEEPSEEK_KEY ? 'yes' : 'no'}  SiteAPI=${siteApiAllowed() ? 'yes' : 'no'}`);
 
 // ---------- Sleep helper ----------
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -170,32 +209,49 @@ async function saveHistory(h) {
 // Groq free tier often hits 8k TPM / 413. When that happens we automatically
 // continue on Gemini, then DeepSeek, so daily publish does not die.
 
+/**
+ * Groq completions.
+ * The old code clamped max_tokens to 4500, so a 1600-word article arrived as
+ * truncated JSON ("no valid JSON") and the whole day's post died. Now the
+ * requested budget is honoured and, if the model rejects it, it steps down a
+ * ladder instead of giving up.
+ */
+const TOKEN_LADDER = [8000, 6000, 4500, 3000, 2000];
 async function callGroqOnly(messages, opts = {}) {
     if (!GROQ_KEY) return null;
     const modelsToTry = opts.singleModel ? [opts.singleModel] : MODELS;
+    const wanted = Math.max(1024, Math.min(opts.max_tokens ?? 4096, 8000));
+    const ladder = [wanted, ...TOKEN_LADDER.filter(t => t < wanted)];
     let lastErr = null;
     for (const model of modelsToTry) {
         for (let attempt = 1; attempt <= 2; attempt++) {
+            const maxTokens = ladder[Math.min(attempt - 1, ladder.length - 1)];
             try {
                 const body = {
                     model,
                     messages,
                     temperature: opts.temperature ?? 0.7,
-                    max_tokens: Math.min(opts.max_tokens ?? 4096, 4500)
+                    max_tokens: maxTokens
                 };
                 if (model.includes('gpt-oss')) body.reasoning_effort = 'low';
                 if (opts.json === true) body.response_format = { type: 'json_object' };
-                const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                const res = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${GROQ_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify(body),
+                    timeoutMs: opts.timeoutMs ?? 120_000,
                 });
                 if (!res.ok) {
                     const errText = await res.text().catch(() => '');
                     lastErr = new Error(`[groq:${model}] ${res.status}: ${errText.slice(0, 220)}`);
-                    if (res.status === 429 || res.status >= 500) {
+                    if (isTransientStatus(res.status)) {
                         console.warn(`   ⚠️  ${lastErr.message} (retry ${attempt}/2)`);
                         await sleep(attempt * 2500);
+                        continue;
+                    }
+                    // max_tokens above the model's limit -> shrink and retry once
+                    if (/max_tokens|context length|too long|maximum|tokens/i.test(errText) && attempt === 1 && maxTokens > 2000) {
+                        console.warn(`   ⚠️  [groq:${model}] token budget rejected, stepping down to ${ladder[1]} tokens`);
                         continue;
                     }
                     // 413 TPM / 404 missing model → next model
@@ -212,13 +268,30 @@ async function callGroqOnly(messages, opts = {}) {
                 return content;
             } catch (err) {
                 lastErr = err;
-                console.warn(`   ⚠️  [groq:${model}] ${err.message}`);
+                console.warn(`   ⚠️  [groq:${model}] ${describeError(err)}`);
                 await sleep(attempt * 1500);
             }
         }
     }
-    if (lastErr) console.warn(`   ⚠️  Groq exhausted: ${lastErr.message}`);
+    if (lastErr) console.warn(`   ⚠️  Groq exhausted: ${describeError(lastErr)}`);
     return null;
+}
+
+/** Site proxy (functions/api/gemini.js) - used when no key is visible here. */
+async function callSiteApiOnly(messages, opts = {}) {
+    if (!siteApiAllowed()) return null;
+    const flat = (messages || []).map(m => `${m.role === 'system' ? 'SYSTEM' : m.role === 'assistant' ? 'ASSISTANT' : 'USER'}:\n${m.content}`).join('\n\n');
+    try {
+        const { content, provider } = await callSiteApi(flat, {
+            tool: opts.tool || (opts.json === true ? 'seo' : 'writer'),
+            timeoutMs: opts.timeoutMs ?? 120_000,
+        });
+        console.log(`   ✔ Site API (${provider})`);
+        return content;
+    } catch (err) {
+        console.warn(`   ⚠️  [siteapi] ${describeError(err)}`);
+        return null;
+    }
 }
 
 async function callGeminiOnly(messages, opts = {}) {
@@ -243,7 +316,7 @@ async function callGeminiOnly(messages, opts = {}) {
             contents,
             generationConfig: {
                 temperature: opts.temperature ?? 0.7,
-                maxOutputTokens: Math.min(opts.max_tokens ?? 4096, 8192),
+                maxOutputTokens: Math.max(1024, Math.min(opts.max_tokens ?? 4096, 16_000)),
                 topP: 0.9,
             }
         };
@@ -264,10 +337,11 @@ async function callGeminiOnly(messages, opts = {}) {
         }
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
-        const res = await fetch(url, {
+        const res = await fetchWithTimeout(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
+            timeoutMs: opts.timeoutMs ?? 120_000,
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
@@ -278,10 +352,11 @@ async function callGeminiOnly(messages, opts = {}) {
                 const alt = 'gemini-2.0-flash';
                 console.warn(`   ⚠️  Retrying Gemini with ${alt}...`);
                 const url2 = `https://generativelanguage.googleapis.com/v1beta/models/${alt}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
-                const res2 = await fetch(url2, {
+                const res2 = await fetchWithTimeout(url2, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify(body),
+                    timeoutMs: opts.timeoutMs ?? 120_000,
                 });
                 const data2 = await res2.json().catch(() => ({}));
                 if (!res2.ok) {
@@ -316,13 +391,14 @@ async function callDeepSeekOnly(messages, opts = {}) {
             model: 'deepseek-chat',
             messages,
             temperature: opts.temperature ?? 0.7,
-            max_tokens: Math.min(opts.max_tokens ?? 4096, 8000),
+            max_tokens: Math.max(1024, Math.min(opts.max_tokens ?? 4096, 8000)),
         };
         if (opts.json === true) body.response_format = { type: 'json_object' };
-        const res = await fetch('https://api.deepseek.com/chat/completions', {
+        const res = await fetchWithTimeout('https://api.deepseek.com/chat/completions', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${DEEPSEEK_KEY}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
+            timeoutMs: opts.timeoutMs ?? 120_000,
         });
         if (!res.ok) {
             const t = await res.text().catch(() => '');
@@ -365,17 +441,21 @@ async function callAI(messages, opts = {}) {
         }
     }
 
+    // Last resort: the site's own proxy (works even with zero Actions secrets).
+    if (siteApiAllowed()) order.push('siteapi');
+
     let lastErr = null;
     for (const provider of order) {
         let content = null;
         if (provider === 'groq') content = await callGroqOnly(messages, opts);
         else if (provider === 'gemini') content = await callGeminiOnly(messages, opts);
         else if (provider === 'deepseek') content = await callDeepSeekOnly(messages, opts);
+        else if (provider === 'siteapi') content = await callSiteApiOnly(messages, opts);
         if (content) return content;
         lastErr = new Error(`${provider} failed`);
         console.warn(`   ↩︎  ${provider} unavailable — trying next provider...`);
     }
-    throw lastErr || new Error('All AI providers failed (Groq / Gemini / DeepSeek).');
+    throw lastErr || new Error('All AI providers failed (Groq / Gemini / DeepSeek / site API).');
 }
 
 // Back-compat alias used elsewhere in this file
@@ -391,6 +471,7 @@ async function callGroqForJson(messages, opts = {}) {
     const pref = String(process.env.AI_PROVIDER_ORDER || 'deepseek,gemini,groq')
         .toLowerCase().split(/[\s,]+/).filter(Boolean);
     for (const n of ['deepseek', 'gemini', 'groq']) if (!pref.includes(n)) pref.push(n);
+    if (siteApiAllowed() && !pref.includes('siteapi')) pref.push('siteapi');
 
     const tryProvider = async (provider) => {
         if (provider === 'deepseek' && DEEPSEEK_KEY) {
@@ -416,6 +497,17 @@ async function callGroqForJson(messages, opts = {}) {
                     }
                 }
             } catch (e) { lastErr = e; }
+        }
+        if (provider === 'siteapi') {
+            const reply = await callSiteApiOnly(messages, opts);
+            if (reply) {
+                try { return { reply, parsed: parseJsonLoose(reply).data, model: 'siteapi' }; }
+                catch (parseErr) {
+                    lastErr = new Error(`[siteapi] JSON parse failed: ${parseErr.message}`);
+                    console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
+                }
+            }
+            return null;
         }
         if (provider === 'groq' && GROQ_KEY) {
             for (const model of MODELS) {
@@ -506,29 +598,14 @@ async function generateGeminiImage(prompt, destFile, { aspect = '16:9', width = 
 }
 
 // ---------- 3b. Robust JSON extractor ----------
+/**
+ * Delegates to publish-core's parser, which additionally REPAIRS a reply that
+ * was cut off by the provider's token limit. That case is the normal failure
+ * mode of long-form generation on a free tier, and previously it killed the
+ * whole day's post with "Unbalanced JSON braces in reply".
+ */
 function extractJson(reply) {
-    if (!reply) throw new Error('Empty AI reply');
-    // Strip markdown fences
-    let txt = reply.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
-    // Find the outermost balanced { ... }
-    const start = txt.indexOf('{');
-    if (start < 0) throw new Error('No JSON object found in reply: ' + reply.slice(0, 200));
-    let depth = 0, inStr = false, esc = false, end = -1;
-    for (let i = start; i < txt.length; i++) {
-        const c = txt[i];
-        if (esc) { esc = false; continue; }
-        if (c === '\\') { esc = true; continue; }
-        if (c === '"') { inStr = !inStr; continue; }
-        if (inStr) continue;
-        if (c === '{') depth++;
-        else if (c === '}') { depth--; if (depth === 0) { end = i; break; } }
-    }
-    if (end < 0) throw new Error('Unbalanced JSON braces in reply: ' + reply.slice(0, 200));
-    const candidate = txt.slice(start, end + 1);
-    // Sanitize: remove trailing commas before } or ]
-    const cleaned = candidate.replace(/,(\s*[}\]])/g, '$1');
-    try { return JSON.parse(cleaned); }
-    catch (e) { throw new Error('JSON parse failed: ' + e.message + '\nPayload head: ' + cleaned.slice(0, 300)); }
+    return parseJsonLoose(reply).data;
 }
 
 // ---------- 4. Generate unique topic ----------
@@ -757,7 +834,7 @@ HTML only: p ul ol li strong em h3. No script/style. Return ONLY JSON.`;
     parsed.related_tools = parsed.related_tools || ['ai-chat','ai-writer','ai-image-generator','youtube-kit'];
     parsed.related_blogs = parsed.related_blogs || ['best-free-ai-tools-2026','top-100-ai-tools-2026','ai-productivity-tools'];
     parsed.affiliate_picks = Array.isArray(parsed.affiliate_picks) ? parsed.affiliate_picks.slice(0, 3) : [];
-    if (parsed.sections.length < 6) throw new Error('Content too short (needs >=6 sections). Got: ' + parsed.sections.length);
+    if (!parsed.sections.length) throw new Error('Content has no sections at all.');
     // Approximate word count across main fields — reject thin AI output before it ships
     const approxText = [
         parsed.intro_html, parsed.conclusion_html,
@@ -769,17 +846,17 @@ HTML only: p ul ol li strong em h3. No script/style. Return ONLY JSON.`;
     // sections rather than rejected: the previous code threw at <800 and then
     // had an unreachable padding branch for <1200, so every 600-799 word draft
     // failed the whole run even though it was recoverable.
-    if (wc < 450) {
-        throw new Error(`Content word count too low: ${wc} (need >= 450). Regenerating required.`);
+    if (wc < 300) {
+        throw new PublishError(`Content unusable: only ${wc} words came back.`, { code: 'thin-content', retryable: true });
     }
     // If the draft is usable but short, ask the model for MORE SECTIONS ON THIS
     // TOPIC rather than appending a fixed block. The previous version pasted the
     // same two hardcoded sections into every short post, which is exactly how a
     // set of near-identical articles gets flagged as scaled content.
     let finalWc = wc;
-    if (wc < 1500) {
+    for (let pass = 1; pass <= EXPANSION_PASSES && finalWc < TARGET_WORDS; pass++) {
         const have = (parsed.sections || []).map(x => x.h2).filter(Boolean);
-        const need = Math.max(3, Math.ceil((2000 - wc) / 180));
+        const need = Math.max(2, Math.ceil((TARGET_WORDS + 300 - finalWc) / 180));
         console.log(`   ➤ Draft is ${wc} words. Requesting ${need} more topic-specific sections...`);
         const expandPrompt = `You are expanding an existing article titled "${topic.title}".
 
@@ -818,15 +895,25 @@ HTML allowed: p ul ol li strong em h3.`;
                 ...(parsed.faqs || []).map(x => `${x.q || ''} ${x.a || ''}`),
             ].join(' ').replace(/<[^>]+>/g, ' ');
             finalWc = (reText.match(/[A-Za-z0-9']+/g) || []).length;
-            console.log(`   ✔ Added ${added} section(s). Now ${finalWc} words.`);
+            console.log(`   ✔ Pass ${pass}: added ${added} section(s). Now ${finalWc} words.`);
+            if (!added) break;   // the model has nothing new to say - stop asking
         } catch (err) {
-            console.warn(`   ⚠️  Expansion failed: ${err.message}`);
+            console.warn(`   ⚠️  Expansion pass ${pass} failed: ${describeError(err)}`);
+            break;
         }
+    }
 
-        // Never publish below the quality floor the site already meets.
-        if (finalWc < 1500) {
-            throw new Error(`Content still too short after expansion: ${finalWc} (need >= 1500).`);
-        }
+    // Publish only what clears the site's quality bar. Anything above the floor
+    // ships; anything under it is retried by the caller, so one short model
+    // answer no longer converts into "no post for five days".
+    if (finalWc < MIN_WORDS) {
+        throw new PublishError(
+            `Content below quality floor after ${EXPANSION_PASSES} expansion pass(es): ${finalWc} words (need >= ${MIN_WORDS}, target ${TARGET_WORDS}).`,
+            { code: 'thin-content', retryable: true }
+        );
+    }
+    if (parsed.sections.length < MIN_SECTIONS) {
+        throw new PublishError(`Content too shallow: ${parsed.sections.length} sections (need >= ${MIN_SECTIONS}).`, { code: 'thin-content', retryable: true });
     }
 
     console.log(`   ➤ Approx body words: ${finalWc}`);
@@ -1193,7 +1280,7 @@ async function pingIndexNow(topic) {
     if (!INDEXNOW_KEY) { console.log('   ℹ️  INDEXNOW_KEY not set — skipping IndexNow ping (Google/Bing sitemap ping still runs in workflow).'); return; }
     const url = `https://aitoolsnova.com/blog/${topic.slug}`;
     try {
-        const res = await fetch('https://api.indexnow.org/indexnow', {
+        const res = await fetchWithTimeout('https://api.indexnow.org/indexnow', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json; charset=utf-8' },
             body: JSON.stringify({
@@ -1210,16 +1297,54 @@ async function pingIndexNow(topic) {
 }
 
 // ---------- MAIN ----------
-async function main() {
-    console.log('🚀 AIToolsNova - Daily Blog Generator (v2 bulletproof) starting...\n');
-    const today = new Date();
-    const todayISO = today.toISOString().slice(0, 10);
+// ---------- Which days still need a post? ----------
+const BACKFILL_WINDOW = Number(process.env.BACKFILL_WINDOW || 10);
+const SKIP_IF_UP_TO_DATE = process.env.ALLOW_DUPLICATE_DAY !== '1';
+
+/**
+ * A missed schedule used to be a permanently missing day. Now every run asks
+ * "which of the last N days have no post?" and publishes those first, oldest
+ * first, capped per run so a long outage cannot turn into a content flood.
+ */
+async function resolveDates() {
+    const today = isoDate();
+    if (TARGET_DATE) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(TARGET_DATE)) {
+            throw new PublishError(`--date must be YYYY-MM-DD (got "${TARGET_DATE}")`, { code: 'bad-args' });
+        }
+        return [TARGET_DATE];
+    }
+    const planned = await planGaps(ROOT, { kind: 'blog', days: BACKFILL_WINDOW, max: Math.max(1, BACKFILL_MAX), today });
+    if (BACKFILL_MAX > 0) {
+        if (planned.gaps.length) {
+            console.log(`\n🧾 Catch-up: ${planned.gaps.length} day(s) without a post in the last ${BACKFILL_WINDOW} -> ${planned.gaps.join(', ')}`);
+            return planned.gaps;
+        }
+        console.log(`\n✅ Nothing to catch up: every day since ${planned.earliest} has a post.`);
+        return SKIP_IF_UP_TO_DATE ? [] : [today];
+    }
+    const have = await publishedDatesForBlog();
+    if (SKIP_IF_UP_TO_DATE && have.has(today)) {
+        console.log(`\n✅ Today (${today}) already has ${(have.get(today) || []).length} post(s) - nothing to do.`);
+        return [];
+    }
+    const count = Math.max(1, COUNT);
+    return Array.from({ length: count }, (_, i) => addDays(today, -i)).filter(d => !have.has(d) || !SKIP_IF_UP_TO_DATE);
+}
+
+async function publishedDatesForBlog() {
+    return publishedDates(ROOT, 'blog');
+}
+
+// ---------- One article, for one publish date ----------
+async function publishForDate(todayISO) {
+    console.log(`\n${'='.repeat(60)}\n📅 Publishing blog post for ${todayISO}\n${'='.repeat(60)}`);
+    const today = new Date(`${todayISO}T12:00:00Z`);
     const todayHuman = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     console.log('📚 Reading existing blog titles...');
     const existingTitles = await readExistingTitles();
     console.log(`   Found ${existingTitles.length} existing titles.`);
-
     const history = await loadHistory();
 
     console.log('\n🎯 Generating unique topic...');
@@ -1227,30 +1352,33 @@ async function main() {
     console.log(`   ➤ Title: ${topic.title}`);
     console.log(`   ➤ Slug:  ${topic.slug}`);
     console.log(`   ➤ Category: ${topic.category}`);
-    console.log(`   ➤ Hero prompt: ${topic.hero_prompt}`);
 
     const outFile = path.join(BLOG_DIR, `${topic.slug}.html`);
     if (existsSync(outFile)) {
-        console.log(`⚠️  ${topic.slug}.html already exists — appending timestamp for safety.`);
+        console.log(`⚠️  ${topic.slug}.html already exists — appending a suffix for safety.`);
         topic.slug += '-' + today.getTime().toString(36).slice(-4);
     }
 
-    console.log('\n📝 Generating full blog content (may take 20-60s, up to 3 attempts)...');
+    console.log(`\n📝 Generating content (target ${TARGET_WORDS} words, floor ${MIN_WORDS})...`);
     let content = null;
     let lastContentErr = null;
-    for (let attempt = 1; attempt <= 3; attempt++) {
+    for (let attempt = 1; attempt <= CONTENT_ATTEMPTS; attempt++) {
         try {
-            console.log(`   attempt ${attempt}/3...`);
+            console.log(`   attempt ${attempt}/${CONTENT_ATTEMPTS}...`);
             content = await generateContent(topic);
             console.log(`   ➤ ${content.sections?.length || 0} sections, ${content.faqs?.length || 0} FAQs, ~${content.read_time_min || '?'} min read`);
             break;
         } catch (err) {
             lastContentErr = err;
-            console.warn(`   ⚠️  content attempt ${attempt} failed: ${err.message}`);
-            if (attempt < 3) await sleep(2000 * attempt);
+            console.warn(`   ⚠️  content attempt ${attempt} failed: ${describeError(err)}`);
+            const fatal = err instanceof PublishError && !err.retryable;
+            if (fatal) break;
+            if (attempt < CONTENT_ATTEMPTS) await sleep(2000 * attempt);
         }
     }
-    if (!content) throw lastContentErr || new Error('Content generation failed after 3 attempts');
+    if (!content) {
+        throw lastContentErr || new PublishError(`Content generation failed after ${CONTENT_ATTEMPTS} attempts`, { code: 'content-failed' });
+    }
 
     console.log('\n🖼️  Generating hero image (Gemini AI first — Pollinations fallback)...');
     let heroLocal = null;
@@ -1298,13 +1426,18 @@ async function main() {
     {
         const plain = finalHtml.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ');
         const wc2 = (plain.match(/[A-Za-z0-9']+/g) || []).length;
-        if (wc2 < 1500) {
+        if (wc2 < MIN_WORDS) {
             await fs.unlink(finalPath).catch(()=>{});
-            throw new Error(`Word count QA failed after write (${wc2} words). Thin posts are not published.`);
+            throw new PublishError(`Word count QA failed after write (${wc2} words, floor ${MIN_WORDS}). Thin posts are not published.`, { code: 'qa-word-count' });
         }
         console.log(`   ➤ On-disk visible words ~= ${wc2}`);
     }
     console.log(`   ✅ Written: blog/${topic.slug}.html (${(finalHtml.length/1024).toFixed(1)} KB)`);
+
+    console.log('\n🔗 Updating blogs.html and sitemap.xml...');
+    await updateBlogsList(topic, content, todayHuman);
+    await updateSitemap(topic, todayISO);
+
 
     console.log('\n🔗 Updating blogs.html and sitemap.xml...');
     await updateBlogsList(topic, content, todayHuman);
@@ -1317,14 +1450,153 @@ async function main() {
     console.log('\n📣 Pinging search engines...');
     await pingIndexNow(topic);
 
-    console.log('\n🎉 Done! Blog post created successfully.');
-    console.log(`   Preview URL: https://aitoolsnova.com/blog/${topic.slug}\n`);
+    const words = visibleWords(finalHtml);
+    console.log(`\n🎉 Created blog/${topic.slug}.html (${words} words) for ${todayISO}`);
+    return { slug: topic.slug, title: topic.title, words, date: todayISO };
 }
 
-main().catch(err => {
-    console.error('\n❌ FATAL:', err.message);
-    const annotation = String(err && err.message ? err.message : err).replace(/\s+/g, ' ').slice(0, 400);
-    console.error(`::error title=Blog generation failed::${annotation}`);
+// ---------- Diagnostics-only mode ----------
+async function runCheck() {
+    const keys = readKeys();
+    const today = isoDate();
+    const planned = await planGaps(ROOT, { kind: 'blog', days: BACKFILL_WINDOW, max: 10, today });
+    const have = await publishedDatesForBlog();
+    const newest = have.size ? [...have.keys()].sort().at(-1) : null;
+    const lines = [
+        '### Blog pipeline check',
+        '',
+        `| Check | Result |`,
+        `|---|---|`,
+        `| AI keys visible | ${keys.any ? keys.present.join(', ') : '**none**'} |`,
+        `| Site API fallback | ${siteApiAllowed() ? 'enabled' : 'disabled'} |`,
+        `| IndexNow key | ${INDEXNOW_KEY ? 'found' : 'not set (optional)'} |`,
+        `| Newest post | ${newest || 'none'} (${newest ? daysBetween(newest, today) : '?'} days ago) |`,
+        `| Missing days in last ${BACKFILL_WINDOW} | ${planned.gaps.length ? planned.gaps.join(', ') : 'none'} |`,
+        `| Quality bar | >= ${MIN_WORDS} words, >= ${MIN_SECTIONS} sections (target ${TARGET_WORDS}) |`,
+    ];
+    if (!keys.any) {
+        lines.push('', `> ⚠️ ${noKeyGuidance(keys.missing)}`);
+        annotate('warning', 'Blog pipeline: no AI keys', noKeyGuidance(keys.missing));
+    }
+    console.log(lines.join('\n'));
+    await stepSummary(lines);
+    return 0;
+}
+
+// ---------- Publish bookkeeping (ledger + live status file) ----------
+async function recordAndPublish({ results, pushErr }) {
+    const okOnes = results.filter(r => r.ok);
+    const firstErr = results.find(r => !r.ok);
+    let pushed = false;
+    const selfPublish = !DRY_RUN && process.env.SKIP_AUTO_PUBLISH !== '1' && process.env.NO_PUBLISH !== '1'
+        && (isCI() || process.env.FORCE_PUBLISH === '1');
+    try {
+        await writePublishStatus(ROOT, {
+            kind: 'blog',
+            ok: okOnes.length > 0 && !pushErr,
+            date: okOnes.at(-1)?.date || isoDate(),
+            slug: okOnes.map(r => r.slug).join(','),
+            pushed,
+            reason: pushErr ? `git push failed: ${describeError(pushErr)}` : (firstErr ? firstErr.error : ''),
+        });
+    } catch (e) {
+        console.warn(`   ⚠️  could not write publish-status.json: ${e.message}`);
+    }
+    if (selfPublish) {
+        try {
+            const res = await publishContent({
+                root: ROOT,
+                include: CONTENT_PATHS.blog,
+                message: okOnes.length
+                    ? `content(blog): auto-publish ${okOnes.map(r => r.slug).join(', ').slice(0, 70)}`
+                    : 'chore(blog): record publish failure status',
+            });
+            pushed = res.pushed;
+            if (res.committed) console.log(`📦 ${pushed ? 'Pushed' : 'Committed'} ${res.files.length} file(s) to main`);
+            else if (res.skipped) console.log(`📦 Nothing to commit (${res.skipped})`);
+        } catch (err) {
+            pushErr = err;
+            annotate('error', 'Blog auto-commit failed', describeError(err) + (err.hint ? ` — ${err.hint}` : ''));
+        }
+    } else {
+        console.log('ℹ️  Local run: files are written but not committed (auto-publish runs inside GitHub Actions).');
+    }
+    return { pushed, pushErr };
+}
+
+async function main() {
+    console.log('🚀 AIToolsNova - Blog Auto-Publish starting...\n');
+    console.log(`🔑 Groq=${readKeys().groq ? 'yes' : 'no'} Gemini=${readKeys().gemini ? 'yes' : 'no'} DeepSeek=${readKeys().deepseek ? 'yes' : 'no'} SiteAPI=${siteApiAllowed() ? 'yes' : 'no'}  DRY_RUN=${DRY_RUN ? 'yes' : 'no'}`);
+    if (ARGS.flags.check) return runCheck();
+
+    const dates = await resolveDates();
+    if (!dates.length) {
+        await stepSummary(['### Blog auto-publish', '', '✅ Already up to date — no missing day in the window, nothing to publish.']);
+        console.log('✅ Up to date. Exiting 0.');
+        return 0;
+    }
+
+    const results = [];
+    for (const d of dates) {
+        try {
+            const r = await publishForDate(d);
+            results.push({ ...r, ok: true });
+            await appendLedger(ROOT, { kind: 'blog', date: d, slug: r.slug, status: 'ok', words: r.words });
+        } catch (err) {
+            const reason = describeError(err);
+            results.push({ date: d, ok: false, error: reason, code: err?.code || 'error' });
+            await appendLedger(ROOT, { kind: 'blog', date: d, slug: '', status: 'fail', reason });
+            annotate('error', `Blog publish failed for ${d}`, reason + (err?.hint ? ` — ${err.hint}` : ''));
+            console.error(`❌ ${d}: ${reason}`);
+            if (err instanceof PublishError && (err.code === 'no-ai-key' || err.code === 'bad-args')) break;
+        }
+    }
+
+    const { pushed, pushErr } = await recordAndPublish({ results, pushErr: null });
+    const okOnes = results.filter(r => r.ok);
+    await stepSummary([
+        '### Blog auto-publish',
+        '',
+        '| Date | Status | Slug | Words |',
+        '|---|---|---|---|',
+        ...results.map(r => `| ${r.date} | ${r.ok ? '✅ published' : '❌ failed'} | ${r.slug || '-'} | ${r.words || '-'}${r.ok ? '' : ` — ${r.error}`.slice(0, 160)} |`),
+        '',
+        `Pushed to main: ${pushed ? 'yes' : 'no'} · Keys: ${readKeys().present.join(', ') || 'none (site API used)'} · Providers: Groq/Gemini/DeepSeek/site-api chain`,
+    ]);
+
+    if (!okOnes.length) {
+        const why = results[0]?.error || 'unknown';
+        annotate('error', 'No blog published', `${why} (see the run log above; publish-status.json records this)`);
+        throw new PublishError(`Blog run published nothing. First error: ${why}`, { code: 'nothing-published' });
+    }
+    if (pushErr) throw pushErr;
+    console.log(`\n✅ Done: ${okOnes.length} post(s)${pushed ? ' pushed to main' : ' written locally'}.`);
+    return 0;
+}
+
+// Records an unrecoverable startup failure so the outage is visible in the repo,
+// on the live site (publish-status.json) and in the Actions log - then exits 1.
+async function failFast(code, message) {
+    annotate('error', `Blog pipeline cannot start (${code})`, message);
+    console.error(`❌ ${message}`);
+    try {
+        await appendLedger(ROOT, { kind: 'blog', date: isoDate(), slug: '', status: 'fail', reason: message, code });
+        await writePublishStatus(ROOT, { kind: 'blog', ok: false, reason: `${code}: ${message}`, slug: '', pushed: false });
+        if (isCI() && process.env.SKIP_AUTO_PUBLISH !== '1') {
+            await publishContent({
+                root: ROOT,
+                include: ['scripts/publish-log.json', 'publish-status.json'],
+                message: `chore(blog): publish failure status (${code})`,
+            }).catch(() => {});
+        }
+    } catch { /* never mask the original error */ }
+    process.exit(1);
+}
+
+main().then((code) => process.exit(typeof code === 'number' ? code : 0)).catch(async err => {
+    console.error('\n❌ FATAL:', describeError(err));
     if (err.stack) console.error(err.stack);
+    await stepSummary(['### ❌ Blog auto-publish failed', '', '```', describeError(err), '```',
+        ...(err?.hint ? ['', `> ${err.hint}`] : [])]);
     process.exit(1);
 });
