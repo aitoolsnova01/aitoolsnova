@@ -1,0 +1,132 @@
+name: Site Health Check
+
+# ─────────────────────────────────────────────────────────────────────────────
+# This job used to be three bare `curl`s of the live site: no timeout, no retry,
+# no classification, no report - and it checked nothing about the automation.
+# Result: it went red on any Cloudflare bot challenge / rate limit (noise that
+# buried the real signal), while "no blog for 5 days" stayed invisible.
+#
+# It now runs scripts/site-health.mjs, which:
+#   * distinguishes a real breakage (404 / dead page / missing file) from
+#     network noise (403 / 429 / timeout -> warning, retried with backoff);
+#   * checks content freshness (blog + story), the publish ledger, the sitemap,
+#     robots/ads/feed, JSON-LD validity and the publish workflows themselves;
+#   * writes a run summary + test_reports/site-health.json;
+#   * opens ONE GitHub issue per problem (updated, not spammed) so nothing can
+#     rot silently again.
+#
+# `7 */6 * * *` instead of `0 */6 * * *`: GitHub queues scheduled runs behind
+# the :00 pile-up, and this repo's health runs were landing 3-4 hours late.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  schedule:
+    - cron: '7 1,7,13,19 * * *'
+  workflow_dispatch:
+    inputs:
+      offline:
+        description: 'Repo-only checks (skip live HTTP)'
+        type: boolean
+        required: false
+        default: false
+      max_age_days:
+        description: 'Fail if newest post/story is older than N days'
+        required: false
+        default: '3'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: site-health
+  cancel-in-progress: true
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 🩺 Run health checks
+        id: health
+        continue-on-error: true
+        run: |
+          node scripts/site-health.mjs --ci \
+            --max-age-days="${{ github.event.inputs.max_age_days || '3' }}" \
+            ${{ github.event.inputs.offline == 'true' && '--offline' || '' }} \
+            --json test_reports/site-health.json
+
+      - name: 📤 Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-health-report
+          path: |
+            test_reports/site-health.json
+            publish-status.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: 📣 Open or update one tracking issue
+        if: steps.health.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITLE="Site health: failing checks ($(date -u +%Y-%m-%d))"
+          BODY=$(node -e '
+            const fs=require("fs");
+            let r={failed:[],summary:{}};
+            try { r=JSON.parse(fs.readFileSync("test_reports/site-health.json","utf8")); } catch {}
+            const lines=(r.failed||[]).map(f=>`- **${f.group}** · ${f.name}${f.detail?` — ${f.detail}`:""}`);
+            console.log([
+              "The scheduled health check found real problems:",
+              "",
+              lines.join("\n") || "- (see run log)",
+              "",
+              `Report: ${process.env.RUN_URL}`,
+              "",
+              "Automation state is also published at https://aitoolsnova.com/publish-status.json",
+              "and recorded in `scripts/publish-log.json`.",
+              "",
+              "Fixes: node scripts/daily-publish-helper.mjs status",
+            ].join("\\n"));
+          ')
+          # One open issue at a time: update the existing one instead of spamming.
+          # Find by title (labels may not exist in this repo yet).
+          EXISTING=$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=30" --jq '.[] | select(.title | startswith("Site health")) | .number' 2>/dev/null | head -1 || true)
+          if [ -n "${EXISTING:-}" ] && [ "$EXISTING" != "null" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/$EXISTING" -f body="$BODY" >/dev/null || true
+            echo "Updated tracking issue #$EXISTING"
+          else
+            # The `site-health` label may not exist yet; never let bookkeeping
+            # turn a green-looking red run into a second failure.
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues" -f title="$TITLE" -f body="$BODY" -f "labels[]=site-health" >/dev/null 2>&1 \
+              || gh api -X POST "repos/$GITHUB_REPOSITORY/issues" -f title="$TITLE" -f body="$BODY" >/dev/null || true
+            echo "Opened tracking issue"
+          fi
+
+      - name: 🧹 Close the tracking issue when green
+        if: steps.health.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OPEN=$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=30" --jq '.[] | select(.title | startswith("Site health")) | .number' 2>/dev/null || true)
+          for n in $OPEN; do
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/$n" -f state=closed \
+              -f state_reason=completed >/dev/null && echo "closed #$n"
+          done
+
+      - name: ❌ Fail the run on real problems
+        if: steps.health.outcome == 'failure'
+        run: |
+          echo "::error title=Site health failed::See the check output above and the tracking issue. Do not ignore this: it means users or the auto-publish pipeline are affected."
+          exit 1
