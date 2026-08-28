@@ -135,6 +135,15 @@ export async function validateWorkflows() {
             if (!/node scripts\/generate-/.test(src)) {
                 errors.push(`${name}: missing node generate script step`);
             }
+            // The exact pattern that produced days of green-but-empty runs:
+            // a generator step that may fail plus a commit step that exits 0
+            // when nothing changed.
+            if (/continue-on-error:\s*true/.test(src) && !/Nothing published|nothing-published|verify-publish/.test(src)) {
+                errors.push(`${name}: continue-on-error on the generate step with no publish verification = silent green runs`);
+            }
+            if (/git diff --staged --quiet[\s\S]{0,120}exit 0/.test(src) && !/verify-publish/.test(src)) {
+                errors.push(`${name}: "no changes" is treated as success - a run that published nothing must fail`);
+            }
         }
     }
     return errors;
@@ -168,6 +177,8 @@ export async function commitAndPush({
         console.log('ℹ️  Not in GitHub Actions — skip auto commit/push (set FORCE_PUBLISH=1 to override).');
         return false;
     }
+    // Always start from a clean index so a stray staged file cannot ride along.
+    await git(['reset', '-q']).catch(() => {});
     if (onlyWorkflows) {
         await git(['add', '-A', '--', '.github/workflows']);
     } else {
@@ -192,13 +203,25 @@ export async function commitAndPush({
 
     const workflowToken = process.env.WORKFLOW_PAT || process.env.GH_WORKFLOW_TOKEN || '';
     if (onlyWorkflows && !workflowToken) {
-        console.log('ℹ️  No WORKFLOW_PAT — cannot push workflow files. Reverting workflow changes; content-only commit will follow.');
+        // GitHub rejects any push from a job token that touches
+        // .github/workflows, so this path can never succeed. Undo COMPLETELY:
+        // `git reset --soft` here used to leave the workflow files STAGED in the
+        // index, the workflow's own "Commit and push" step then committed them,
+        // the push was refused, and the generated story was never published.
+        // --mixed clears the index too, and the worktree is restored as well.
+        console.log('ℹ️  No WORKFLOW_PAT — workflow files cannot be pushed from a job token. Reverting the workflow commit; content-only commit will follow.');
+        try {
+            await git(['reset', '--mixed', '-q', 'HEAD~1']).catch(() => {});
+        } catch { /* no commit to undo */ }
         await git(['restore', '--staged', '.github/workflows']).catch(() => {});
         await git(['restore', '--worktree', '.github/workflows']).catch(() => {});
-        // The commit already includes workflow files — undo it entirely
-        try {
-            await git(['reset', '--soft', 'HEAD~1']).catch(() => {});
-        } catch { /* no commit to undo */ }
+        const stagedAfter = await git(['diff', '--cached', '--name-only'])
+            .then(r => r.stdout.trim())
+            .catch(() => '');
+        if (/\.github\/workflows/.test(stagedAfter)) {
+            // Belt and braces: refuse to continue with a poisoned index.
+            throw new Error('index still contains workflow files after revert - refusing to publish (this is the bug that made every run red)');
+        }
         return false;
     }
     if (onlyWorkflows && workflowToken) {
@@ -262,6 +285,18 @@ if (isMain) {
             process.exit(1);
         }
         console.log('✅ All workflow files look valid');
+    } else if (cmd === 'sync') {
+        // Copy the CURRENT live workflow files over scripts/workflow-fixes/*.fixed
+        // so the two never drift apart (they drifted, and the "fix" sat unapplied).
+        const { copyFile } = await import('node:fs/promises');
+        let n = 0;
+        for (const name of [BLOG_WF, WEBSTORY_WF, 'health-check.yml', 'cloudflare-pages-deploy.yml']) {
+            const live = path.join(WF_DIR, name);
+            if (!existsSync(live)) continue;
+            await copyFile(live, path.join(FIX_DIR, `${name}.fixed`));
+            n++;
+        }
+        console.log(`✅ Synced ${n} workflow file(s) into scripts/workflow-fixes/`);
     } else if (cmd === 'apply') {
         const changed = await selfHealWorkflows();
         if (!changed.length) {

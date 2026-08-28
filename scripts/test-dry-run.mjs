@@ -57,6 +57,8 @@ const content = {
 const blogsHtml = await fs.readFile(BLOGS_HTML, 'utf-8');
 const sitemap = await fs.readFile(SITEMAP_XML, 'utf-8');
 
+const gen = fs.readFile('scripts/generate-blog.mjs', 'utf-8');
+
 const checks = [
     ['blogs.html has AUTO-BLOG-INSERT-START marker', blogsHtml.includes('<!-- AUTO-BLOG-INSERT-START -->')],
     ['blogs.html has AUTO-BLOG-INSERT-END marker',   blogsHtml.includes('<!-- AUTO-BLOG-INSERT-END -->')],
@@ -67,7 +69,13 @@ const checks = [
     ['generate-blog.mjs has hero image via pollinations', (await fs.readFile('scripts/generate-blog.mjs','utf-8')).includes('image.pollinations.ai')],
     ['generate-blog.mjs has IndexNow ping', (await fs.readFile('scripts/generate-blog.mjs','utf-8')).includes('api.indexnow.org')],
     ['generate-blog.mjs has robust extractJson', (await fs.readFile('scripts/generate-blog.mjs','utf-8')).includes('function extractJson')],
-    ['generate-blog.mjs has retry loop (attempt <= 3)', (await fs.readFile('scripts/generate-blog.mjs','utf-8')).includes('attempt <= 3')],
+    ['generate-blog.mjs retries content generation (CONTENT_ATTEMPTS)', (await gen).includes('CONTENT_ATTEMPTS')],
+    ['generate-blog.mjs uses the shared retry helper (publish-core retry)', /retry as withRetry|\bwithRetry\(/.test(await gen)],
+    ['generate-blog.mjs publishes through lib/publish-core.mjs', (await gen).includes('publishContent(')],
+    ['generate-blog.mjs writes the publish ledger', (await gen).includes('appendLedger')],
+    ['generate-blog.mjs enforces a minimum word count', (await gen).includes('MIN_WORDS')],
+    ['generate-blog.mjs backfills missed days', (await gen).includes('planGaps')],
+    ['generate-blog.mjs fails loudly instead of exiting 0', (await gen).includes('failFast')],
     ['blog/ directory exists', existsSync(BLOG_DIR)],
     ['sitemap.xml has ads.txt-friendly aitoolsnova.com host', sitemap.includes('aitoolsnova.com')],
     ['ads.txt has google.com pub-2278101269918728', (await fs.readFile('ads.txt','utf-8')).includes('pub-2278101269918728')]

@@ -49,6 +49,13 @@
   Content-Type: application/rss+xml; charset=utf-8
   Cache-Control: public, max-age=600, s-maxage=1800
 
+# The automation status file is the operator's dashboard: browsers and the CDN
+# must never serve a stale copy, or a publish outage looks like a healthy site.
+/publish-status.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: no-store, max-age=0
+  Access-Control-Allow-Origin: *
+
 # ---- Background Remover needs cross-origin isolation for multithreaded WASM ----
 # 'credentialless' keeps third-party scripts (AdSense, GA) working, unlike
 # 'require-corp' which would break them.
