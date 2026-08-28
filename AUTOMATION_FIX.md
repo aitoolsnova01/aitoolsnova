@@ -172,7 +172,7 @@ poisoned index, pathspec whitelist, concurrent-push rebase) ·
 `test-webstory-e2e.mjs` (13: full mocked story pipeline, asserts workflows stay
 byte-identical and a re-run is a no-op) · `test-site-health.mjs` (24: the
 pass/warn/fail classifier, gap math, and a broken fixture repo that *must* go
-red) · `test-publish-helper.mjs` (14) · `test-e2e-mock.mjs` (19) ·
+red) · `test-publish-helper.mjs` (17) · `test-e2e-mock.mjs` (19) ·
 `test-dry-run.mjs` (19 contract checks) · `test-webstory-smoke.mjs` (10).
 
 `npm test` = audits + all of the above. Current: **all green**.
@@ -186,17 +186,15 @@ dashboard can never show a stale "last run ok".
 
 ## 3. Owner actions (one-time)
 
-### 3.1 Add the AI key as a **repository** secret (this is what unblocks content)
+### 3.1 AI key — already present, no new key needed
 
-GitHub → `aitoolsnova01/aitoolsnova` → **Settings** → **Secrets and variables** →
-**Actions** → **New repository secret**:
+`DEEPSEEK_API_KEY` already exists as a **repository** secret, so the generator's
+provider ladder (`groq → gemini → deepseek → siteapi`) can already publish
+through DeepSeek. No new key is required to unblock content.
 
-```
-GROQ_API_KEY = gsk_...            # free: console.groq.com/keys
-```
-
-Optional extras: `GEMINI_API_KEY`, `DEEPSEEK_API_KEY` (fallbacks),
-`INDEXNOW_KEY`, `GOOGLE_SERVICE_ACCOUNT_JSON`.
+(Optional, only if you want the primary providers back: add `GROQ_API_KEY`
+and/or `GEMINI_API_KEY` the same way — Settings → **Secrets and variables** →
+**Actions** → **New repository secret**.)
 
 ⚠️ **Do not** put them under Environments — a scheduled run has no environment
 and cannot see them. That is exactly what broke the last 5 days.
@@ -206,24 +204,17 @@ and cannot see them. That is exactly what broke the last 5 days.
 Settings → Actions → General → **Workflow permissions** → **Read and write
 permissions**. (Without it, every push from the job token fails.)
 
-### 3.3 Apply the new workflow YAML
+### 3.3 The hardened workflow YAML self-applies — no manual paste
 
-The files in `.github/workflows/` are already rewritten in this branch. A GitHub
-App/token without the `workflows` scope **cannot** push workflow files, so if
-this PR merges without them, paste them manually:
+The repository secret `WORKFLOW_PAT` already exists, so
+`generate-webstory.mjs`'s `healWorkflowsIfAllowed()` will push the hardened YAML
+from `scripts/workflow-fixes/*.fixed` into `.github/workflows/` (blog + story +
+health-check) and re-run `validateWorkflows` — verified by
+`test-publish-helper.mjs`. No manual copy-paste is needed.
 
-1. github.com/aitoolsnova01/aitoolsnova → `.github/workflows/daily-blog.yml` →
-   ✏️ → replace the whole file with `scripts/workflow-fixes/daily-blog.yml.fixed`
-   → **Commit directly to main**.
-2. Repeat for `daily-webstory.yml` and `health-check.yml`
-   (same `.fixed` mirrors; `sync` keeps them identical: `node
-   scripts/daily-publish-helper.mjs sync`).
-
-Permanent alternative (then I *can* ship workflow changes myself): create a
-fine-grained PAT (this repo only, **Actions: read & write**) and add it as the
-repository secret `WORKFLOW_PAT`. With that secret present,
-`generate-webstory.mjs`'s `healWorkflowsIfAllowed()` will push a hardened YAML
-and re-run `validateWorkflows` — verified by `test-publish-helper.mjs`.
+If `WORKFLOW_PAT` is ever removed, fall back to: edit each workflow file in the
+GitHub UI and replace it with the matching `scripts/workflow-fixes/*.fixed`
+mirror (`node scripts/daily-publish-helper.mjs sync` keeps them identical).
 
 ### 3.4 Drain the 4 missing days
 
@@ -267,7 +258,7 @@ curl -s https://aitoolsnova.com/publish-status.json   # live proof of last run
 6. **The git-index class of bug is structurally gone**: content commits use a
    whitelist and always clear workflow paths; workflow writes need `WORKFLOW_PAT`
    and go through a separate, validated commit.
-7. **Regression-locked**: 131 assertions across 7 suites now run on every
+7. **Regression-locked**: 134 assertions across 7 suites now run on every
    `npm test` — including a deliberately broken fixture repo that the health
    checker must mark red.
 

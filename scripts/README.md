@@ -22,22 +22,23 @@
 
 ## 🚀 Setup (Ek Baar Ka Kaam, ~5 Minutes)
 
-### Step 1: Groq API Key Banao (2 min, FREE)
+### Step 1: AI Key — already done, no new key needed ✅
 
-1. https://console.groq.com/keys open karo
-2. Google account se login karo (free)
-3. **"Create API Key"** click karo → naam do "AIToolsNova Blog Bot"
-4. Key copy karo (starts with `gsk_...`)
+`DEEPSEEK_API_KEY` pehle se ek **repository** secret ke roop me hai, isliye
+generator ka provider ladder (`groq → gemini → deepseek → siteapi`) DeepSeek se
+publish kar sakta hai — koi naya key banane ki zaroorat nahi.
 
-### Step 2: GitHub Secret Add Karo (1 min)
+(Optional, sirf agar primary providers wapas chahiye: `GROQ_API_KEY` ya
+`GEMINI_API_KEY` bana kar Step 2 ki tarah add karo.)
 
-1. Apne GitHub repo pe jao: `github.com/YOUR_USERNAME/aitoolsnova-main`
-2. **Settings** tab → left sidebar me **Secrets and variables** → **Actions**
-3. **New repository secret** button click karo
-4. Fill karo:
-   - Name: `GROQ_API_KEY`
-   - Secret: (jo Step 1 me copy kiya tha, `gsk_...`)
-5. **Add secret** click karo
+### Step 2: GitHub Secret — already done, no manual paste needed ✅
+
+`WORKFLOW_PAT` secret pehle se hai, isliye hardened workflow YAML
+(`scripts/workflow-fixes/*.fixed`) **khud apply** ho jata hai —
+`.github/workflows/` me kuch manually paste karne ki zaroorat nahi.
+
+(Agar kabhi `WORKFLOW_PAT` hatao to: har workflow file GitHub UI me kholo aur
+`scripts/workflow-fixes/*.fixed` ki copy se replace kar do.)
 
 ### Step 3: Workflow Enable Karo (30 sec)
 
