@@ -14,6 +14,7 @@ const REPO = path.resolve(HERE, '..');
 const helperSrc = path.join(HERE, 'daily-publish-helper.mjs');
 const blogFixed = path.join(HERE, 'workflow-fixes', 'daily-blog.yml.fixed');
 const storyFixed = path.join(HERE, 'workflow-fixes', 'daily-webstory.yml.fixed');
+const healthFixed = path.join(HERE, 'workflow-fixes', 'health-check.yml.fixed');
 
 const checks = [];
 const check = (name, ok, detail = '') => {
@@ -31,11 +32,14 @@ try {
     cpSync(helperSrc, path.join(sandbox, 'scripts', 'daily-publish-helper.mjs'));
     cpSync(blogFixed, path.join(sandbox, 'scripts', 'workflow-fixes', 'daily-blog.yml.fixed'));
     cpSync(storyFixed, path.join(sandbox, 'scripts', 'workflow-fixes', 'daily-webstory.yml.fixed'));
+    cpSync(healthFixed, path.join(sandbox, 'scripts', 'workflow-fixes', 'health-check.yml.fixed'));
 
     writeFileSync(path.join(sandbox, '.github', 'workflows', 'daily-blog.yml'),
         'name: broken\non: [push]\npermissions:\n  contents: write\n  secrets: read\njobs:\n  x:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo hi\n');
     writeFileSync(path.join(sandbox, '.github', 'workflows', 'daily-webstory.yml'),
         'name: truncated\non: [push]\npermissions:\n  contents: write\njobs:\n  x:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo hi\n');
+    writeFileSync(path.join(sandbox, '.github', 'workflows', 'health-check.yml'),
+        'name: broken-health\non: [push]\njobs:\n  x:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo hi\n');
 
     execFileSync('git', ['init', '-b', 'main'], { cwd: sandbox });
     execFileSync('git', ['config', 'user.email', 'test@example.com'], { cwd: sandbox });
@@ -51,6 +55,7 @@ try {
 
     const healed = await helper.selfHealWorkflows();
     check('heals both workflow files', healed.includes('daily-blog.yml') && healed.includes('daily-webstory.yml'), healed.join(','));
+    check('heals health-check.yml too', healed.includes('health-check.yml'), healed.join(','));
 
     const blogNow = readFileSync(path.join(sandbox, '.github', 'workflows', 'daily-blog.yml'), 'utf8');
     const storyNow = readFileSync(path.join(sandbox, '.github', 'workflows', 'daily-webstory.yml'), 'utf8');
@@ -84,6 +89,32 @@ try {
     const show = execFileSync('git', ['show', '--name-only', '--pretty=format:'], { cwd: sandbox, encoding: 'utf8' });
     check('content commit does not include workflow files', !show.includes('.github/workflows'), show.trim());
     check('content commit includes hello.txt', show.includes('hello.txt'));
+
+    // Self-heal (workflow-only) commit must NOT be blocked by SKIP_AUTO_PUBLISH,
+    // otherwise a broken workflow YAML can never be repaired from inside a run.
+    // daily-blog.yml still carries the '# leak-me' marker from above (a content
+    // commit excludes workflow paths). With no WORKFLOW_PAT, a workflow-only
+    // commit must still get as far as the guarded revert, which restores the
+    // workflow files to HEAD and drops the marker.
+    process.env.SKIP_AUTO_PUBLISH = '1';
+    const wfOnly = await helper.commitAndPush({
+        message: 'chore(workflows): self-heal',
+        onlyWorkflows: true,
+        remote: 'origin',
+        branch: 'main',
+    });
+    const blogAfterWf = readFileSync(path.join(sandbox, '.github', 'workflows', 'daily-blog.yml'), 'utf8');
+    check('workflow-only commit ignores SKIP_AUTO_PUBLISH', wfOnly === false && !blogAfterWf.includes('# leak-me'));
+
+    // Control: a content commit must STILL be skipped under SKIP_AUTO_PUBLISH=1.
+    writeFileSync(path.join(sandbox, 'hello2.txt'), 'content2');
+    const contentBlocked = await helper.commitAndPush({
+        message: 'content(day): should-skip',
+        onlyWorkflows: false,
+        remote: 'origin',
+        branch: 'main',
+    });
+    check('content commit still skipped under SKIP_AUTO_PUBLISH', contentBlocked === false);
 
     // .fixed copies in THIS repo are the source of truth. Live YAML may
     // still be broken until a token with `workflows` permission can push it.

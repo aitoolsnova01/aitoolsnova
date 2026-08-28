@@ -51,6 +51,10 @@ const WF_DIR = path.join(ROOT, '.github', 'workflows');
 const FIX_DIR = path.join(ROOT, 'scripts', 'workflow-fixes');
 const BLOG_WF = 'daily-blog.yml';
 const WEBSTORY_WF = 'daily-webstory.yml';
+const HEALTHCHECK_WF = 'health-check.yml';
+
+// Workflow files the self-heal step repairs: blog + story + health-check.
+export const HEAL_WFS = [BLOG_WF, WEBSTORY_WF, HEALTHCHECK_WF];
 
 // GitHub Actions job-level `permissions:` keys. Anything else (e.g.
 // `secrets: read`) makes the whole workflow file invalid.
@@ -95,7 +99,7 @@ export async function isBlogWorkflowBroken() {
  */
 export async function selfHealWorkflows() {
     const changed = [];
-    for (const name of [BLOG_WF, WEBSTORY_WF]) {
+    for (const name of HEAL_WFS) {
         const fixedPath = path.join(FIX_DIR, `${name}.fixed`);
         if (!existsSync(fixedPath)) continue;
         const target = path.join(WF_DIR, name);
@@ -166,10 +170,13 @@ export async function commitAndPush({
     remote = 'origin',
     branch = 'main',
 } = {}) {
-    // The daily-webstory workflow sets SKIP_AUTO_PUBLISH=1 so the commit/push
-    // is owned by the workflow's guarded "Commit and push" step (which fails
-    // RED when nothing was published). Keeps one auditable publish path.
-    if (process.env.SKIP_AUTO_PUBLISH === '1') {
+    // The daily-webstory workflow sets SKIP_AUTO_PUBLISH=1 so the CONTENT
+    // commit/push is owned by the workflow's guarded "Commit and push" step
+    // (which fails RED when nothing was published) — one auditable publish
+    // path. The self-heal (onlyWorkflows=true) commit is a separate, validated
+    // path and must STILL run when SKIP_AUTO_PUBLISH=1, otherwise a broken
+    // workflow YAML could never be repaired from inside a run.
+    if (!onlyWorkflows && process.env.SKIP_AUTO_PUBLISH === '1') {
         console.log('ℹ️  SKIP_AUTO_PUBLISH=1 — leaving commit/push to the workflow step.');
         return false;
     }
@@ -290,7 +297,7 @@ if (isMain) {
         // so the two never drift apart (they drifted, and the "fix" sat unapplied).
         const { copyFile } = await import('node:fs/promises');
         let n = 0;
-        for (const name of [BLOG_WF, WEBSTORY_WF, 'health-check.yml', 'cloudflare-pages-deploy.yml']) {
+        for (const name of [BLOG_WF, WEBSTORY_WF, HEALTHCHECK_WF, 'cloudflare-pages-deploy.yml']) {
             const live = path.join(WF_DIR, name);
             if (!existsSync(live)) continue;
             await copyFile(live, path.join(FIX_DIR, `${name}.fixed`));
