@@ -2,7 +2,8 @@
 
 ## ✨ Kya Karta Hai?
 
-- **Har din 14:00 UTC** (India 7:30 PM / US 9 AM EST / Europe 3 PM CET) automatically **1 unique blog post publish** karta hai
+- **Har din 2 baar (05:20 + 14:20 UTC)** automatically **unique blog post** publish karta hai — aur pichhle chhoot gaye din khud bhar leta hai (backfill)
+- Publish hone par bhi shaq hai? Agle run ka last step `origin/main` me file verify karta hai — **"green but empty" ab possible nahi**
 - **Duplicate check**: Existing blogs + har generate hua topic history file me save karke, next time repeat nahi hota
 - **Professional & Safe**:
   - Sirf verified facts likhta hai
@@ -57,7 +58,10 @@ Automation start hone se pehle ek baar test karo:
 
 ## 📅 Publishing Schedule
 
-- **Har din 14:00 UTC** (fixed time)
+- **Har din 2 baar: 05:20 + 14:20 UTC** (India 10:50 AM / 7:50 PM) — `daily-blog.yml`
+- Web Story: **06:45 + 16:45 UTC** (`daily-webstory.yml`), Site Health: every 6 h (`health-check.yml`)
+- Do baar is liye ki GitHub ka scheduler `:00` wale crons ko kabhi-kabhi ghanton delay kar deta hai — ek run miss ho to dusra catch kar leta hai
+- Har run **idempotent + self-healing**: aaj ka post already hai to skip, aur pichhle chhoot gaye din (`--backfill`, default 2/run, oldest-first) apne aap bhar dete hai
 - Kyun ye time?
   - 🇺🇸 US East Coast: 9:00 AM (log in karte samay)
   - 🇬🇧 UK: 2:00 PM (lunch break, high engagement)
@@ -78,6 +82,10 @@ Script me ye rules **hard-coded** hain:
 4. ✅ **No defamation** — No personal attacks on individuals
 5. ✅ **No file overwrites** — Only ADDS new files, existing files ko chhoota hi nahi
 6. ✅ **Marker-based insertion** — `blogs.html` aur `sitemap.xml` me safe `<!-- AUTO-BLOG-INSERT-START -->` markers, purana structure intact rehta hai
+7. ✅ **Koi "green but empty" nahi** — publish na ho to run RED hota hai; last step `scripts/verify-publish.mjs` `origin/main` me file ka existence check karta hai
+8. ✅ **Thin content publish nahi hota** — `MIN_WORDS=1000` / `MIN_SECTIONS=5` (story: `MIN_SLIDES=6`); gate fail ho to 3 baar retry, phir bhi fail = RED run
+9. ✅ **Index-safe git** — content commit me sirf whitelisted paths jate hain; `.github/workflows/**` har baar index se hataya jata hai (yahi wajah thi ki 40 din se story job red thi)
+10. ✅ **Har run ka record** — `scripts/publish-log.json` (ledger) + live `https://aitoolsnova.com/publish-status.json` (sirf status/counts, key values kabhi nahi)
 
 ---
 
@@ -86,19 +94,23 @@ Script me ye rules **hard-coded** hain:
 ### Change publishing time:
 `.github/workflows/daily-blog.yml` me:
 ```yaml
-- cron: '0 14 * * *'
+- cron: '20 5,14 * * *'
 ```
-Format: `minute hour * * *` (UTC time). Example:
-- `0 6 * * *` = 6 AM UTC daily
-- `30 12 * * *` = 12:30 PM UTC daily
+Format: `minute hour day month weekday` (UTC). Rule: **minute `:00` mat rakho** — busy
+slots me GitHub scheduled runs ko ghanton delay kar deta hai (ek "missed day" ki yahin se
+shuruaat hui thi).
+- `20 5,14 * * *` = roz 05:20 + 14:20 UTC (current)
+- `35 12 * * 1-5` = weekdays 12:35 UTC
 
 ### Add more posts per day:
-Just change cron to run 2-3 times:
 ```yaml
-- cron: '0 8 * * *'
-- cron: '0 14 * * *'
-- cron: '0 20 * * *'
+- cron: '20 5,11,14 * * *'
 ```
+aur (optional) repo **variable** `POSTS_PER_RUN=2` — ek run me kitne din publish.
+
+### Chhoot gaye din (backfill):
+- default: har run aaj + `2` missing din (oldest-first, `BACKFILL_MAX` se change, `0` = off)
+- one-off: Actions → *Blog Auto-Publish (daily)* → **Run workflow** → `backfill=5`
 
 ### Use different AI model:
 `.github/workflows/daily-blog.yml` me `GROQ_MODEL` change karo (Repository → Settings → Variables → Actions → New variable → `GROQ_MODEL`):
@@ -115,17 +127,27 @@ Available models: https://console.groq.com/docs/models
 
 ## 🐛 Troubleshoot
 
+### Sabse pehle ye 3 commands (2 minute me poori diagnosis)
+```bash
+node scripts/daily-publish-helper.mjs status   # secrets/yaml/ledger ek saath
+node scripts/site-health.mjs --offline         # content + sitemap + workflow checks
+node scripts/verify-publish.mjs --kind=blog    # origin/main tak pahuncha ya nahi
+```
+
 ### Blog nahi ban rahi (autoblog rerun fail)?
 1. Actions tab me latest failed run open karo → red step ke logs check karo
 2. Common issues aur fix:
-   - **`GROQ_API_KEY env var missing`** → Step 2 dobara karo. Repo → Settings → Secrets and variables → Actions → New secret → name `GROQ_API_KEY`
+   - **`No AI key found`** → secret **repository** level par hona chahiye. *Environment* secrets scheduled runs ko dikhte hi nahi — yahi 5-din ke outage ki asli wajah thi
+   - **`green tick par post nahi aaya`** → ab possible nahi: `continue-on-error` hata diya gaya hai aur `verify-publish.mjs` job ka last step hai. Agar aisa phir dikhe to `.github/workflows/daily-blog.yml` purana version hai — `scripts/workflow-fixes/*.fixed` paste karo
    - **`Groq 401 Unauthorized`** → Key invalid ho gayi. Naya key generate karo aur secret update karo
    - **`Groq 429 Rate limit`** → Script auto-retries 3x with backoff. Agar phir bhi fail, 1 hour baad rerun karo
    - **`model_decommissioned` / `model_not_found`** → Script auto-fallback karta hai 3 models me. Agar sab fail — set repo variable `GROQ_MODEL` = `openai/gpt-oss-120b`
    - **`JSON parse failed`** → AI ne malformed response diya. Actions me manual **Run workflow** click karo — 2nd try me usually pass ho jata hai
    - **`Auto-commit failed`** → Repo Settings → Actions → General → Workflow permissions → **"Read and write permissions"** → Save
-3. Local test bhi kar sakte ho: `GROQ_API_KEY=gsk_... node scripts/generate-blog.mjs`
-4. Pipeline sanity check: `node scripts/test-e2e-mock.mjs` (Groq nahi call karta, sirf HTML pipeline verify karta hai)
+3. Local dry run: `node scripts/generate-blog.mjs --check` (kuch likhega nahi, bas batayega kya hoga)
+   ya `GROQ_API_KEY=gsk_... node scripts/generate-blog.mjs --date=2026-08-26 --dry-run`
+4. Pipeline sanity: `npm run test:publish` (mocked Groq — koi API call nahi, publish/ledger/sitemap/guard sab verify)
+5. Poora suite: `npm test`
 
 ### Auto-commit fail?
 Repo settings → **Actions** → **General** → scroll down to **Workflow permissions** → select **"Read and write permissions"** → Save.
@@ -135,23 +157,37 @@ Repo settings → **Actions** → **General** → scroll down to **Workflow perm
 
 ---
 
-## 📊 Local Testing (Optional)
-
-Agar aap script ko locally test karna chahte ho:
+## 📊 Local testing
 
 ```bash
 export GROQ_API_KEY="gsk_your_key_here"
-node scripts/generate-blog.mjs
+node scripts/generate-blog.mjs --check        # plan only: aaj kaunsa topic + kaunse din missing hain
+node scripts/generate-blog.mjs --dry-run      # post banega, commit/push NAHI
+FORCE_PUBLISH=1 node scripts/generate-blog.mjs   # poora flow, push ke saath (branch par)
+npm test                                      # 131 assertions + audits
 ```
 
-Ye ek new blog post banayega but commit nahi karega (local run). Fir manually check kar lo.
+Local run by default push nahi karta (`SKIP_AUTO_PUBLISH` logic) — safety.
+
+### Scripts ka map
+
+| File | Kaam |
+|---|---|
+| `lib/publish-core.mjs` | shared spine: keys, timeouts, retry, JSON salvage, word gates, gap planner, ledger, `publishContent()` |
+| `generate-blog.mjs` | blog post generate + publish (CLI: `--date --backfill --count --dry-run --force --check`) |
+| `generate-webstory.mjs` | web story from newest article (same CLI) |
+| `daily-publish-helper.mjs` | `status` / `validate` / `sync` / `heal` — workflow config + self-heal |
+| `verify-publish.mjs` | CI ka final gate: file disk par + `origin/main` par + SEO complete |
+| `site-health.mjs` | health checker (files/sitemap/freshness/markup/audits/automation/live) |
+| `check-workflows.mjs` | workflow YAML lint (GitHub-reject patterns + failure-hiding patterns) |
+| `test-publish-core.mjs`, `test-e2e-mock.mjs`, `test-webstory-smoke.mjs`, `test-webstory-e2e.mjs`, `test-publish-helper.mjs`, `test-site-health.mjs`, `test-dry-run.mjs`, `test-gemini-fallback.mjs`, `test-ats.mjs` | tests (sab `npm test` me) |
 
 ---
 
 ## 🎉 Kaam Ho Gaya!
 
-Bas itna hi. Ab har din 14:00 UTC pe ek naya post publish hoga, aap kuch nahi karoge. 🚀
+Bas itna hi. Ab din me 2 baar (05:20 + 14:20 UTC) ek naya post publish hoga, aap kuch nahi karoge. 🚀
 
-**Pehli blog post 24 hours ke andar aa jayegi** (agla scheduled time). Ya **manual trigger** se abhi test karo.
+**Pehli post agle scheduled slot me** (zyada se zyada ~6.5 ghante, kyunki din me 2 runs hain) — ya Actions → *Blog Auto-Publish (daily)* → **Run workflow** → `backfill=5` se abhi. Deep-dive + owner checklist: [`AUTOMATION_FIX.md`](../AUTOMATION_FIX.md).
 
 **Traffic tips**: Har naye post ka URL Google Search Console me **"Request Indexing"** karo — 1-3 din me indexed ho jaayega instead of weeks.
