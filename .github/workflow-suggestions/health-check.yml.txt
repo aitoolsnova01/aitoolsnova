@@ -1,0 +1,112 @@
+name: Site Health Check
+
+# Verifies the live site is actually serving. Designed to avoid false alarms:
+# each check retries with a back-off (Cloudflare edge cold-starts / transient
+# network blips must not turn the run red). Only a real, repeated failure does.
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 🩺 Homepage, ads.txt and sitemap URLs (with retries)
+        run: |
+          set -uo pipefail
+          UA="Mozilla/5.0 (compatible; AIToolsNova-HealthCheck/1.0)"
+
+          # fetch_code <url> -> echoes final HTTP code, retrying up to 5 times.
+          fetch_code () {
+            local url="$1" code="" i
+            for i in 1 2 3 4 5; do
+              code=$(curl -sL -o /dev/null -w "%{http_code}" -A "$UA" --max-time 25 "$url" || echo "000")
+              if [ "$code" = "200" ]; then echo "200"; return 0; fi
+              echo "  attempt $i: $url -> $code" >&2
+              sleep $((i * 5))
+            done
+            echo "$code"; return 1
+          }
+
+          FAIL=0
+
+          HOME_CODE=$(fetch_code "https://aitoolsnova.com/")
+          echo "Homepage: $HOME_CODE"
+          [ "$HOME_CODE" = "200" ] || { echo "::error::Homepage returned $HOME_CODE (expected 200)"; FAIL=1; }
+
+          ADS_CODE=$(fetch_code "https://aitoolsnova.com/ads.txt")
+          echo "ads.txt: $ADS_CODE"
+          if [ "$ADS_CODE" = "200" ]; then
+            BODY=$(curl -sL -A "$UA" --max-time 25 "https://aitoolsnova.com/ads.txt" || true)
+            echo "$BODY"
+            echo "$BODY" | grep -q "pub-2278101269918728" || { echo "::error::ads.txt missing publisher ID"; FAIL=1; }
+          else
+            echo "::error::ads.txt returned $ADS_CODE"; FAIL=1
+          fi
+
+          # Check every sitemap URL, but tolerate a handful of transient
+          # non-200s: only fail when MORE THAN 3 URLs are broken (real 404s),
+          # which indicates a deploy/redirect regression rather than a blip.
+          curl -sL -A "$UA" --max-time 25 https://aitoolsnova.com/sitemap.xml -o s.xml
+          grep -o '<loc>[^<]*</loc>' s.xml | sed 's|<loc>||;s|</loc>||' > urls.txt
+          TOTAL=$(wc -l < urls.txt | tr -d ' ')
+          BAD=0; BADURLS=""
+          while read -r u; do
+            [ -z "$u" ] && continue
+            C=$(curl -sL -o /dev/null -w "%{http_code}" -A "$UA" --max-time 25 "$u" || echo "000")
+            if [ "$C" != "200" ]; then
+              # retry once for transient failures
+              sleep 2
+              C=$(curl -sL -o /dev/null -w "%{http_code}" -A "$UA" --max-time 25 "$u" || echo "000")
+            fi
+            if [ "$C" != "200" ]; then
+              echo "::warning::$C $u"
+              BAD=$((BAD+1)); BADURLS="$BADURLS$C $u\n"
+            fi
+          done < urls.txt
+          echo "Sitemap URLs checked: $TOTAL, broken: $BAD"
+          if [ "$BAD" -gt 3 ]; then
+            echo "::error::$BAD sitemap URLs are not 200"
+            printf "$BADURLS" | head -20
+            FAIL=1
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "HEALTH_FAILED=1" >> "$GITHUB_ENV"
+            exit 1
+          fi
+          echo "✅ Site healthy: homepage 200, ads.txt OK, sitemap URLs reachable."
+
+      - name: Open issue if site is down
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Site health check failed — ${new Date().toISOString().slice(0,10)}`;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              'The live-site health check failed after retries (homepage / ads.txt / sitemap URLs).',
+              '',
+              `- Run: ${runUrl}`,
+              '',
+              'Check Cloudflare Pages deploy status and that the domain/SSL is active. If the site loads fine for you, re-run this workflow once to confirm it is not a transient edge issue.',
+            ].join('\n');
+            const existing = await github.rest.issues.list({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: ['site-down'], per_page: 5,
+            });
+            if (existing.data.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['site-down', 'monitoring'],
+              });
+            }
