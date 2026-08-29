@@ -13,6 +13,11 @@
           'Har week one useful AI story, one practical tool and one honest limitation. No spam, unsubscribe anytime.' +
         '</p>' +
         '<form class="atn-sub-form" novalidate style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">' +
+          // Honeypot: hidden from humans, bots auto-fill it. The API silently
+          // accepts (and discards) any submission where this is non-empty.
+          '<div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px">' +
+            '<label>Company (leave blank)<input type="text" name="company" tabindex="-1" autocomplete="off"></label>' +
+          '</div>' +
           '<label for="atn-sub-email" style="position:absolute;left:-9999px">Email address</label>' +
           '<input id="atn-sub-email" type="email" name="email" required autocomplete="email" ' +
             'placeholder="you@example.com" ' +
@@ -49,10 +54,11 @@
       msg.style.color = '#64748B';
       msg.textContent = '';
 
+      var honeypot = form.querySelector('input[name=company]');
       fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, source: location.pathname })
+        body: JSON.stringify({ email: email, source: location.pathname, company: honeypot ? honeypot.value : '' })
       })
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (d) {

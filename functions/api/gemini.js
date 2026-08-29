@@ -164,7 +164,7 @@ function redactSecrets(s) {
     .replace(/([?&](?:key|api_key|apikey|token|access_token)=)[^&\s"']+/gi, '$1[redacted]')
     .replace(/Bearer\s+[A-Za-z0-9._~+\/-]+=*/gi, 'Bearer [redacted]')
     .replace(/\b(token|secret|password)\b(\s*[:=]?\s*)[A-Za-z0-9._~+\/-]{12,}/gi, '$1$2[redacted]')
-    .replace(/\b(AIza[0-9A-Za-z_-]{20,}|gsk_[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{20,})\b/g, '[redacted]');
+    .replace(/\b(AIza[0-9A-Za-z_-]{20,}|gsk_[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z_-]{20,}|cf_[A-Za-z0-9_-]{20,})\b/g, '[redacted]');
 }
 
 function json(obj, status, request) {
@@ -295,8 +295,52 @@ export async function onRequest(context) {
       ),
     ];
 
+    // Native Workers AI binding (env.AI). This is the most reliable provider:
+    // it runs inside the same Cloudflare account and needs NO API key/token —
+    // it is enabled by the `[ai] binding = "AI"` block in wrangler.toml (or the
+    // Pages dashboard binding). It is tried FIRST so the endpoint keeps working
+    // even when every external key (Gemini/Groq/DeepSeek) is missing or dead.
+    async function callCloudflareBinding() {
+      if (!env.AI || typeof env.AI.run !== 'function') {
+        return { ok: false, error: 'Workers AI binding (env.AI) not configured' };
+      }
+      const models = [
+        env.CLOUDFLARE_MODEL,
+        '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+        '@cf/meta/llama-3.1-8b-instruct-fast',
+        '@cf/meta/llama-3.1-8b-instruct',
+      ].filter(Boolean);
+      let lastErr = 'No model succeeded';
+      for (const model of [...new Set(models)]) {
+        try {
+          const out = await env.AI.run(model, {
+            messages,
+            temperature: 0.35,
+            max_tokens,
+          });
+          const reply =
+            out?.response ||
+            out?.text ||
+            (Array.isArray(out?.content) ? out.content.map((c) => c.text || '').join('') : '') ||
+            (typeof out === 'string' ? out : '');
+          if (reply && String(reply).trim()) return { ok: true, reply: String(reply).trim() };
+          lastErr = `empty response from ${model}`;
+        } catch (e) {
+          lastErr = `${model}: ${e?.message || e}`;
+        }
+      }
+      return { ok: false, error: `Workers AI: ${lastErr}` };
+    }
+
     async function callCloudflare() {
-      if (!cfToken || !cfAccountId) return { ok: false, error: 'Cloudflare env vars missing' };
+      // Prefer the zero-config native binding.
+      const bound = await callCloudflareBinding();
+      if (bound.ok) return bound;
+
+      // Fall back to the REST API when an explicit token/account is configured.
+      if (!cfToken || !cfAccountId) {
+        return { ok: false, error: bound.error };
+      }
       const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountId}/ai/run/${cfModel}`;
       const res = await fetchWithTimeout(url, {
         method: 'POST',
@@ -390,7 +434,17 @@ export async function onRequest(context) {
 
     const errors = [];
 
-    // 1) Gemini first — full model fallback chain. Every call is isolated:
+    // 0) Cloudflare Workers AI native binding (env.AI) — tried FIRST. It needs
+    //    no external API key and runs inside this account, so it keeps the site
+    //    tools AND the daily auto-publish alive even if Gemini/Groq/DeepSeek
+    //    keys are missing, revoked or rate-limited.
+    {
+      const cloudflare = await tryCall(() => callCloudflare());
+      if (cloudflare.ok) return json({ reply: cloudflare.reply, provider: cloudflare.provider || 'cloudflare' }, 200, request);
+      errors.push(`cloudflare: ${cloudflare.error}`);
+    }
+
+    // 1) Gemini — full model fallback chain. Every call is isolated:
     //    HTTP error, timeout, empty response or network exception moves on
     //    to the next Gemini model, never to the outer catch.
     if (geminiKey) {
@@ -431,12 +485,8 @@ export async function onRequest(context) {
       errors.push(`deepseek: ${deepseek.error}`);
     }
 
-    // 4) Cloudflare Workers AI
-    {
-      const cloudflare = await tryCall(() => callCloudflare());
-      if (cloudflare.ok) return json({ reply: cloudflare.reply, provider: 'cloudflare' }, 200, request);
-      errors.push(`cloudflare: ${cloudflare.error}`);
-    }
+    // (Cloudflare Workers AI is already tried first as step 0 — it is the
+    // zero-key provider that keeps this endpoint alive.)
 
     return json(
       {

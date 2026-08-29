@@ -441,8 +441,13 @@ async function callAI(messages, opts = {}) {
         }
     }
 
-    // Last resort: the site's own proxy (works even with zero Actions secrets).
+    // The site's own proxy works even with zero Actions secrets (it holds the
+    // keys + a zero-config Cloudflare Workers AI binding). On a keyless runner
+    // it is the ONLY viable path, so put it first instead of last.
     if (siteApiAllowed()) order.push('siteapi');
+    if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY) {
+        order.sort((a, b) => (a === 'siteapi' ? -1 : b === 'siteapi' ? 1 : 0));
+    }
 
     let lastErr = null;
     for (const provider of order) {
@@ -472,6 +477,14 @@ async function callGroqForJson(messages, opts = {}) {
         .toLowerCase().split(/[\s,]+/).filter(Boolean);
     for (const n of ['deepseek', 'gemini', 'groq']) if (!pref.includes(n)) pref.push(n);
     if (siteApiAllowed() && !pref.includes('siteapi')) pref.push('siteapi');
+    // When this job has NO direct provider key, the only working path is the
+    // site API (which holds the keys + the zero-config Cloudflare Workers AI
+    // binding). Try it FIRST instead of wasting calls on providers that cannot
+    // possibly answer — this turns "all providers failed" into a successful
+    // auto-publish on a keyless runner.
+    if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY && siteApiAllowed()) {
+        pref.sort((a, b) => (a === 'siteapi' ? -1 : b === 'siteapi' ? 1 : 0));
+    }
 
     const tryProvider = async (provider) => {
         if (provider === 'deepseek' && DEEPSEEK_KEY) {

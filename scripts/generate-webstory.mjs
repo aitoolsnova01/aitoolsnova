@@ -174,6 +174,13 @@ async function callGroq(messages) {
     const pref = String(process.env.AI_PROVIDER_ORDER || 'deepseek,gemini,groq')
         .toLowerCase().split(/[\s,]+/).filter(Boolean);
     for (const n of ['deepseek', 'gemini', 'groq']) if (!pref.includes(n)) pref.push(n);
+    // Site API proxy: add it, and when this runner has no direct key put it FIRST
+    // because it is the only path that can answer (it holds the keys + the
+    // zero-config Cloudflare Workers AI binding).
+    if (siteApiAllowed() && !pref.includes('siteapi')) pref.push('siteapi');
+    if (!GROQ_KEY && !GEMINI_KEY && !DEEPSEEK_KEY && siteApiAllowed()) {
+        pref.sort((a, b) => (a === 'siteapi' ? -1 : b === 'siteapi' ? 1 : 0));
+    }
     let lastErr;
 
     const tryDeepSeek = async () => {

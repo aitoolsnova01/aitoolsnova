@@ -3,3 +3,15 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = "."
+
+# Workers AI binding — makes `env.AI.run(...)` available inside Pages Functions
+# with NO API key/token. This is the always-on provider that powers both the
+# site's AI tools and the daily auto-publish fallback (/api/gemini), so the
+# pipeline keeps working even when Gemini/Groq/DeepSeek keys are missing.
+#
+# If the Cloudflare Pages project is wired to Git (it is), the dashboard also
+# needs the binding once: Pages -> aitoolsnova -> Settings -> Functions ->
+# Workers AI bindings -> Add binding -> Variable name "AI". wrangler-based deploys
+# pick this block up automatically.
+[ai]
+binding = "AI"
