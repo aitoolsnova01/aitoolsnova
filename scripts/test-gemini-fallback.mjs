@@ -34,12 +34,17 @@ const realFetch = globalThis.fetch;
 process.on('exit', () => { globalThis.fetch = realFetch; try { fs.unlinkSync(tmpMod); } catch {} });
 
 // --- Helpers ----------------------------------------------------------------
+// By default the zero-config Cloudflare Workers AI binding (env.AI) is tried
+// FIRST. Provider-chain tests disable Cloudflare (no token, no binding) so they
+// exercise only the Gemini/Groq/DeepSeek fallback logic. A dedicated test for
+// the binding appears at the end.
+const NO_CF = { CLOUDFLARE_API_TOKEN: '', CLOUDFLARE_ACCOUNT_ID: '', AI: undefined };
 const FAKE = {
   GEMINI_API_KEY: 'AIzaSyFAKE_FAKE_FAKE_FAKE_FAKE12345',
   GROQ_API_KEY: 'gsk_FAKE_FAKE_FAKE_FAKE_FAKE12345',
   DEEPSEEK_API_KEY: 'sk-FAKE_FAKE_FAKE_FAKE_FAKE12345',
-  CLOUDFLARE_API_TOKEN: 'cf_fake_token_never_leak_12345',
-  CLOUDFLARE_ACCOUNT_ID: 'cf_fake_account_987654321',
+  CLOUDFLARE_API_TOKEN: '',
+  CLOUDFLARE_ACCOUNT_ID: '',
 };
 
 function makeEnv(over = {}) {
@@ -217,12 +222,21 @@ function installFetch(handler) {
     }
     return jsonResponse({}, 500);
   });
-  const { res, data, text } = await run('10.0.0.4', { message: 'x', tool: 'chat' }, makeEnv());
+  // env.AI binding present but failing too, so the whole chain errors out.
+  const envAllFail = makeEnv({
+    CLOUDFLARE_API_TOKEN: 'cf_fake_token_never_leak_12345',
+    CLOUDFLARE_ACCOUNT_ID: 'cf_fake_account_987654321',
+    AI: { run: async () => { throw new Error(`denied token cf_fake_token_never_leak_12345`); } },
+  });
+  const { res, data, text } = await run('10.0.0.4', { message: 'x', tool: 'chat' }, envAllFail);
   check('HTTP 500 when all providers fail', res.status === 500, `got ${res.status}`);
   check('generic error message', /All AI providers failed/i.test(data.error || ''), data.error);
   for (const [k, v] of Object.entries(FAKE)) {
+    if (!v) continue; // empty-string placeholder: includes('') is always true
     check(`secret ${k} NOT leaked in response`, !text.includes(v));
   }
+  // The Cloudflare token is set per-test (not in FAKE): assert it separately.
+  check('secret CLOUDFLARE_API_TOKEN NOT leaked in response', !text.includes('cf_fake_token_never_leak_12345'));
   check('details list present but redacted', Array.isArray(data.details) && data.details.length > 0);
 }
 
@@ -257,6 +271,38 @@ function installFetch(handler) {
   check('46th request in window -> 429 rate limited', limited.res.status === 429, `got ${limited.res.status}`);
   const other = await run('10.0.0.6', { message: 'ping', tool: 'chat' }, makeEnv());
   check('different IP unaffected by rate limit', other.res.status === 200, `got ${other.res.status}`);
+}
+
+// =============================================================================
+// TEST 6: Workers AI binding (env.AI) answers with ZERO external keys — this is
+// what keeps the site tools and daily auto-publish alive on a keyless runner.
+// =============================================================================
+{
+  console.log('\n--- Test 6: Workers AI binding works with no external keys ---');
+  let bindingCalled = 0;
+  const envBinding = makeEnv({
+    GEMINI_API_KEY: '',
+    GROQ_API_KEY: '',
+    DEEPSEEK_API_KEY: '',
+    CLOUDFLARE_API_TOKEN: '',
+    CLOUDFLARE_ACCOUNT_ID: '',
+    AI: {
+      run: async (model, payload) => {
+        bindingCalled++;
+        check('binding called with a @cf model', String(model).startsWith('@cf/'), model);
+        check('messages passed through', Array.isArray(payload?.messages) && payload.messages.length > 0);
+        return { response: 'answer-from-workers-ai' };
+      },
+    },
+  });
+  // No outbound fetch should be needed for the binding path.
+  installFetch(() => jsonResponse({ error: 'should not call network' }, 500));
+  const { res, data } = await run('10.0.0.7', { message: 'hi', tool: 'chat' }, envBinding);
+  check('HTTP 200 from Workers AI binding with zero keys', res.status === 200, `got ${res.status}`);
+  check('reply comes from the binding', data.reply === 'answer-from-workers-ai', JSON.stringify(data));
+  check('provider reported as cloudflare', String(data.provider).startsWith('cloudflare'), data.provider);
+  check('no external network fetch was made', calls.length === 0, `${calls.length} fetches`);
+  check('env.AI.run was actually invoked', bindingCalled > 0);
 }
 
 console.log(`\n🎉 All ${passed} assertions passed. Provider fallback chain is resilient.`);

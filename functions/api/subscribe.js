@@ -6,6 +6,15 @@ export async function onRequestPost(context) {
         const email = String(body.email || '').trim().toLowerCase();
         const source = String(body.source || 'unknown');
 
+        // Honeypot: a real subscriber never fills a field that is hidden with
+        // CSS or moved off-screen. Bots auto-fill every input they see.
+        if (String(body.company || body.website || body.url || '').trim()) {
+            return new Response(JSON.stringify({ ok: true, stored: true, message: 'Subscribed successfully' }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+            });
+        }
+
         // Basic email validation
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return new Response(JSON.stringify({ ok: false, detail: 'Invalid email address' }), {
