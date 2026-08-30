@@ -1,25 +1,25 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-08-28T23:25:39.493Z",
+  "generatedAt": "2026-08-30T18:24:44.070Z",
   "automation": {
     "blog": {
       "newest": "2026-08-23",
-      "daysSinceNewest": 5
+      "daysSinceNewest": 7
     },
     "webstory": {
       "newest": "2026-08-23",
-      "daysSinceNewest": 5
+      "daysSinceNewest": 7
     }
   },
   "lastRun": {
     "kind": "blog",
     "ok": false,
-    "date": "2026-08-28",
+    "date": "2026-08-30",
     "slug": "",
     "pushed": false,
     "reason": "All providers failed to return valid JSON",
-    "at": "2026-08-28T23:25:39.494Z"
+    "at": "2026-08-30T18:24:44.070Z"
   },
   "providers": {
     "groq": false,
@@ -28,6 +28,15 @@
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-08-30T18:24:44.061Z",
+      "date": "2026-08-30",
+      "kind": "blog",
+      "slug": "",
+      "status": "fail",
+      "reason": "All providers failed to return valid JSON",
+      "pushed": false
+    },
     {
       "at": "2026-08-28T23:25:39.485Z",
       "date": "2026-08-28",
