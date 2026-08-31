@@ -496,6 +496,10 @@ async function callGroqForJson(messages, opts = {}) {
                         lastErr = new Error(`[deepseek] JSON parse failed: ${parseErr.message}`);
                         console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
                     }
+                } else {
+                    // callDeepSeekOnly already warned with the HTTP status; keep the
+                    // ledger honest instead of the old "invalid JSON" misdirection.
+                    lastErr = new Error('[deepseek] no usable reply (see the ⚠️ status line above — usually 401 invalid key, 402 insufficient balance, or a timeout)');
                 }
             } catch (e) { lastErr = e; }
         }
@@ -508,6 +512,8 @@ async function callGroqForJson(messages, opts = {}) {
                         lastErr = new Error(`[gemini] JSON parse failed: ${parseErr.message}`);
                         console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
                     }
+                } else {
+                    lastErr = new Error('[gemini] no usable reply (see the ⚠️ status line above — invalid key / quota / network)');
                 }
             } catch (e) { lastErr = e; }
         }
@@ -519,6 +525,11 @@ async function callGroqForJson(messages, opts = {}) {
                     lastErr = new Error(`[siteapi] JSON parse failed: ${parseErr.message}`);
                     console.warn(`   \u26a0\ufe0f  ${lastErr.message}`);
                 }
+            } else {
+                // The site proxy should work keyless via the Workers AI binding — if it
+                // stays silent either the `AI` binding is missing in the Pages project
+                // or the edge/WAF blocked this datacenter request (e.g. 403).
+                lastErr = new Error('[siteapi] no reply from /api/gemini (Workers AI binding `AI` missing on the Pages project, or the request was blocked at the edge — see ⚠️ line above)');
             }
             return null;
         }
@@ -534,6 +545,7 @@ async function callGroqForJson(messages, opts = {}) {
                     }
                 } catch (e) { lastErr = e; }
             }
+            if (!lastErr) lastErr = new Error('[groq] every configured model rejected the request (see ⚠️ lines above)');
         }
         return null;
     };
