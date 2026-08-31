@@ -1,11 +1,11 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-08-31T19:50:58.477Z",
+  "generatedAt": "2026-08-31T20:07:24.545Z",
   "automation": {
     "blog": {
-      "newest": "2026-08-23",
-      "daysSinceNewest": 8
+      "newest": "2026-08-31",
+      "daysSinceNewest": 0
     },
     "webstory": {
       "newest": "2026-08-23",
@@ -14,20 +14,30 @@
   },
   "lastRun": {
     "kind": "blog",
-    "ok": false,
+    "ok": true,
     "date": "2026-08-31",
-    "slug": "",
+    "slug": "free-ai-tools-for-drivers",
     "pushed": false,
-    "reason": "All providers failed to return valid JSON",
-    "at": "2026-08-31T19:50:58.477Z"
+    "reason": "",
+    "at": "2026-08-31T20:07:24.545Z"
   },
   "providers": {
-    "groq": false,
-    "gemini": false,
+    "groq": true,
+    "gemini": true,
     "deepseek": true,
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-08-31T20:07:24.540Z",
+      "date": "2026-08-31",
+      "kind": "blog",
+      "slug": "free-ai-tools-for-drivers",
+      "status": "ok",
+      "reason": "",
+      "words": 2094,
+      "pushed": false
+    },
     {
       "at": "2026-08-31T19:50:58.467Z",
       "date": "2026-08-31",
