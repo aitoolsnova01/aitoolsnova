@@ -24,12 +24,20 @@ The replacements:
 
 ## How to apply (2 minutes)
 
-In the GitHub web UI (or locally with an account that has `workflows` permission):
+> ⚠️ **STATUS (2026-08-31): ye step abhi bhi PENDING hai.** PR #29 (30 Aug) ne ye
+> files banayi thi, par automation bot ko `.github/workflows/` edit karne ki
+> GitHub permission nahi hoti, isliye asli workflows aaj bhi purane (silent-green)
+> hain. **Sirf aap (repo owner) hi inhe GitHub web UI se apply kar sakte hain.**
 
-1. Open `.github/workflows/daily-blog.yml` on `main`, click **Edit**.
-2. Replace its full contents with the contents of `daily-blog.yml.txt` here.
-3. Commit. Repeat for `daily-webstory.yml` ← `daily-webstory.yml.txt` and
-   `health-check.yml` ← `health-check.yml.txt`.
+In the GitHub **web UI** (browser — mobile se bhi ho jayega):
+
+1. Repo kholo → `.github/workflows/daily-blog.yml` → pencil (**Edit**) icon.
+2. Poora content delete karke `daily-blog.yml.txt` ka content paste karo → **Commit changes** (directly to `main`).
+3. Wahi repeat karo: `daily-webstory.yml` ← `daily-webstory.yml.txt`, `health-check.yml` ← `health-check.yml.txt`.
+
+Iske baad agar publish phir fail ho to run **RED** dikhega aur `publish-failure`
+label ka issue apne-aap khul jayega — "green par kuch publish nahi hua" wala
+silent-failure khatam.
 
 No new secrets are required for the keyless path once the Cloudflare Workers AI
 binding `AI` is added (see `SECURITY_BOT_AND_PUBLISH_FIX.md`, section 2C).
