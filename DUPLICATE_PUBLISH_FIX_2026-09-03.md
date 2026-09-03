@@ -47,6 +47,16 @@ instead of giving up on the day; if an *article* has it, the day is closed as co
 
 `buildFeed()` rebuilds `feed.xml` from `blog/`: newest 30 posts, one item per headline, each item with its **own** deterministic timestamp inside the 04:00–13:00 UTC window (so two posts published the same day no longer share a pubDate), `lastBuildDate` = now. Both jobs run it and commit `feed.xml` (`CONTENT_PATHS` updated). `--check` is a staleness gate.
 
+### 5b. The feed cannot be poisoned by a test fixture
+
+`scripts/test-e2e-mock.mjs` runs the real generator, so its throwaway
+"Mock Test Post Please Ignore <ts>" article briefly exists in `blog/` — and the
+feed rebuild picked it up as the newest item, which a local run then left
+behind. Two fixes: `rebuild-feed.mjs` skips anything that looks like a fixture
+(`mock` / `please ignore` / `test only` / `^test-`, override with
+`FEED_ALLOW_MOCK=1`), and the mock test now backs up + restores `feed.xml` and
+asserts the mock never appears in it.
+
 ### 6. Repair of what already shipped (`scripts/dedupe-listings.mjs`)
 
 Dry-run by default, `--apply` to write. Idempotent (a clean repo reports 0 changes). Applied on 2026-09-03:
@@ -62,11 +72,21 @@ New `duplicates` check group, run every 6 h by `health-check.yml`: duplicate car
 ## Verification
 
 ```bash
-npm test                    # full suite, incl. the new scripts/test-dedup.mjs (16 checks)
+npm test                    # full suite, incl. scripts/test-dedup.mjs (18) + test-dedup-mock.mjs (7)
 node scripts/site-health.mjs --offline
 npm run feed:check          # or: node scripts/rebuild-feed.mjs --check
 node scripts/dedupe-listings.mjs   # dry run must report 0 changes
 ```
+
+`scripts/test-dedup-mock.mjs` is the end-to-end proof: it runs the real generator
+with a mocked AI answer that repeats the newest published article, and asserts the
+run exits 0, no second file appears, `blogs.html` / `sitemap.xml` / `feed.xml` are
+**byte-identical**, and the day is closed in the ledger against the existing slug.
+
+The workflow-YAML assertions in `test-dedup.mjs` read `scripts/workflow-fixes/*.fixed`
+(what actually reaches main through the self-heal) and accept the live file once it
+has been healed - an App token without the `workflows` scope can never make the live
+copy pass, and a test that requires the impossible gets muted within a week.
 
 After the fix: `blogs.html` 20 cards / 20 unique, `web-stories.html` 13 / 13, sitemap 115 URLs all unique, every story traceable to its article, `feed.xml` carrying the newest post with distinct timestamps.
 

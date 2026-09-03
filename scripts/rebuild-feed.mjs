@@ -44,11 +44,27 @@ function first(html, re) {
     return m ? m[1].trim() : '';
 }
 
+/**
+ * CI and local tests generate throwaway posts (scripts/test-e2e-mock.mjs writes
+ * "Mock Test Post Please Ignore <ts>" into blog/ for a second). The feed is the
+ * one public artifact that must never carry them, so anything that smells like a
+ * test fixture is skipped here. The staleness gate still looks at blog/, so this
+ * filter can never hide a real post that failed to reach the feed.
+ * FEED_ALLOW_MOCK=1 turns the filter off (tests assert both behaviours).
+ */
+const MOCKISH = /(mock|please ignore|test only|for test only|placeholder post|^test[-_])/i;
+
+function isTestPost(slug, title) {
+    if (process.env.FEED_ALLOW_MOCK === '1') return false;
+    return MOCKISH.test(String(slug || '')) || MOCKISH.test(String(title || ''));
+}
+
 /** One feed item per published article, newest first. */
 export function collectFeedItems(root = process.cwd()) {
     const dir = path.join(root, 'blog');
     if (!existsSync(dir)) return [];
     const out = [];
+    const skipped = [];
     for (const f of readdirSync(dir).filter(x => x.endsWith('.html'))) {
         let html = '';
         try { html = readFileSync(path.join(dir, f), 'utf8').slice(0, 40_000); } catch { continue; }
@@ -59,18 +75,23 @@ export function collectFeedItems(root = process.cwd()) {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) continue;
         const title = first(html, /<title>([^<|]+)/) || first(html, /<h1[^>]*>([^<]+)/) || slug;
         const description = first(html, /<meta\s+name="description"\s+content="([^"]+)"/);
+        if (isTestPost(slug, title)) { skipped.push(slug); continue; }
         out.push({ slug, date, title, description, url: `${SITE}/blog/${slug}` });
     }
     // Newest first. Ties are broken by slug so the order is stable across runs
     // (an unstable sort used to rewrite the whole file for no reason).
     out.sort((a, b) => (b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug)));
     const seen = new Set();
-    return out.filter((it) => {
+    const list = out.filter((it) => {
         const key = normalizeTitle(it.title) || it.slug;
         if (seen.has(key)) return false;      // never list one headline twice
         seen.add(key);
         return true;
     }).slice(0, MAX_ITEMS);
+    // carried along so --check can explain a "stale" verdict (test fixtures are
+    // deliberately filtered out, and that must never look like a missing post)
+    list.skippedTestPosts = skipped;
+    return list;
 }
 
 /** Deterministic "HH:MM:SS" inside the publish window, derived from the slug. */
@@ -142,6 +163,7 @@ export async function buildFeed({ root = process.cwd(), write = true, now = new 
         missing,
         duplicateTimes,
         newestDate,
+        skippedTestPosts: items.skippedTestPosts || [],
         text,
     };
 }
@@ -155,6 +177,7 @@ if (isMain) {
         const lines = [
             `feed.xml: ${res.items} item(s), newest article ${res.newestDate || 'none'}`,
             res.stale ? `STALE - not listed in the feed: ${res.missing.join(', ')}` : 'up to date',
+            res.skippedTestPosts.length ? `filtered test fixtures: ${res.skippedTestPosts.join(', ')}` : '',
             res.duplicateTimes ? `WARN - ${res.duplicateTimes} item(s) share a pubDate with another item` : 'every item has a distinct timestamp',
         ];
         console.log(lines.join('\n'));

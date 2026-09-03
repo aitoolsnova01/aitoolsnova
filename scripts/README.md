@@ -196,7 +196,7 @@ Local run by default push nahi karta (`SKIP_AUTO_PUBLISH` logic) — safety.
 | `rebuild-feed.mjs` | `feed.xml` ko `blog/` se regenerate karta hai (`--check` = staleness gate) |
 | `dedupe-listings.mjs` | jo duplicates pipeline chhod gaya tha unki repair: `blogs.html`/`web-stories.html` cards, sitemap dupes, story provenance + canonical + re-dating, extra story ka 301 (default dry-run, `--apply` se likhta hai) |
 | `check-workflows.mjs` | workflow YAML lint (GitHub-reject patterns + failure-hiding patterns) |
-| `test-dedup.mjs`, `test-publish-core.mjs`, `test-e2e-mock.mjs`, `test-webstory-smoke.mjs`, `test-webstory-e2e.mjs`, `test-publish-helper.mjs`, `test-site-health.mjs`, `test-dry-run.mjs`, `test-gemini-fallback.mjs`, `test-ats.mjs` | tests (sab `npm test` me) |
+| `test-dedup.mjs` (dedupe rules), `test-dedup-mock.mjs` (duplicate-topic skip, real generator + mocked AI), `test-publish-core.mjs`, `test-e2e-mock.mjs`, `test-webstory-smoke.mjs`, `test-webstory-e2e.mjs`, `test-publish-helper.mjs`, `test-site-health.mjs`, `test-dry-run.mjs`, `test-gemini-fallback.mjs`, `test-ats.mjs` | tests (sab `npm test` me) |
 
 ---
 

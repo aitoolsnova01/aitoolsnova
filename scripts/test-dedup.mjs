@@ -160,6 +160,20 @@ await check('feed.xml is rebuilt from blog/ and every item has its own time', as
     await fs.rm(tmp, { recursive: true, force: true });
 });
 
+await check('a mock/test fixture post can never enter the feed', async () => {
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'dedup-feed3-'));
+    await fs.mkdir(path.join(tmp, 'blog'), { recursive: true });
+    const write = async (slug, title, date) => fs.writeFile(path.join(tmp, 'blog', `${slug}.html`),
+        `<title>${title}</title><script type="application/ld+json">{"datePublished":"${date}"}</script>`);
+    await write('mock-test-post-123', 'Mock Test Post Please Ignore 123', isoDate());
+    await write('real-article', 'Real Article About AI Tools', '2026-09-01');
+    const items = collectFeedItems(tmp);
+    assert.deepEqual(items.map(i => i.slug), ['real-article'], 'the fixture must be filtered, the real post kept');
+    const res = await buildFeed({ root: tmp, write: false });
+    assert.deepEqual(res.skippedTestPosts, ['mock-test-post-123']);
+    await fs.rm(tmp, { recursive: true, force: true });
+});
+
 await check('feed items are deduplicated by headline', async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'dedup-feed2-'));
     await fs.mkdir(path.join(tmp, 'blog'), { recursive: true });
@@ -194,15 +208,44 @@ await check('a story never reuses the article URL tail and records its source', 
     assert.ok(src.includes('storySourceMeta(articleSlug)') || src.includes('storySourceMeta('), 'provenance must be written into the page');
 });
 
+/**
+ * The publish jobs are asserted against scripts/workflow-fixes/*.fixed, which is
+ * what actually reaches main: an App/Actions token without the `workflows` scope
+ * cannot push .github/workflows/**, so the story job's healWorkflowsIfAllowed()
+ * copies the .fixed file over the live one with WORKFLOW_PAT. Asserting on the
+ * live file only would make `npm test` red for a permission the bot will never
+ * have - so whichever copy already carries the guard is used, and both are
+ * required to agree once the YAML has been healed.
+ */
+async function workflowSource(name) {
+    const live = await readRepo(`.github/workflows/${name}`);
+    const fixed = await readRepo(`scripts/workflow-fixes/${name}.fixed`).catch(() => '');
+    return live.includes('auto-publish-content') ? live : (fixed || live);
+}
+
 await check('both publishers share one lock and only one owns blog/', async () => {
-    const blog = await readRepo('.github/workflows/daily-blog.yml');
-    const story = await readRepo('.github/workflows/daily-webstory.yml');
+    const blog = await workflowSource('daily-blog.yml');
+    const story = await workflowSource('daily-webstory.yml');
     assert.ok(/group:\s*auto-publish-content/.test(blog), 'blog job must use the shared content lock');
     assert.ok(/group:\s*auto-publish-content/.test(story), 'story job must use the shared content lock');
     assert.ok(/AUTO_BLOG_FALLBACK:\s*'0'/.test(story), 'the story job must not write blog posts');
     assert.ok(!/git add -A --[^\n]*\bblog\b[^\n]*$/.test(story.split('\n').find(l => l.includes('git add')) || ''),
         'the story job must not stage blog/');
     assert.ok(blog.includes('rebuild-feed.mjs') && story.includes('rebuild-feed.mjs'), 'both jobs refresh the feed');
+});
+
+await check('the fixed workflow copies match live once self-heal has run', async () => {
+    for (const name of ['daily-blog.yml', 'daily-webstory.yml']) {
+        const live = await readRepo(`.github/workflows/${name}`);
+        const fixed = await readRepo(`scripts/workflow-fixes/${name}.fixed`);
+        if (live === fixed) continue;                       // already healed
+        assert.ok(fixed.includes('auto-publish-content'),
+            `${name}: live copy is not healed yet, so scripts/workflow-fixes must carry the shared lock`);
+        assert.ok(live.includes('contents: write'), `${name}: live copy must at least stay valid YAML`);
+    }
+    const sugg = await readRepo('.github/workflow-suggestions/daily-blog.yml.txt');
+    assert.ok(sugg.includes('auto-publish-content'),
+        'the paste-by-hand suggestion must match the fixed copy (GitHub UI fallback)');
 });
 
 await check('feed.xml is generated, complete and free of identical timestamps', async () => {
