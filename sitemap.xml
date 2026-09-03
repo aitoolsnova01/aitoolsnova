@@ -1926,4 +1926,28 @@
         </image:image>
     </url>
     <!-- AUTO-BLOG-SITEMAP-END -->
+
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/free-no-code-ai-apps</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/free-ai-tools-for-drivers</loc>
+        <lastmod>2026-08-26</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+
+    <url>
+        <loc>https://aitoolsnova.com/web-stories/ai-tool-privacy-checklist-before-upload</loc>
+        <lastmod>2026-09-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>

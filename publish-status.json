@@ -1,33 +1,69 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-02T17:42:05.711Z",
+  "generatedAt": "2026-09-03T05:02:48.419Z",
   "automation": {
     "blog": {
       "newest": "2026-09-02",
-      "daysSinceNewest": 0
+      "daysSinceNewest": 1
     },
     "webstory": {
-      "newest": "2026-08-23",
-      "daysSinceNewest": 10
+      "newest": "2026-09-03",
+      "daysSinceNewest": 0
     }
   },
   "lastRun": {
-    "kind": "blog",
+    "kind": "webstory",
     "ok": true,
-    "date": "2026-09-02",
-    "slug": "free-no-code-ai-apps",
+    "date": "2026-09-03",
+    "slug": "cutting-edge-ai-tools-small-business",
     "pushed": false,
     "reason": "",
-    "at": "2026-09-02T17:42:05.711Z"
+    "at": "2026-09-03T05:02:48.419Z"
   },
   "providers": {
-    "groq": true,
-    "gemini": true,
-    "deepseek": true,
-    "anyConfigured": true
+    "groq": false,
+    "gemini": false,
+    "deepseek": false,
+    "anyConfigured": false
   },
   "ledgerTail": [
+    {
+      "at": "2026-09-03T05:02:48.413Z",
+      "date": "2026-09-03",
+      "kind": "webstory",
+      "slug": "cutting-edge-ai-tools-small-business",
+      "status": "ok",
+      "reason": "",
+      "pushed": false
+    },
+    {
+      "at": "2026-09-03T05:02:48.306Z",
+      "date": "2026-09-02",
+      "kind": "webstory",
+      "slug": "ai-tool-privacy-checklist-before-upload",
+      "status": "ok",
+      "reason": "",
+      "pushed": false
+    },
+    {
+      "at": "2026-09-03T05:02:45.190Z",
+      "date": "2026-08-26",
+      "kind": "webstory",
+      "slug": "free-ai-tools-for-drivers",
+      "status": "ok",
+      "reason": "",
+      "pushed": false
+    },
+    {
+      "at": "2026-09-03T05:02:45.171Z",
+      "date": "2026-08-25",
+      "kind": "webstory",
+      "slug": "free-no-code-ai-apps",
+      "status": "ok",
+      "reason": "",
+      "pushed": false
+    },
     {
       "at": "2026-09-02T17:42:05.704Z",
       "date": "2026-09-02",
