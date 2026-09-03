@@ -38,6 +38,7 @@ import { pathToFileURL } from 'node:url';
 import {
     SITE, isoDate, addDays, daysBetween, readKeys, annotate,
     stepSummary, fetchWithTimeout, parseArgs, noKeyGuidance,
+    normalizeTitle, storySourceOf,
 } from './lib/publish-core.mjs';
 import { validateWorkflows } from './daily-publish-helper.mjs';
 
@@ -287,6 +288,98 @@ function gapsSync(kind, today) {
     return planGapDays([...have.keys()], today, { lookback: 7 });
 }
 
+/**
+ * Duplicate-content alarms - the class of problem that made one post look like
+ * it was published twice (same card in /blogs two times, the same article also
+ * shipped as a story with the identical headline and an older date, a feed where
+ * every item shares one timestamp).
+ *
+ * These are cheap repo checks, so they run offline too, and they name the repair
+ * command instead of only reporting the symptom.
+ */
+function checkDuplicates() {
+    const START = '<!-- AUTO-BLOG-INSERT-START -->';
+    const END = '<!-- AUTO-BLOG-INSERT-END -->';
+    const fix = 'node scripts/dedupe-listings.mjs --apply';
+
+    const blogsHtml = read('blogs.html') || '';
+    if (blogsHtml.includes(START) && blogsHtml.includes(END)) {
+        const block = blogsHtml.slice(blogsHtml.indexOf(START), blogsHtml.indexOf(END));
+        const slugs = [...block.matchAll(/href="blog\/([^"/]+)" class="read-more"/g)].map(m => m[1]);
+        const dupes = [...new Set(slugs.filter((x, i) => slugs.indexOf(x) !== i))];
+        add('duplicates', 'blogs.html lists every post once', dupes.length ? 'fail' : 'pass',
+            dupes.length ? `${dupes.join(', ')} listed more than once - run: ${fix}` : `${slugs.length} cards`);
+    }
+    const storiesIdx = read('web-stories.html') || '';
+    const testids = [...storiesIdx.matchAll(/data-testid="story-card-([a-z0-9-]+)"/g)].map(m => m[1]);
+    const dupStories = [...new Set(testids.filter((x, i) => testids.indexOf(x) !== i))];
+    add('duplicates', 'web-stories.html lists every story once', dupStories.length ? 'fail' : 'pass',
+        dupStories.length ? `${dupStories.join(', ')} - run: ${fix}` : `${testids.length} cards`);
+
+    const blogDir = path.join(ROOT, 'blog');
+    const storyDir = path.join(ROOT, 'web-stories');
+    if (existsSync(blogDir) && existsSync(storyDir)) {
+        const bySlug = new Map(), byKey = new Map();
+        for (const f of readdirSync(blogDir).filter(x => x.endsWith('.html'))) {
+            const html = read(`blog/${f}`) || '';
+            const slug = f.replace(/\.html$/, '');
+            const rec = {
+                slug,
+                date: (html.match(/"datePublished"\s*:\s*"?(\d{4}-\d{2}-\d{2})/) || [])[1] || '',
+                key: normalizeTitle(html.match(/<h1[^>]*>([^<]+)/i)?.[1] || html.match(/<title>([^<]+)/i)?.[1] || ''),
+            };
+            bySlug.set(slug, rec);
+            if (rec.key && !byKey.has(rec.key)) byKey.set(rec.key, rec);
+        }
+        const untagged = [], backdated = [], competing = [];
+        for (const f of readdirSync(storyDir).filter(x => x.endsWith('.html'))) {
+            const html = read(`web-stories/${f}`) || '';
+            const slug = f.replace(/\.html$/, '');
+            const src = storySourceOf(html);
+            const art = (src && bySlug.get(src)) || bySlug.get(slug) || byKey.get(normalizeTitle(html.match(/<h1[^>]*>([^<]+)/i)?.[1] || html.match(/<title>([^<]+)/i)?.[1] || ''));
+            if (!art) continue;
+            if (!src) untagged.push(slug);
+            const sDate = (html.match(/"datePublished"\s*:\s*"?(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
+            if (sDate && art.date && sDate < art.date) backdated.push(`${slug} (${sDate} < /blog/${art.slug} ${art.date})`);
+            const sameHeadline = !!art.key && art.key === normalizeTitle(html.match(/<h1[^>]*>([^<]+)/i)?.[1] || html.match(/<title>([^<]+)/i)?.[1] || '');
+            if (sameHeadline && !html.includes(`rel="canonical" href="${SITE}/blog/${art.slug}"`)) competing.push(slug);
+        }
+        add('duplicates', 'every derived story records its source article',
+            untagged.length ? 'fail' : 'pass',
+            untagged.length ? `${untagged.slice(0, 3).join(', ')} - without provenance the story job can re-publish the same article` : 'aitoolsnova:source-blog present');
+        add('duplicates', 'no story is dated before its own article', backdated.length ? 'fail' : 'pass',
+            backdated.slice(0, 3).join(', '));
+        add('duplicates', 'a story repeating an article headline canonicalizes to it',
+            competing.length ? 'fail' : 'pass',
+            competing.length ? `${competing.slice(0, 3).join(', ')} compete with their article - run: ${fix}` : '');
+    }
+
+    const feed = read('feed.xml');
+    if (!feed) {
+        add('duplicates', 'feed.xml is generated, not hand-kept', 'warn', 'feed.xml missing - run: node scripts/rebuild-feed.mjs');
+    } else {
+        const times = [...feed.matchAll(/<pubDate>([^<]+)<\/pubDate>/g)].map(m => m[1]);
+        const collisions = times.length - new Set(times).size;
+        add('duplicates', 'feed items have distinct publish times', collisions ? 'warn' : 'pass',
+            collisions ? `${collisions} item(s) share a pubDate - run: node scripts/rebuild-feed.mjs` : `${times.length} items`);
+        const dates = [...blogDir ? readdirSync(blogDir).filter(x => x.endsWith('.html')).map(f => (read(`blog/${f}`) || '').match(/"datePublished"\s*:\s*"?(\d{4}-\d{2}-\d{2})/)?.[1]).filter(Boolean) : []].sort();
+        const newestSlug = (() => {
+            let best = { d: '', s: '' };
+            for (const f of (existsSync(blogDir) ? readdirSync(blogDir).filter(x => x.endsWith('.html')) : [])) {
+                const d = (read(`blog/${f}`) || '').match(/"datePublished"\s*:\s*"?(\d{4}-\d{2}-\d{2})/)?.[1] || '';
+                if (d >= best.d) best = { d, s: f.replace(/\.html$/, '') };
+            }
+            return best;
+        })();
+        if (newestSlug.s) {
+            add('duplicates', 'feed.xml lists the newest article',
+                feed.includes(`/blog/${newestSlug.s}`) ? 'pass' : 'warn',
+                feed.includes(`/blog/${newestSlug.s}`) ? `${newestSlug.s} (${newestSlug.d})` : `${newestSlug.s} (${newestSlug.d}) missing - run: node scripts/rebuild-feed.mjs`);
+        }
+        void dates;
+    }
+}
+
 function checkSchemaAndMeta() {
     const pages = [...readdirSync(path.join(ROOT, 'blog')).filter(f => f.endsWith('.html')).slice(0, 200).map(f => `blog/${f}`),
     ...(existsSync(path.join(ROOT, 'web-stories')) ? readdirSync(path.join(ROOT, 'web-stories')).filter(f => f.endsWith('.html')).map(f => `web-stories/${f}`) : [])];
@@ -381,6 +474,7 @@ async function main() {
     checkRepoFiles();
     const urls = checkSitemap();
     checkContentFreshness();
+    checkDuplicates();
     checkSchemaAndMeta();
     runRepoAudits();
     await checkWorkflows();

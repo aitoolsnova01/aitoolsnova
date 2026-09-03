@@ -36,7 +36,19 @@ import {
     parseJsonLoose, fetchWithTimeout, isoDate, addDays, daysBetween,
     appendLedger, planGaps, publishedDates, publishContent, writePublishStatus,
     isCI, parseArgs, CONTENT_PATHS, callSiteApi, siteApiAllowed,
+    normalizeTitle, storySourceMeta, storySourceOf,
 } from './lib/publish-core.mjs';
+
+/**
+ * How a story declares itself to search engines.
+ *   auto   - canonical -> the article, but only when the story is a verbatim
+ *            restatement of that article (same normalized headline). This is the
+ *            duplicate-content case that made "one blog + one story, same title,
+ *            same time" look like the post was published twice.
+ *   always - every story canonicals to its source article.
+ *   self   - legacy behaviour (a story competes with its article).
+ */
+const STORY_CANONICAL = String(process.env.STORY_CANONICAL || 'auto').toLowerCase();
 
 // ---- CLI -----------------------------------------------------------------
 //   node scripts/generate-webstory.mjs                  one story for today
@@ -94,6 +106,33 @@ console.log(`🔑 Providers: Groq=${GROQ_KEY ? 'yes' : 'no'} Gemini=${GEMINI_KEY
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ---------- Pick source blog ----------
+/**
+ * Every blog slug that ALREADY has a story.
+ *
+ * The old test was `web-stories/<blog slug>.html exists`, which broke the moment
+ * a story was saved under a different name (the AI can retitle, and the
+ * "all covered" branch appends a random suffix). One article then got storified
+ * twice - that is how /web-stories/ai-upload-privacy-checks and
+ * /web-stories/ai-tool-privacy-checklist-before-upload both exist for the same
+ * post. Provenance is now written INTO the page (aitoolsnova:source-blog), so
+ * the check survives any rename.
+ */
+export function storiesCoveredSources(storiesDir = STORIES_DIR, blogDir = BLOG_DIR) {
+    const covered = new Set();
+    let files = [];
+    try { files = readdirSync(storiesDir).filter(f => f.endsWith('.html')); } catch { return covered; }
+    for (const f of files) {
+        let html = '';
+        try { html = readFileSync(path.join(storiesDir, f), 'utf8').slice(0, 6000); } catch { continue; }
+        const src = storySourceOf(html);
+        if (src) { covered.add(src); continue; }
+        // Legacy page with no provenance: same slug as an article = derived from it.
+        const slug = f.replace(/\.html$/, '');
+        if (existsSync(path.join(blogDir, `${slug}.html`))) covered.add(slug);
+    }
+    return covered;
+}
+
 async function pickSourceBlog(preferDate = '') {
     /**
      * Sort by the article's OWN publish date, not by file mtime.
@@ -107,20 +146,36 @@ async function pickSourceBlog(preferDate = '') {
         .sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.f.localeCompare(a.f));
 
     // Blogs that already have a story are skipped, newest first.
+    const covered = storiesCoveredSources();
     for (const { f, date } of files) {
         const slug = f.replace(/\.html$/, '');
+        if (covered.has(slug)) continue;
         if (existsSync(path.join(STORIES_DIR, `${slug}.html`))) continue;
         const html = await fs.readFile(path.join(BLOG_DIR, f), 'utf-8');
-        return describeSource(slug, html, date);
+        const src = describeSource(slug, html, date);
+        // A story must never reuse the article's URL tail: /blog/x and
+        // /web-stories/x with the same headline is duplicate content by
+        // definition, and it made one post look published twice.
+        src.slug = storySlugFor(slug);
+        return src;
     }
     // Every blog already has a story: make a "part 2" of the newest one (or of
     // the article published on the date we are catching up), instead of failing.
     if (!files.length) throw new PublishError('No blog posts found in blog/ - cannot build a story', { code: 'no-source' });
     const chosen = (preferDate ? files.find(x => x.date === preferDate) : null) || files[0];
     const html = await fs.readFile(path.join(BLOG_DIR, chosen.f), 'utf-8');
-    const src = describeSource(`${chosen.f.replace(/\.html$/, '')}-story`, html, chosen.date || isoDate());
-    src.slug = `${src.slug}-${Date.now().toString(36).slice(-4)}`;
+    const blogSlug = chosen.f.replace(/\.html$/, '');
+    const src = describeSource(blogSlug, html, chosen.date || isoDate());
+    // "part 2" of an article that already has a story: unique slug, unique URL,
+    // and still traceable to the same source via the provenance meta tag.
+    src.slug = `${storySlugFor(blogSlug)}-2-${Date.now().toString(36).slice(-4)}`;
+    src.isSequel = true;
     return src;
+}
+
+/** /web-stories/<article>-story - never the bare article slug. */
+function storySlugFor(blogSlug) {
+    return /-story$/.test(blogSlug) ? blogSlug : `${blogSlug}-story`;
 }
 
 /** datePublished from the article itself; falls back to the sitemap/HEAD-free null. */
@@ -146,6 +201,8 @@ function describeSource(slug, html, date) {
         .slice(0, 14);
     return {
         slug,
+        sourceSlug: slug,
+        articleTitle: (h1Match?.[1] || titleMatch?.[1] || '').trim(),
         title: (h1Match?.[1] || titleMatch?.[1] || slug.replace(/-/g, ' ')).trim(),
         description: (descMatch?.[1] || '').trim(),
         sourceFile: `${slug}.html`,
@@ -592,9 +649,16 @@ async function localizeHtmlImages(html) {
 }
 
 // ---------- Build AMP Story HTML ----------
-function buildStoryHtml({ slug, story }, localImgs = {}, dateISO = '') {
+function buildStoryHtml({ slug, story, articleSlug = '', articleTitle = '', canonicalTo = '' }, localImgs = {}, dateISO = '') {
     // Extensionless - the .html form 308-redirects on Cloudflare Pages.
-    const canonical = `${SITE}/web-stories/${slug}`;
+    const selfUrl = `${SITE}/web-stories/${slug}`;
+    const articleUrl = articleSlug ? `${SITE}/blog/${articleSlug}` : '';
+    // A story that restates an article headline for the same content is the
+    // definition of duplicate content, so it hands its canonical to the article
+    // (STORY_CANONICAL=always does that for every story, =self keeps the old
+    // behaviour). The story page itself stays live and linked from /web-stories.
+    const canonical = canonicalTo && articleUrl ? canonicalTo : selfUrl;
+    const canonicalizesArticle = !!articleUrl && canonical === articleUrl;
     const publisherLogo = `${SITE}/images/publisher-logo.png`;
     // Pre-generated Gemini images win; Pollinations URLs remain as fallback and
     // get localized later by localizeHtmlImages().
@@ -646,6 +710,8 @@ function buildStoryHtml({ slug, story }, localImgs = {}, dateISO = '') {
   <meta name="keywords" content="${esc(story.geo_keywords || 'free ai tools, ai tools 2026')}">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <link rel="canonical" href="${canonical}">
+  ${articleSlug ? storySourceMeta(articleSlug) : ''}
+  ${canonicalizesArticle ? `<link rel="alternate" type="text/html" hreflang="x-default" href="${articleUrl}">` : ''}
   <meta property="og:title" content="${esc(story.story_title)}">
   <meta property="og:description" content="${esc(story.meta_description)}">
   <meta property="og:image" content="${esc(coverImgAbs)}">
@@ -732,6 +798,7 @@ ${slidesHtml}
         <div class="cta-wrap">
           <h2 class="cta-title">Try 30+ Free AI Tools</h2>
           <p class="cta-desc">${esc(story.cta_line)}</p>
+          ${articleUrl ? `<a class="cta-cta" style="margin-bottom:10px;background:#fff" href="${articleUrl}">Read the full article →</a>` : ''}
           <a class="cta-cta" href="${SITE}/tools">Explore Tools →</a>
           <a class="cta-cta" style="margin-left:8px;background:#fff" href="https://www.amazon.in/s?k=ai+productivity+books&tag=aitoolsnova-21" rel="sponsored nofollow noopener">Recommended products →</a>
           <small style="display:block;color:#f2f2f2;margin-top:12px;font-size:11px">Affiliate link, at no extra cost to you.</small>
@@ -753,7 +820,13 @@ ${slidesHtml}
 async function updateSitemap({ slug, title }, lastmodISO = '') {
     let xml = await fs.readFile(SITEMAP_XML, 'utf-8');
     const url = `${SITE}/web-stories/${slug}`;
+    // Self-heal first, then insert: a second <url> for the same <loc> (re-run,
+    // retry, or a rebased double push) is a duplicate-URL signal for Google.
+    const dup = new RegExp('\\s*<url>\\s*<loc>' + url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*<\\/loc>[\\s\\S]*?<\\/url>', 'g');
+    const extra = (xml.match(dup) || []).length;
+    if (extra) xml = xml.replace(dup, '');
     if (xml.includes(url)) return false;
+    if (extra) console.log(`♻️  sitemap.xml: removed ${extra} stale entr(ies) for ${slug}`);
 
     const today = lastmodISO || new Date().toISOString().split('T')[0];
     const block = `
@@ -985,13 +1058,37 @@ async function maybeCoverBlog() {
     }
     const broken = await isBlogWorkflowBroken();
     const planned = await planGaps(ROOT, { kind: 'blog', days: 3, max: 1 });
-    if (broken || planned.gaps.length) {
-        console.log(`📝 Blog ${broken ? 'workflow is broken' : `is missing ${planned.gaps[0]}`} → generating it from the story job too...`);
+    const have = await publishedDates(ROOT, 'blog');
+    const newest = have.size ? [...have.keys()].sort().at(-1) : null;
+    const staleDays = newest ? daysBetween(newest, isoDate()) : 99;
+    const minStale = Number(process.env.AUTO_BLOG_MIN_STALE_DAYS || 2);
+    // A missing "today" is NORMAL while the blog job is still queued - the two
+    // schedules run ~85 minutes apart, and two writers for the same day is what
+    // put one post in twice. So the fallback needs a real outage: broken
+    // workflow AND nothing published for at least AUTO_BLOG_MIN_STALE_DAYS.
+    if (broken && staleDays >= minStale) {
+        console.log(`📝 Blog workflow is broken and nothing has landed for ${staleDays} day(s) → this job writes the article too...`);
         await runBlogGenerator();
         return true;
     }
-    console.log('✅ Blog is current and its workflow is valid → leaving the blog to its own schedule.');
+    console.log(`✅ Blog left to its own schedule (workflow ${broken ? 'broken' : 'valid'}, newest post ${newest || 'none'}, ${staleDays} day(s) old${planned.gaps.length ? `, pending gap ${planned.gaps[0]}` : ''}).`);
     return false;
+}
+
+/**
+ * Which day does this story claim?
+ *
+ * Backfilled stories used to inherit the arbitrary gap date, so a story ended up
+ * dated 2026-08-25 while the article it summarizes was published 2026-09-02 -
+ * a summary older than its own source, which reads as two copies published at a
+ * bogus time. The rule is now: publish date, never earlier than the article,
+ * never in the future.
+ */
+export function storyDateFor(publishDateISO = '', sourceDateISO = '') {
+    const today = isoDate();
+    let d = /^\d{4}-\d{2}-\d{2}$/.test(publishDateISO || '') ? publishDateISO : today;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(sourceDateISO || '') && d < sourceDateISO) d = sourceDateISO;
+    return d > today ? today : d;
 }
 
 async function publishForDate(dateISO) {
@@ -1001,6 +1098,16 @@ async function publishForDate(dateISO) {
     const src = await pickSourceBlog(dateISO);
     console.log(`📖 Source blog: ${src.sourceFile}`);
     console.log(`🎯 Slug: ${src.slug}`);
+
+    // Checked before a single token is spent: a story that already exists must
+    // never be regenerated - that is how one article ended up with two story
+    // pages carrying the same content for the same day.
+    const outPath = path.join(STORIES_DIR, `${src.slug}.html`);
+    if (existsSync(outPath) && process.env.ALLOW_DUPLICATE_DAY !== '1') {
+        const err = new PublishError(`web-stories/${src.slug}.html already exists - story for "${src.sourceSlug}" is already published, skipped`, { code: 'duplicate-story' });
+        err.existingSlug = src.slug;
+        throw err;
+    }
 
     const story = await generateStoryContent(src);
     console.log(`✍️  Title: ${story.story_title}`);
@@ -1038,14 +1145,26 @@ async function publishForDate(dateISO) {
         }
     }
 
-    const html = buildStoryHtml({ slug: src.slug, story }, localImgs, dateISO);
+    const storyDate = storyDateFor(dateISO, src.date);
+    const dupTitle = normalizeTitle(story.story_title) === normalizeTitle(src.articleTitle || src.title);
+    const canonicalTo = STORY_CANONICAL === 'self' || !src.sourceSlug
+        ? ''
+        : (STORY_CANONICAL === 'always' || dupTitle) ? `${SITE}/blog/${src.sourceSlug}` : '';
+    if (canonicalTo) console.log(`🔗 Story canonicals to /blog/${src.sourceSlug} (${STORY_CANONICAL === 'always' ? 'policy' : 'same headline as the article'})`);
+    const html = buildStoryHtml({
+        slug: src.slug, story,
+        articleSlug: src.sourceSlug || '', articleTitle: src.title || '', canonicalTo,
+    }, localImgs, storyDate);
     console.log('🖼️  Downloading HD images locally (this makes stories fast + indexable)...');
     const localizedHtml = await localizeHtmlImages(html);
-    const outFile = path.join(STORIES_DIR, `${src.slug}.html`);
+    const outFile = outPath;
+    if (existsSync(outFile)) {
+        throw new PublishError(`web-stories/${src.slug}.html appeared while this run was generating - refusing to overwrite a published story`, { code: 'duplicate-story' });
+    }
     await fs.writeFile(outFile, localizedHtml);
     console.log(`💾 Saved: ${path.relative(ROOT, outFile)}`);
 
-    const sitemapUpdated = await updateSitemap({ slug: src.slug, title: story.story_title }, dateISO);
+    const sitemapUpdated = await updateSitemap({ slug: src.slug, title: story.story_title }, storyDate);
     console.log(sitemapUpdated ? '🗺️  sitemap.xml updated' : '🗺️  sitemap.xml unchanged');
 
     await rebuildStoriesIndex();
@@ -1059,7 +1178,10 @@ async function publishForDate(dateISO) {
 
 
     // ---- AUTO-PUBLISH: commit + push everything generated this run ----
-    return { slug: src.slug, title: story.story_title, slides: story.slides.length, date: dateISO };
+    return {
+        slug: src.slug, title: story.story_title, slides: story.slides.length,
+        date: dateISO, storyDate, sourceSlug: src.sourceSlug, canonicalTo,
+    };
 }
 
 async function runCheck() {
@@ -1128,6 +1250,14 @@ async function main() {
             await appendLedger(ROOT, { kind: 'webstory', date: d, slug: r.slug, status: 'ok' });
         } catch (err) {
             const reason = describeError(err);
+            if (err?.code === 'duplicate-story') {
+                console.log(`♻️  ${d}: ${reason}`);
+                results.push({ date: d, ok: false, skipped: true, slug: err.existingSlug || '', error: reason });
+                if (err.existingSlug) {
+                    await appendLedger(ROOT, { kind: 'webstory', date: d, slug: err.existingSlug, status: 'ok', reason: 'deduped to the existing story' });
+                }
+                continue;
+            }
             results.push({ date: d, ok: false, error: reason });
             await appendLedger(ROOT, { kind: 'webstory', date: d, slug: '', status: 'fail', reason });
             annotate('error', `Web story failed for ${d}`, reason + (err?.hint ? ` — ${err.hint}` : ''));
@@ -1143,10 +1273,10 @@ async function main() {
     try {
         await writePublishStatus(ROOT, {
             kind: 'webstory',
-            ok: okOnes.length > 0,
+            ok: okOnes.length > 0 || results.some(r => r.skipped),
             date: okOnes.at(-1)?.date || isoDate(),
             slug: okOnes.map(r => r.slug).join(','),
-            reason: okOnes.length ? '' : (results.find(r => !r.ok)?.error || ''),
+            reason: okOnes.length ? '' : (results.find(r => !r.ok && !r.skipped)?.error || ''),
         });
     } catch (e) { console.warn(`   ⚠️  could not write publish-status.json: ${e.message}`); }
     if (selfPublish) {
@@ -1173,15 +1303,20 @@ async function main() {
         '',
         '| Date | Status | Story | Slides |',
         '|---|---|---|---|',
-        ...results.map(r => `| ${r.date} | ${r.ok ? '✅ published' : '❌ failed'} | ${r.slug || '-'} | ${r.slides || '-'}${r.ok ? '' : ` — ${r.error}`.slice(0, 160)} |`),
+        ...results.map(r => `| ${r.date} | ${r.ok ? '✅ published' : r.skipped ? '♻️ already published' : '❌ failed'} | ${r.slug || '-'} | ${r.slides || '-'}${r.ok ? '' : ` — ${r.error}`.slice(0, 160)} |`),
         '',
         `Pushed to main: ${pushed ? 'yes' : 'no'} · Workflow heal: ${heal}`,
     ]);
 
-    if (!okOnes.length) {
+    const skippedOnes = results.filter(r => r.skipped);
+    if (!okOnes.length && !skippedOnes.length) {
         const why = results[0]?.error || 'unknown';
         annotate('error', 'No web story published', `${why} — recorded in scripts/publish-log.json + publish-status.json`);
         throw new PublishError(`Web story run published nothing. First error: ${why}`, { code: 'nothing-published' });
+    }
+    if (!okOnes.length) {
+        console.log(`\n✅ Done: nothing new to publish - ${skippedOnes.length} day(s) already covered by an existing story.`);
+        return 0;
     }
     if (pushErr) throw pushErr;
     console.log(`\n✅ Done: ${okOnes.length} story(ies)${pushed ? ' pushed to main' : ' written locally'}.`);

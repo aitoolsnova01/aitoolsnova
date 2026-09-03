@@ -14,8 +14,15 @@ name: Web Story Auto-Publish (daily)
 # content commit, the generator only touches .github/workflows when a
 # WORKFLOW_PAT secret exists, and the last step verifies origin/main.
 #
-# A story is derived from the newest article, so this job also publishes the
-# blog when the blog day is missing (AUTO_BLOG_FALLBACK=1, the default).
+# A story is derived from the newest article, and this job NO LONGER writes the
+# blog on its own (AUTO_BLOG_FALLBACK=0). It used to: "today's blog is missing"
+# is normal 85 minutes before the blog job runs, so both jobs generated the same
+# day's article and both pushes survived the rebase -> one post, listed twice,
+# same timestamp. blog/ belongs to the blog job; a genuine multi-day outage is
+# caught by that job's own --backfill=2.
+#
+# Stories also stopped copying the article URL tail (/web-stories/<article-slug>)
+# and the article's date: both are fixed in scripts/generate-webstory.mjs.
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -41,7 +48,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: auto-publish-webstory
+  # Shared with daily-blog.yml - see rule 6 there. One content writer at a time.
+  group: auto-publish-content
   cancel-in-progress: false
 
 jobs:
@@ -71,7 +79,17 @@ jobs:
           PUBLISH_DATE: ${{ github.event.inputs.date }}
           DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '1' || '0' }}
           SKIP_AUTO_PUBLISH: '1'
+          # The blog job owns blog/; this job only ever writes web-stories/.
+          AUTO_BLOG_FALLBACK: '0'
+          # A story canonicalizes to its article whenever the AI kept the
+          # article headline (auto). `always` = every story, `self` = old way.
+          STORY_CANONICAL: 'auto'
         run: node scripts/generate-webstory.mjs --backfill="${BACKFILL_MAX:-2}" ${PUBLISH_DATE:+--date="$PUBLISH_DATE"}
+
+      - name: Refresh feed.xml from blog/
+        # Cheap and idempotent; keeps RSS listing the newest post with its own
+        # timestamp instead of rotting at a hand-written 06:00:00 GMT.
+        run: node scripts/rebuild-feed.mjs
 
       - name: Commit and push (index-safe, workflow paths excluded)
         if: ${{ github.event.inputs.dry_run != 'true' }}
@@ -80,7 +98,7 @@ jobs:
           git config user.name  "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
           git reset -q
-          git add -A -- web-stories web-stories.html blog blogs.html sitemap.xml \
+          git add -A -- web-stories web-stories.html blogs.html sitemap.xml feed.xml \
                         scripts/publish-log.json scripts/topic-history.json publish-status.json 2>/dev/null || true
           git reset -q -- .github/workflows 2>/dev/null || true
           if git diff --staged --quiet; then

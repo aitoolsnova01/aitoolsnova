@@ -15,6 +15,8 @@ const ROOT = path.resolve(process.cwd());
 const BLOGS_HTML = path.join(ROOT, 'blogs.html');
 const SITEMAP_XML = path.join(ROOT, 'sitemap.xml');
 const HISTORY_FILE = path.join(ROOT, 'scripts', 'topic-history.json');
+const FEED_FILE = path.join(ROOT, 'feed.xml');
+const feedBackup = await fs.readFile(FEED_FILE, 'utf8').catch(() => null);
 
 // Backup
 const blogsBackup = await fs.readFile(BLOGS_HTML, 'utf-8');
@@ -135,6 +137,10 @@ if (mockFile) {
     mockChecks.push(['publish-status.json written', !!statusRaw]);
     mockChecks.push(['publish-status.json says ok', /"ok": true/.test(statusRaw || '')]);
     mockChecks.push(['publish-status.json leaks no API keys', !/mock-key-for-test|gsk_/.test(statusRaw || '')]);
+    // The generator refreshes feed.xml after a publish: a mock post must never
+    // reach a public artifact, and the run must still restore it.
+    const feedAfter = await fs.readFile(FEED_FILE, 'utf8').catch(() => '');
+    mockChecks.push(['feed.xml never lists the mock post', !feedAfter.includes(mockSlug)]);
 } else {
     mockChecks = [['Generated blog file NOT found — pipeline broken!', false]];
 }
@@ -154,6 +160,8 @@ if (mockFile) await fs.unlink(path.join(ROOT, 'blog', mockFile)).catch(() => {})
 await fs.writeFile(BLOGS_HTML, blogsBackup);
 await fs.writeFile(SITEMAP_XML, sitemapBackup);
 await fs.writeFile(HISTORY_FILE, historyBackup);
+if (feedBackup === null) await fs.unlink(FEED_FILE).catch(() => {});
+else await fs.writeFile(FEED_FILE, feedBackup);
 // ledger/status are real repo files - restore them exactly as they were
 for (const [file, backup] of [[LEDGER_FILE, ledgerBackup], [STATUS_FILE, statusBackup]]) {
     if (backup === null) await fs.unlink(file).catch(() => {});

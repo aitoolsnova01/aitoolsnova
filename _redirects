@@ -213,3 +213,8 @@
 /blog/ai                               /blogs                            301
 /blog/chatgpt                          /blog/chatgpt-alternatives        301
 /blog/seo                              /blog/seo-guide                   301
+
+# Auto-generated 301s for de-duplicated web stories.
+# >>> auto-dedupe redirects (scripts/dedupe-listings.mjs)
+/web-stories/ai-tool-privacy-checklist-before-upload       /web-stories/ai-upload-privacy-checks                 301
+# <<< auto-dedupe redirects

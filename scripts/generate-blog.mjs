@@ -31,7 +31,7 @@ import {
     parseJsonLoose, isTransientStatus, fetchWithTimeout, retry as withRetry,
     isoDate, addDays, daysBetween, readLedger, appendLedger, planGaps, publishedDates,
     publishContent, writePublishStatus, visibleWords, isCI, parseArgs, dedupeBy,
-    callSiteApi, siteApiAllowed, CONTENT_PATHS,
+    callSiteApi, siteApiAllowed, CONTENT_PATHS, normalizeTitle, dedupeManagedCards,
 } from './lib/publish-core.mjs';
 
 const ROOT = path.resolve(process.env.REPO_ROOT || process.cwd());
@@ -191,6 +191,64 @@ async function readExistingTitles() {
         } catch { /* ignore unreadable file */ }
     }
     return [...new Set(titles)];
+}
+
+/**
+ * Titles already used by web stories. The story pipeline derives its topics from
+ * the articles, so an article title that a story already used is NOT fresh
+ * material - without this the two jobs happily ship the same headline twice.
+ */
+async function readStoryTitles() {
+    const dir = path.join(ROOT, 'web-stories');
+    let files = [];
+    try { files = (await fs.readdir(dir)).filter(f => f.endsWith('.html')); } catch { return []; }
+    const titles = [];
+    for (const f of files) {
+        try {
+            const html = await fs.readFile(path.join(dir, f), 'utf-8');
+            const m = html.match(/<title>([^<|]+)/i) || html.match(/<h1[^>]*>([^<]+)/i);
+            if (m) titles.push(m[1].trim());
+        } catch { /* unreadable file */ }
+    }
+    return [...new Set(titles)];
+}
+
+/**
+ * Is this topic already on the site - as a blog post or as a story?
+ *
+ * Checked by slug AND by normalized title, because the old code only avoided the
+ * last 25 titles and renamed on a collision (slug += '-xxxx'), which is exactly
+ * how one article ended up published twice under two URLs with the same headline.
+ * Returns the existing slug so the caller can close the day's gap with it.
+ */
+async function findExistingPostFor(topic) {
+    const wantSlug = String(topic.slug || '');
+    const wantTitle = normalizeTitle(topic.title || '');
+    const FILES = [
+        ['blog', BLOG_DIR],
+        ['web-stories', path.join(ROOT, 'web-stories')],
+    ];
+    for (const [kind, dir] of FILES) {
+        let files = [];
+        try { files = (await fs.readdir(dir)).filter(f => f.endsWith('.html')); } catch { continue; }
+        for (const f of files) {
+            const slug = f.replace(/\.html$/, '');
+            if (kind === 'blog' && slug === wantSlug) return { slug, kind, why: 'slug' };
+            let html = '';
+            try { html = (await fs.readFile(path.join(dir, f), 'utf-8')).slice(0, 12_000); } catch { continue; }
+            const title = html.match(/<title>([^<]+)/i)?.[1] || '';
+            const h1 = html.match(/<h1[^>]*>([^<]+)/i)?.[1] || '';
+            const key = normalizeTitle(title) || normalizeTitle(h1);
+            if (wantTitle && key && (key === wantTitle || normalizeTitle(h1) === wantTitle)) {
+                return { slug, kind, why: 'title' };
+            }
+        }
+    }
+    const history = await loadHistory();
+    if (wantTitle && (history.topics || []).some(t => normalizeTitle(t) === wantTitle)) {
+        return { slug: wantSlug, kind: 'history', why: 'title' };
+    }
+    return null;
 }
 
 // ---------- 2. Load / save topic history ----------
@@ -634,14 +692,19 @@ function extractJson(reply) {
 }
 
 // ---------- 4. Generate unique topic ----------
-async function generateTopic(existingTitles, history) {
+async function generateTopic(existingTitles, history, topicAvoidExtra = []) {
     const existingSlugs = [];
     try {
         const files = await fs.readdir(BLOG_DIR);
         files.filter(f => f.endsWith('.html')).forEach(f => existingSlugs.push(f.replace('.html', '')));
     } catch {}
     // Keep avoid list small enough to stay under context / prompt-budget
-    const avoidList = [...existingTitles, ...history.topics].slice(-25);
+    // The window used to be 25 titles, so a topic older than ~4 weeks could be
+    // regenerated word for word. Titles already used by stories count too.
+    const avoidList = dedupeBy(
+        [...existingTitles, ...(history.topics || []), ...(topicAvoidExtra || [])],
+        t => normalizeTitle(t)
+    ).filter(Boolean).slice(-90);
     const NICHES = [
         'AI tools for productivity',
         'AI in freelancing and side hustles',
@@ -1287,10 +1350,36 @@ async function updateBlogsList(topic, content, todayHuman) {
                         </div>
                     </article>
 `;
-    const idx = html.indexOf(START) + START.length;
-    const newHtml = html.slice(0, idx) + '\n' + card + '                    ' + html.slice(idx);
+    // Insert-once, idempotently: any card that already points at this slug is
+    // removed first (inside the managed block only). A retry, a rebased second
+    // push or a re-run used to stack a second copy of the same post in the
+    // listing - the "same blog posted twice" report came from exactly this.
+    const deduped = dedupeManagedCards(html, START, END, topic.slug);
+    if (deduped.removed) {
+        console.log(`♻️  blogs.html: removed ${deduped.removed} stale card(s) for ${topic.slug} before inserting`);
+    }
+    const base = deduped.removed ? deduped.html : html;
+    const idx = base.indexOf(START) + START.length;
+    const newHtml = base.slice(0, idx) + '\n' + card + '                    ' + base.slice(idx);
     await fs.writeFile(BLOGS_HTML, newHtml);
     console.log('✅ blogs.html updated');
+}
+
+/**
+ * feed.xml used to be a hand-maintained file: every item carried the same
+ * "06:00:00 GMT" clock time and the feed stopped growing on 20 Aug while posts
+ * kept publishing. It is now rebuilt from blog/ on every successful run.
+ * Best-effort: a feed problem must never take a publish down with it.
+ */
+async function rebuildFeedBestEffort() {
+    if (process.env.SKIP_FEED === '1') return;
+    try {
+        const { buildFeed } = await import('./rebuild-feed.mjs');
+        const res = await buildFeed({ root: ROOT, write: !DRY_RUN });
+        console.log(`📰 feed.xml rebuilt (${res.items} item(s)${res.stale ? `, was ${res.staleDays}d stale` : ''})`);
+    } catch (err) {
+        console.warn(`⚠️  feed.xml not rebuilt: ${describeError(err)}`);
+    }
 }
 
 // ---------- 8. Update sitemap.xml ----------
@@ -1406,19 +1495,47 @@ async function publishForDate(todayISO) {
 
     console.log('📚 Reading existing blog titles...');
     const existingTitles = await readExistingTitles();
-    console.log(`   Found ${existingTitles.length} existing titles.`);
+    const storyTitles = await readStoryTitles();
+    console.log(`   Found ${existingTitles.length} blog titles + ${storyTitles.length} story titles.`);
     const history = await loadHistory();
 
     console.log('\n🎯 Generating unique topic...');
-    const topic = await generateTopic(existingTitles, history);
+    const topic = await generateTopic(existingTitles, history, storyTitles);
     console.log(`   ➤ Title: ${topic.title}`);
     console.log(`   ➤ Slug:  ${topic.slug}`);
     console.log(`   ➤ Category: ${topic.category}`);
 
+    // Duplicate gate BEFORE any expensive content/image generation. Renaming the
+    // slug instead (the old behaviour) is what filled the site with the same
+    // article under two URLs, listed twice in blogs.html.
+    let dupe = process.env.ALLOW_DUPLICATE_TOPIC === '1' ? null : await findExistingPostFor(topic);
+    // A headline that only a WEB STORY already uses is fixable: ask for one more
+    // topic. (An article match is fatal for this date - the day is covered.)
+    if (dupe && dupe.kind === 'web-stories') {
+        console.log(`♻️  "${topic.title}" is already a story (${dupe.slug}) - asking for one more topic...`);
+        const retry = await generateTopic([...existingTitles, topic.title], history, storyTitles);
+        retry.slug = retry.slug.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+        const dupe2 = await findExistingPostFor(retry);
+        if (!dupe2) { topic.title = retry.title; topic.slug = retry.slug; topic.category = retry.category; topic.emoji = retry.emoji; topic.hero_prompt = retry.hero_prompt; topic.primary_keyword = retry.primary_keyword; topic.geo = retry.geo; topic.geo_keywords = retry.geo_keywords; topic.unique_angle = retry.unique_angle; dupe = null; console.log(`   ➤ New topic: ${topic.title}`); }
+        else dupe = dupe2;
+    }
+    if (dupe && process.env.ALLOW_DUPLICATE_TOPIC !== '1') {
+        const err = new PublishError(
+            `Topic "${topic.title}" already exists as ${dupe.kind}/${dupe.slug} (${dupe.why} match) — skipped, day marked as covered`,
+            { code: 'duplicate-topic' }
+        );
+        err.existingSlug = dupe.slug;
+        err.existingKind = dupe.kind;
+        throw err;
+    }
+
     const outFile = path.join(BLOG_DIR, `${topic.slug}.html`);
     if (existsSync(outFile)) {
-        console.log(`⚠️  ${topic.slug}.html already exists — appending a suffix for safety.`);
-        topic.slug += '-' + today.getTime().toString(36).slice(-4);
+        const err = new PublishError(`blog/${topic.slug}.html already exists — refusing to overwrite or fork a second URL for it`,
+            { code: 'duplicate-topic', hint: 'Re-run with --date=<the missing day>, or delete the stale file if the day really is unpublished.' });
+        err.existingSlug = topic.slug;
+        err.existingKind = 'blog';
+        throw err;
     }
 
     console.log(`\n📝 Generating content (target ${TARGET_WORDS} words, floor ${MIN_WORDS})...`);
@@ -1533,11 +1650,7 @@ async function publishForDate(todayISO) {
     console.log('\n🔗 Updating blogs.html and sitemap.xml...');
     await updateBlogsList(topic, content, todayHuman);
     await updateSitemap(topic, todayISO);
-
-
-    console.log('\n🔗 Updating blogs.html and sitemap.xml...');
-    await updateBlogsList(topic, content, todayHuman);
-    await updateSitemap(topic, todayISO);
+    await rebuildFeedBestEffort();
 
     history.topics.push(topic.title);
     if (history.topics.length > 200) history.topics = history.topics.slice(-200);
@@ -1582,14 +1695,15 @@ async function runCheck() {
 // ---------- Publish bookkeeping (ledger + live status file) ----------
 async function recordAndPublish({ results, pushErr }) {
     const okOnes = results.filter(r => r.ok);
-    const firstErr = results.find(r => !r.ok);
+    const covered = results.filter(r => r.ok || r.skipped);
+    const firstErr = results.find(r => !r.ok && !r.skipped);
     let pushed = false;
     const selfPublish = !DRY_RUN && process.env.SKIP_AUTO_PUBLISH !== '1' && process.env.NO_PUBLISH !== '1'
         && (isCI() || process.env.FORCE_PUBLISH === '1');
     try {
         await writePublishStatus(ROOT, {
             kind: 'blog',
-            ok: okOnes.length > 0 && !pushErr,
+            ok: covered.length > 0 && !pushErr,
             date: okOnes.at(-1)?.date || isoDate(),
             slug: okOnes.map(r => r.slug).join(','),
             pushed,
@@ -1640,6 +1754,18 @@ async function main() {
             await appendLedger(ROOT, { kind: 'blog', date: d, slug: r.slug, status: 'ok', words: r.words });
         } catch (err) {
             const reason = describeError(err);
+            // A duplicate is NOT a failed day: the day already has content, it
+            // just lives at another slug. Record it against the existing post so
+            // the gap planner stops re-publishing the same topic every run.
+            if (err?.code === 'duplicate-topic') {
+                const covered = err.existingKind === 'blog' ? err.existingSlug : '';
+                console.log(`♻️  ${d}: ${reason}`);
+                results.push({ date: d, ok: false, skipped: true, slug: covered, error: reason, code: 'duplicate-topic' });
+                if (covered) {
+                    await appendLedger(ROOT, { kind: 'blog', date: d, slug: covered, status: 'ok', reason: 'deduped to the existing post' });
+                }
+                continue;
+            }
             results.push({ date: d, ok: false, error: reason, code: err?.code || 'error' });
             await appendLedger(ROOT, { kind: 'blog', date: d, slug: '', status: 'fail', reason });
             annotate('error', `Blog publish failed for ${d}`, reason + (err?.hint ? ` — ${err.hint}` : ''));
@@ -1655,17 +1781,22 @@ async function main() {
         '',
         '| Date | Status | Slug | Words |',
         '|---|---|---|---|',
-        ...results.map(r => `| ${r.date} | ${r.ok ? '✅ published' : '❌ failed'} | ${r.slug || '-'} | ${r.words || '-'}${r.ok ? '' : ` — ${r.error}`.slice(0, 160)} |`),
+        ...results.map(r => `| ${r.date} | ${r.ok ? '✅ published' : r.skipped ? '♻️ already published' : '❌ failed'} | ${r.slug || '-'} | ${r.words || '-'}${r.ok ? '' : ` — ${r.error}`.slice(0, 160)} |`),
         '',
         `Pushed to main: ${pushed ? 'yes' : 'no'} · Keys: ${readKeys().present.join(', ') || 'none (site API used)'} · Providers: Groq/Gemini/DeepSeek/site-api chain`,
     ]);
 
-    if (!okOnes.length) {
+    const skipped = results.filter(r => r.skipped);
+    if (!okOnes.length && !skipped.length) {
         const why = results[0]?.error || 'unknown';
         annotate('error', 'No blog published', `${why} (see the run log above; publish-status.json records this)`);
         throw new PublishError(`Blog run published nothing. First error: ${why}`, { code: 'nothing-published' });
     }
     if (pushErr) throw pushErr;
+    if (!okOnes.length) {
+        console.log(`\n✅ Done: nothing new to publish - ${skipped.length} day(s) already covered by an existing post.`);
+        return 0;
+    }
     console.log(`\n✅ Done: ${okOnes.length} post(s)${pushed ? ' pushed to main' : ' written locally'}.`);
     return 0;
 }

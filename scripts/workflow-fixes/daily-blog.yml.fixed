@@ -18,6 +18,13 @@ name: Blog Auto-Publish (daily)
 # 5. The commit step resets the index first, so no stale staged file (e.g. a
 #    workflow YAML touched by a self-heal) can ride into the push and get the
 #    push refused by GitHub's "workflows permission" rule.
+# 6. ONE lock for both publishers: `concurrency.group` is shared with
+#    daily-webstory.yml (`auto-publish-content`). The story job also writes into
+#    blog/ + blogs.html as a fallback, and two jobs racing on the same day each
+#    generated "the missing post" and both pushes survived the rebase - that is
+#    how one article ended up listed twice in blogs.html at the same time.
+# 7. feed.xml is rebuilt from blog/ on every run; it used to be a hand-kept file
+#    where every item had the same "06:00:00 GMT" timestamp.
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -43,7 +50,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: auto-publish-blog
+  # Shared with daily-webstory.yml on purpose: only one publisher may write
+  # content (both jobs touch blog/, blogs.html, sitemap.xml, feed.xml) at a time.
+  group: auto-publish-content
   cancel-in-progress: false
 
 jobs:
@@ -88,6 +97,11 @@ jobs:
           SKIP_AUTO_PUBLISH: '1'
         run: node scripts/generate-blog.mjs --backfill="${BACKFILL_MAX:-2}" ${PUBLISH_DATE:+--date="$PUBLISH_DATE"}
 
+      - name: Refresh feed.xml from blog/
+        # The feed is generated, not hand-kept: this is what stops RSS going
+        # stale and stops two items sharing one pubDate.
+        run: node scripts/rebuild-feed.mjs
+
       - name: Commit and push (index-safe)
         if: ${{ github.event.inputs.dry_run != 'true' }}
         run: |
@@ -95,7 +109,7 @@ jobs:
           git config user.name  "AIToolsNova Bot"
           git config user.email "bot@aitoolsnova.com"
           git reset -q                                   # never inherit a stale index
-          git add -A -- blog blogs.html sitemap.xml scripts/publish-log.json scripts/topic-history.json publish-status.json 2>/dev/null || true
+          git add -A -- blog blogs.html sitemap.xml feed.xml scripts/publish-log.json scripts/topic-history.json publish-status.json 2>/dev/null || true
           git reset -q -- .github/workflows 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Nothing left to commit - the generator already pushed, or there was nothing to publish."

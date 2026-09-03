@@ -21,13 +21,24 @@ The replacements:
    red runs; only a real, repeated outage fails (and opens an issue).
 4. Set `SITE_API_FALLBACK=1` explicitly so the keyless fallback (Cloudflare Workers
    AI binding via `/api/gemini`) is always available.
+5. **One content writer** (2026-09-03): both publish jobs share
+   `concurrency.group: auto-publish-content`, the story job sets
+   `AUTO_BLOG_FALLBACK=0` and no longer stages `blog/`, and both refresh
+   `feed.xml` before committing — see `DUPLICATE_PUBLISH_FIX_2026-09-03.md`.
+   The duplicate-content repairs in `scripts/` work **without** this YAML being
+   applied; the shared lock only removes the race window.
 
 ## How to apply (2 minutes)
 
-> ⚠️ **STATUS (2026-08-31): ye step abhi bhi PENDING hai.** PR #29 (30 Aug) ne ye
-> files banayi thi, par automation bot ko `.github/workflows/` edit karne ki
-> GitHub permission nahi hoti, isliye asli workflows aaj bhi purane (silent-green)
-> hain. **Sirf aap (repo owner) hi inhe GitHub web UI se apply kar sakte hain.**
+> ⚠️ **STATUS (2026-09-03):** ye `.txt` copies ab `scripts/workflow-fixes/*.fixed`
+> se generate hoti hain, isliye dono hamesha same rakhte hain. Bot token ko
+> `.github/workflows/` me push karne ki `workflows` permission nahi milti, par
+> **daily-webstory job har run par `WORKFLOW_PAT` se ye files khud apply kar push
+> kar deta hai** (`healWorkflowsIfAllowed()` in `scripts/generate-webstory.mjs`) —
+> matlab aam taur par aapko kuch karne ki zaroorat nahi.
+>
+> Sirf tab manual apply karo jab self-heal warn kare (Actions log me
+> "Workflow YAML drift not applied") ya `WORKFLOW_PAT` secret na ho:
 
 In the GitHub **web UI** (browser — mobile se bhi ho jayega):
 
