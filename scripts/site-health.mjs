@@ -60,7 +60,14 @@ const add = (group, name, status, detail = '') => {
 
 // ------------------------------------------------------------- helpers ----
 async function probe(url, { tries = 3, method = 'GET' } = {}) {
-    const last = { status: 0, err: null, redirects: [] };
+    // `let`, NOT `const`: the retry loop rebinds `last` on a non-2xx response
+    // (line below) and in the catch. With `const` the very first 429 / 5xx /
+    // timeout threw `TypeError: Assignment to constant variable.`, which the
+    // caller swallowed into "live probing - skipped". One flaky request
+    // therefore disabled EVERY live check (homepage, ads.txt, all ~113 sitemap
+    // URLs) and the health job went green-on-outage again - the exact failure
+    // mode this script was rewritten to prevent.
+    let last = { status: 0, err: null, redirects: [] };
     for (let attempt = 1; attempt <= tries; attempt++) {
         const started = Date.now();
         try {
@@ -420,7 +427,7 @@ async function main() {
     return fails.length ? 1 : 0;
 }
 
-export { main, checkRepoFiles, checkSitemap, checkContentFreshness, checkSchemaAndMeta, checkLive };
+export { main, checkRepoFiles, checkSitemap, checkContentFreshness, checkSchemaAndMeta, checkLive, probe };
 
 // Only self-run when invoked directly - the unit tests import these helpers.
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

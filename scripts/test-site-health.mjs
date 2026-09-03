@@ -13,7 +13,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { classifyLiveStatus, planGapDays } from './site-health.mjs';
+import { classifyLiveStatus, planGapDays, probe } from './site-health.mjs';
 
 let pass = 0, fail = 0;
 const check = (name, ok, extra = '') => {
@@ -46,6 +46,20 @@ check('301 passes (redirect followed)', classifyLiveStatus(301, 'https://aitools
     check('no gaps when the last days are covered', none.length === 0, none.join(','));
     const capped = planGapDays([], '2026-08-28', { lookback: 3 });
     check('lookback caps the backlog', capped.length === 3, capped.join(','));
+}
+
+/* ── probe() must survive network noise ────────────────────────────── */
+// Regression: `last` used to be declared `const` inside probe() and rebound in
+// the catch, so a single failed request threw "Assignment to constant
+// variable" and main() downgraded the ENTIRE live group to a warning.
+// Port 9 has nothing listening -> guaranteed ECONNREFUSED, no network needed.
+{
+    const r = await probe('http://127.0.0.1:9/nothing-listens-here', { tries: 1 }).catch(e => ({ threw: e }));
+    check('probe() returns instead of throwing when the request fails', !r.threw, r.threw?.message);
+    check('probe() reports status 0 for a failed request', r.status === 0, `status=${r.status}`);
+    check('probe() keeps the error message', typeof r.err === 'string' && r.err.length > 0, String(r.err));
+    check('probe() always returns a redirects array', Array.isArray(r.redirects), `redirects=${r.redirects}`);
+    check('probe() flags the request as exhausted', r.exhausted === true, `exhausted=${r.exhausted}`);
 }
 
 /* ── end-to-end on a deliberately broken fixture repo ──────────────── */
