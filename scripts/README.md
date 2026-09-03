@@ -4,7 +4,7 @@
 
 - **Har din 2 baar (05:20 + 14:20 UTC)** automatically **unique blog post** publish karta hai — aur pichhle chhoot gaye din khud bhar leta hai (backfill)
 - Publish hone par bhi shaq hai? Agle run ka last step `origin/main` me file verify karta hai — **"green but empty" ab possible nahi**
-- **Duplicate check**: Existing blogs + har generate hua topic history file me save karke, next time repeat nahi hota
+- **Duplicate check (teen level par)**: (a) *topic* — existing blog titles + story titles + poori 200-entry history AI prompt me jaati hai; (b) *publish* — slug ya headline site par pehle se mila to post generate hi nahi hoti (`duplicate-topic` skip) aur wo din covered mark ho jata hai; (c) *listing* — `blogs.html` me insert se pehle us slug ka purana card hata diya jata hai, isliye ek post kabhi do baar list nahi hoti
 - **Professional & Safe**:
   - Sirf verified facts likhta hai
   - Rumors ko clearly "Rumored:" label karta hai
@@ -77,7 +77,9 @@ Automation start hone se pehle ek baar test karo:
 
 Script me ye rules **hard-coded** hain:
 
-1. ✅ **No duplicate topics** — 200 previous titles memory + existing blog scan
+1. ✅ **No duplicate topics** — existing blog titles + story titles + 200-entry history prompt me jaati hai;
+   uske baad bhi topic ka slug/headline site par mil gaya to post generate hi nahi hoti (`duplicate-topic`
+   skip) aur din ledger me covered mark ho jata hai — pehle yahin slug rename karke doosra URL ban jata tha
 2. ✅ **No fake facts/rumors** — AI ko explicit instruction: "Only verified facts. Mark rumors as rumors."
 3. ✅ **No illegal content** — Prompt explicitly bans it
 4. ✅ **No defamation** — No personal attacks on individuals
@@ -87,6 +89,17 @@ Script me ye rules **hard-coded** hain:
 8. ✅ **Thin content publish nahi hota** — `MIN_WORDS=1000` / `MIN_SECTIONS=5` (story: `MIN_SLIDES=6`); gate fail ho to 3 baar retry, phir bhi fail = RED run
 9. ✅ **Index-safe git** — content commit me sirf whitelisted paths jate hain; `.github/workflows/**` har baar index se hataya jata hai (yahi wajah thi ki 40 din se story job red thi)
 10. ✅ **Har run ka record** — `scripts/publish-log.json` (ledger) + live `https://aitoolsnova.com/publish-status.json` (sirf status/counts, key values kabhi nahi)
+11. ✅ **Ek hi content writer** — dono publish jobs `concurrency.group: auto-publish-content` share karte hain,
+    aur story job ab `blog/` ko sparsh nahi karta (`AUTO_BLOG_FALLBACK=0`). Pehle 05:20 ka blog run aur 06:45
+    ke story-run ka blog-fallback ek hi din ka post do baar bana kar dono push kar dete the — same post, same
+    time, listing me do baar
+12. ✅ **Story = article ka companion, duplicate nahi** — story ka URL ab `<article-slug>-story` (pehle bilkul
+    same slug tha), page par `<meta name="aitoolsnova:source-blog">` provenance hoti hai (dedupe isi se hota
+    hai, filename se nahi), story ki date kabhi apne source article se purani nahi hoti, CTA me "Read the full
+    article" link hota hai, aur agar headline article jaisa hi reh gaya to story apna canonical usi article ko
+    de deti hai (`STORY_CANONICAL=auto|always|self`)
+13. ✅ **feed.xml generated hai** — har publish ke baad `scripts/rebuild-feed.mjs` se rebuild. Pehle ye haath se
+    likhi file thi: saare items ka time `06:00:00 GMT` same, aur 20 Aug 2026 ke baad koi naya item hi nahi aaya
 
 ---
 
@@ -179,9 +192,11 @@ Local run by default push nahi karta (`SKIP_AUTO_PUBLISH` logic) — safety.
 | `generate-webstory.mjs` | web story from newest article (same CLI) |
 | `daily-publish-helper.mjs` | `status` / `validate` / `sync` / `heal` — workflow config + self-heal |
 | `verify-publish.mjs` | CI ka final gate: file disk par + `origin/main` par + SEO complete |
-| `site-health.mjs` | health checker (files/sitemap/freshness/markup/audits/automation/live) |
+| `site-health.mjs` | health checker (files/sitemap/freshness/markup/audits/automation/live + `duplicates` group) |
+| `rebuild-feed.mjs` | `feed.xml` ko `blog/` se regenerate karta hai (`--check` = staleness gate) |
+| `dedupe-listings.mjs` | jo duplicates pipeline chhod gaya tha unki repair: `blogs.html`/`web-stories.html` cards, sitemap dupes, story provenance + canonical + re-dating, extra story ka 301 (default dry-run, `--apply` se likhta hai) |
 | `check-workflows.mjs` | workflow YAML lint (GitHub-reject patterns + failure-hiding patterns) |
-| `test-publish-core.mjs`, `test-e2e-mock.mjs`, `test-webstory-smoke.mjs`, `test-webstory-e2e.mjs`, `test-publish-helper.mjs`, `test-site-health.mjs`, `test-dry-run.mjs`, `test-gemini-fallback.mjs`, `test-ats.mjs` | tests (sab `npm test` me) |
+| `test-dedup.mjs`, `test-publish-core.mjs`, `test-e2e-mock.mjs`, `test-webstory-smoke.mjs`, `test-webstory-e2e.mjs`, `test-publish-helper.mjs`, `test-site-health.mjs`, `test-dry-run.mjs`, `test-gemini-fallback.mjs`, `test-ats.mjs` | tests (sab `npm test` me) |
 
 ---
 

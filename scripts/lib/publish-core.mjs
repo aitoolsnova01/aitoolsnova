@@ -384,8 +384,8 @@ export const git = (args, cwd, opts = {}) =>
     execFileP('git', args, { cwd, maxBuffer: 64 * 1024 * 1024, env: { ...process.env, GIT_TERMINAL_PROMPT: '0' }, ...opts });
 
 export const CONTENT_PATHS = {
-    blog: ['blog/', 'blogs.html', 'sitemap.xml', 'scripts/topic-history.json', 'scripts/publish-log.json', 'publish-status.json'],
-    webstory: ['web-stories/', 'web-stories.html', 'sitemap.xml', 'blog/', 'blogs.html', 'scripts/topic-history.json', 'scripts/publish-log.json', 'publish-status.json'],
+    blog: ['blog/', 'blogs.html', 'sitemap.xml', 'feed.xml', 'scripts/topic-history.json', 'scripts/publish-log.json', 'publish-status.json'],
+    webstory: ['web-stories/', 'web-stories.html', 'sitemap.xml', 'feed.xml', 'blog/', 'blogs.html', 'scripts/topic-history.json', 'scripts/publish-log.json', 'publish-status.json'],
 };
 
 function workflowsBlockedReason(err) {
@@ -672,10 +672,88 @@ export function parseArgs(argv = process.argv.slice(2)) {
     return { flags, positional, num, bool, get: (k, d) => (flags[k] === undefined ? d : flags[k]) };
 }
 
+
+// ------------------------------------------------- duplicate-content keys --
+
+/**
+ * Normalized form of a headline, used as the duplicate-detection key.
+ *
+ * Why this exists: the auto-publish pipeline used to compare only the last 25
+ * titles, and only after trimming a brand suffix, so the same topic could be
+ * published twice (once as /blog/<slug>, once as /web-stories/<slug>, and twice
+ * in blogs.html). Everything that has to answer "is this the same post?" now
+ * goes through this function: lower-cased, no punctuation, no brand suffix, no
+ * trailing year, whitespace collapsed.
+ */
+export function normalizeTitle(title) {
+    return String(title || '')
+        .replace(/<[^>]+>/g, ' ')
+        .split('|')[0]
+        .toLowerCase()
+        .replace(/[\u2010-\u2015\u2212]/g, '-')
+        .replace(/&[a-z]+;/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\b(19|20)\d{2}\b/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/** The `rel` value of the read-more link that identifies a card in blogs.html. */
+export function cardLinkSelector(slug) {
+    return `href="blog/${slug}" class="read-more"`;
+}
+
+/**
+ * Remove every <article class="blog-card"> that links to `slug` from the
+ * managed block. Re-runs, retries and a rebased second publisher used to insert
+ * the same card again and again - blogs.html showed one post twice, which is
+ * exactly the "duplicate post at a duplicate time" symptom.
+ *
+ * Returns { html, removed } and never touches anything outside START/END, so
+ * hand-written markup is safe.
+ */
+export function dedupeManagedCards(html, START, END, slug) {
+    const start = html.indexOf(START);
+    const end = html.indexOf(END);
+    if (start < 0 || end < 0 || end < start) return { html, removed: 0 };
+    const head = html.slice(0, start + START.length);
+    const tail = html.slice(end);
+    const block = html.slice(start + START.length, end);
+    const needle = cardLinkSelector(slug);
+    let removed = 0;
+    const kept = block.replace(/[ \t]*<article class="blog-card"[\s\S]*?<\/article>\s*/g, (m) => {
+        if (!m.includes(needle)) return m;
+        removed++;
+        return '';
+    });
+    return { html: head + kept + tail, removed };
+}
+
+/** Story -> article provenance. Written into every generated story page. */
+export const STORY_SOURCE_META = 'aitoolsnova:source-blog';
+
+export function storySourceMeta(slug) {
+    return `<meta name="${STORY_SOURCE_META}" content="${slug}">`;
+}
+
+/** Reads the provenance of a story page (undefined when it has none). */
+export function storySourceOf(html) {
+    const m = String(html || '').match(
+        new RegExp(`name="${STORY_SOURCE_META}"\\s+content="([^"]+)"`)
+    );
+    if (m) return m[1];
+    // Legacy pages carry no meta tag: a story whose slug (or canonical) matches
+    // an article was derived from it.
+    const canon = String(html || '').match(/rel="canonical"[^>]*href="[^"]*\/blog\/([^"/]+)"/);
+    if (canon) return canon[1];
+    return undefined;
+}
+
 export default {
     SITE, readKeys, noKeyGuidance, annotate, stepSummary, PublishError, describeError,
     fetchWithTimeout, isTransientStatus, retry, parseJsonLoose, isoDate, addDays, daysBetween,
     readLedger, appendLedger, publishedDates, publishedDatesFromFiles, planGaps,
     publishContent, CONTENT_PATHS, writePublishStatus, visibleWords, isCI, parseArgs,
-    chunk, dedupeBy,
+    chunk, dedupeBy, normalizeTitle, cardLinkSelector, dedupeManagedCards,
+    STORY_SOURCE_META, storySourceMeta, storySourceOf,
 };

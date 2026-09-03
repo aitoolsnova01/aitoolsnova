@@ -7,11 +7,15 @@
     "build": "python3 scripts/audit-broken-links.py",
     "audit": "python3 scripts/audit-broken-links.py",
     "audit-seo": "python3 scripts/audit-seo-assets.py",
-    "test": "npm run audit && npm run audit-seo && node scripts/check-workflows.mjs && node scripts/test-ats.mjs && node scripts/test-publish-helper.mjs && node scripts/test-gemini-fallback.mjs && node scripts/test-dry-run.mjs && node scripts/test-publish-core.mjs && node scripts/test-e2e-mock.mjs && GROQ_API_KEY=test node scripts/test-webstory-smoke.mjs && node scripts/test-webstory-e2e.mjs && node scripts/test-site-health.mjs",
+    "test": "npm run audit && npm run audit-seo && node scripts/check-workflows.mjs && node scripts/test-ats.mjs && node scripts/test-publish-helper.mjs && node scripts/test-gemini-fallback.mjs && node scripts/test-dry-run.mjs && node scripts/test-publish-core.mjs && node scripts/test-dedup.mjs && node scripts/test-e2e-mock.mjs && GROQ_API_KEY=test node scripts/test-webstory-smoke.mjs && node scripts/test-webstory-e2e.mjs && node scripts/test-site-health.mjs",
     "site-health": "node scripts/site-health.mjs",
     "site-health:offline": "node scripts/site-health.mjs --offline",
     "verify-publish": "node scripts/verify-publish.mjs",
-    "test:publish": "node scripts/test-publish-core.mjs && node scripts/test-e2e-mock.mjs && node scripts/test-webstory-e2e.mjs && node scripts/test-publish-helper.mjs && node scripts/test-site-health.mjs && node scripts/check-workflows.mjs"
+    "test:publish": "node scripts/test-dedup.mjs && node scripts/test-publish-core.mjs && node scripts/test-e2e-mock.mjs && node scripts/test-webstory-e2e.mjs && node scripts/test-publish-helper.mjs && node scripts/test-site-health.mjs && node scripts/check-workflows.mjs",
+    "feed": "node scripts/rebuild-feed.mjs",
+    "feed:check": "node scripts/rebuild-feed.mjs --check",
+    "dedupe": "node scripts/dedupe-listings.mjs",
+    "dedupe:apply": "node scripts/dedupe-listings.mjs --apply"
   },
   "engines": {
     "node": ">=20"

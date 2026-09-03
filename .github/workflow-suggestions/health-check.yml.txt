@@ -1,112 +1,132 @@
 name: Site Health Check
 
-# Verifies the live site is actually serving. Designed to avoid false alarms:
-# each check retries with a back-off (Cloudflare edge cold-starts / transient
-# network blips must not turn the run red). Only a real, repeated failure does.
+# ─────────────────────────────────────────────────────────────────────────────
+# This job used to be three bare `curl`s of the live site: no timeout, no retry,
+# no classification, no report - and it checked nothing about the automation.
+# Result: it went red on any Cloudflare bot challenge / rate limit (noise that
+# buried the real signal), while "no blog for 5 days" stayed invisible.
+#
+# It now runs scripts/site-health.mjs, which:
+#   * distinguishes a real breakage (404 / dead page / missing file) from
+#     network noise (403 / 429 / timeout -> warning, retried with backoff);
+#   * checks content freshness (blog + story), the publish ledger, the sitemap,
+#     robots/ads/feed, JSON-LD validity and the publish workflows themselves;
+#   * writes a run summary + test_reports/site-health.json;
+#   * opens ONE GitHub issue per problem (updated, not spammed) so nothing can
+#     rot silently again.
+#
+# `7 */6 * * *` instead of `0 */6 * * *`: GitHub queues scheduled runs behind
+# the :00 pile-up, and this repo's health runs were landing 3-4 hours late.
+# ─────────────────────────────────────────────────────────────────────────────
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # every 6 hours
+    - cron: '7 1,7,13,19 * * *'
   workflow_dispatch:
+    inputs:
+      offline:
+        description: 'Repo-only checks (skip live HTTP)'
+        type: boolean
+        required: false
+        default: false
+      max_age_days:
+        description: 'Fail if newest post/story is older than N days'
+        required: false
+        default: '3'
 
 permissions:
   contents: read
   issues: write
 
+concurrency:
+  group: site-health
+  cancel-in-progress: true
+
 jobs:
   health:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
-      - name: 🩺 Homepage, ads.txt and sitemap URLs (with retries)
-        run: |
-          set -uo pipefail
-          UA="Mozilla/5.0 (compatible; AIToolsNova-HealthCheck/1.0)"
-
-          # fetch_code <url> -> echoes final HTTP code, retrying up to 5 times.
-          fetch_code () {
-            local url="$1" code="" i
-            for i in 1 2 3 4 5; do
-              code=$(curl -sL -o /dev/null -w "%{http_code}" -A "$UA" --max-time 25 "$url" || echo "000")
-              if [ "$code" = "200" ]; then echo "200"; return 0; fi
-              echo "  attempt $i: $url -> $code" >&2
-              sleep $((i * 5))
-            done
-            echo "$code"; return 1
-          }
-
-          FAIL=0
-
-          HOME_CODE=$(fetch_code "https://aitoolsnova.com/")
-          echo "Homepage: $HOME_CODE"
-          [ "$HOME_CODE" = "200" ] || { echo "::error::Homepage returned $HOME_CODE (expected 200)"; FAIL=1; }
-
-          ADS_CODE=$(fetch_code "https://aitoolsnova.com/ads.txt")
-          echo "ads.txt: $ADS_CODE"
-          if [ "$ADS_CODE" = "200" ]; then
-            BODY=$(curl -sL -A "$UA" --max-time 25 "https://aitoolsnova.com/ads.txt" || true)
-            echo "$BODY"
-            echo "$BODY" | grep -q "pub-2278101269918728" || { echo "::error::ads.txt missing publisher ID"; FAIL=1; }
-          else
-            echo "::error::ads.txt returned $ADS_CODE"; FAIL=1
-          fi
-
-          # Check every sitemap URL, but tolerate a handful of transient
-          # non-200s: only fail when MORE THAN 3 URLs are broken (real 404s),
-          # which indicates a deploy/redirect regression rather than a blip.
-          curl -sL -A "$UA" --max-time 25 https://aitoolsnova.com/sitemap.xml -o s.xml
-          grep -o '<loc>[^<]*</loc>' s.xml | sed 's|<loc>||;s|</loc>||' > urls.txt
-          TOTAL=$(wc -l < urls.txt | tr -d ' ')
-          BAD=0; BADURLS=""
-          while read -r u; do
-            [ -z "$u" ] && continue
-            C=$(curl -sL -o /dev/null -w "%{http_code}" -A "$UA" --max-time 25 "$u" || echo "000")
-            if [ "$C" != "200" ]; then
-              # retry once for transient failures
-              sleep 2
-              C=$(curl -sL -o /dev/null -w "%{http_code}" -A "$UA" --max-time 25 "$u" || echo "000")
-            fi
-            if [ "$C" != "200" ]; then
-              echo "::warning::$C $u"
-              BAD=$((BAD+1)); BADURLS="$BADURLS$C $u\n"
-            fi
-          done < urls.txt
-          echo "Sitemap URLs checked: $TOTAL, broken: $BAD"
-          if [ "$BAD" -gt 3 ]; then
-            echo "::error::$BAD sitemap URLs are not 200"
-            printf "$BADURLS" | head -20
-            FAIL=1
-          fi
-
-          if [ "$FAIL" -ne 0 ]; then
-            echo "HEALTH_FAILED=1" >> "$GITHUB_ENV"
-            exit 1
-          fi
-          echo "✅ Site healthy: homepage 200, ads.txt OK, sitemap URLs reachable."
-
-      - name: Open issue if site is down
-        if: failure()
-        uses: actions/github-script@v7
         with:
-          script: |
-            const title = `🚨 Site health check failed — ${new Date().toISOString().slice(0,10)}`;
-            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = [
-              'The live-site health check failed after retries (homepage / ads.txt / sitemap URLs).',
-              '',
-              `- Run: ${runUrl}`,
-              '',
-              'Check Cloudflare Pages deploy status and that the domain/SSL is active. If the site loads fine for you, re-run this workflow once to confirm it is not a transient edge issue.',
-            ].join('\n');
-            const existing = await github.rest.issues.list({
-              owner: context.repo.owner, repo: context.repo.repo,
-              state: 'open', labels: ['site-down'], per_page: 5,
-            });
-            if (existing.data.length === 0) {
-              await github.rest.issues.create({
-                owner: context.repo.owner, repo: context.repo.repo,
-                title, body, labels: ['site-down', 'monitoring'],
-              });
-            }
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 🩺 Run health checks
+        id: health
+        continue-on-error: true
+        run: |
+          node scripts/site-health.mjs --ci \
+            --max-age-days="${{ github.event.inputs.max_age_days || '3' }}" \
+            ${{ github.event.inputs.offline == 'true' && '--offline' || '' }} \
+            --json test_reports/site-health.json
+
+      - name: 📤 Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-health-report
+          path: |
+            test_reports/site-health.json
+            publish-status.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: 📣 Open or update one tracking issue
+        if: steps.health.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITLE="Site health: failing checks ($(date -u +%Y-%m-%d))"
+          BODY=$(node -e '
+            const fs=require("fs");
+            let r={failed:[],summary:{}};
+            try { r=JSON.parse(fs.readFileSync("test_reports/site-health.json","utf8")); } catch {}
+            const lines=(r.failed||[]).map(f=>`- **${f.group}** · ${f.name}${f.detail?` — ${f.detail}`:""}`);
+            console.log([
+              "The scheduled health check found real problems:",
+              "",
+              lines.join("\n") || "- (see run log)",
+              "",
+              `Report: ${process.env.RUN_URL}`,
+              "",
+              "Automation state is also published at https://aitoolsnova.com/publish-status.json",
+              "and recorded in `scripts/publish-log.json`.",
+              "",
+              "Fixes: node scripts/daily-publish-helper.mjs status",
+            ].join("\\n"));
+          ')
+          # One open issue at a time: update the existing one instead of spamming.
+          # Find by title (labels may not exist in this repo yet).
+          EXISTING=$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=30" --jq '.[] | select(.title | startswith("Site health")) | .number' 2>/dev/null | head -1 || true)
+          if [ -n "${EXISTING:-}" ] && [ "$EXISTING" != "null" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/$EXISTING" -f body="$BODY" >/dev/null || true
+            echo "Updated tracking issue #$EXISTING"
+          else
+            # The `site-health` label may not exist yet; never let bookkeeping
+            # turn a green-looking red run into a second failure.
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues" -f title="$TITLE" -f body="$BODY" -f "labels[]=site-health" >/dev/null 2>&1 \
+              || gh api -X POST "repos/$GITHUB_REPOSITORY/issues" -f title="$TITLE" -f body="$BODY" >/dev/null || true
+            echo "Opened tracking issue"
+          fi
+
+      - name: 🧹 Close the tracking issue when green
+        if: steps.health.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OPEN=$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=30" --jq '.[] | select(.title | startswith("Site health")) | .number' 2>/dev/null || true)
+          for n in $OPEN; do
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/$n" -f state=closed \
+              -f state_reason=completed >/dev/null && echo "closed #$n"
+          done
+
+      - name: ❌ Fail the run on real problems
+        if: steps.health.outcome == 'failure'
+        run: |
+          echo "::error title=Site health failed::See the check output above and the tracking issue. Do not ignore this: it means users or the auto-publish pipeline are affected."
+          exit 1
