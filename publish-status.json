@@ -1,40 +1,51 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-03T05:02:48.419Z",
+  "generatedAt": "2026-09-03T09:54:11.098Z",
   "automation": {
     "blog": {
       "newest": "2026-09-02",
       "daysSinceNewest": 1
     },
     "webstory": {
-      "newest": "2026-09-03",
-      "daysSinceNewest": 0
+      "newest": "2026-09-02",
+      "daysSinceNewest": 1
     }
   },
   "lastRun": {
-    "kind": "webstory",
+    "kind": "blog",
     "ok": true,
-    "date": "2026-09-03",
-    "slug": "cutting-edge-ai-tools-small-business",
+    "date": "2026-08-26",
+    "slug": "offline-ai-tools-no-signup,free-ai-tools-upsc-ssc-2026",
     "pushed": false,
     "reason": "",
-    "at": "2026-09-03T05:02:48.419Z"
+    "at": "2026-09-03T09:54:11.098Z"
   },
   "providers": {
-    "groq": false,
-    "gemini": false,
-    "deepseek": false,
-    "anyConfigured": false
+    "groq": true,
+    "gemini": true,
+    "deepseek": true,
+    "anyConfigured": true
   },
   "ledgerTail": [
     {
-      "at": "2026-09-03T05:02:48.413Z",
-      "date": "2026-09-03",
-      "kind": "webstory",
-      "slug": "cutting-edge-ai-tools-small-business",
+      "at": "2026-09-03T09:54:11.092Z",
+      "date": "2026-08-26",
+      "kind": "blog",
+      "slug": "free-ai-tools-upsc-ssc-2026",
       "status": "ok",
       "reason": "",
+      "words": 2158,
+      "pushed": false
+    },
+    {
+      "at": "2026-09-03T09:53:12.216Z",
+      "date": "2026-08-25",
+      "kind": "blog",
+      "slug": "offline-ai-tools-no-signup",
+      "status": "ok",
+      "reason": "",
+      "words": 2010,
       "pushed": false
     },
     {
