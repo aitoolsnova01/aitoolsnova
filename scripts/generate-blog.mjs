@@ -992,8 +992,22 @@ function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null, secti
     const heroImg = heroLocal ? heroLocal.abs : heroRemote;
     const heroImgSrc = heroLocal ? heroLocal.rel : heroRemote;
     const sectionsHtml = content.sections.map((s, i) => {
-        const image = sectionLocals[i] || `/blog/img/${topic.slug}-section-${i + 1}.jpg`;
-        return `<section class="blog-section">\n<h2>${esc(s.h2)}</h2>\n<img class="section-image" src="${image}" alt="${esc(s.h2)}" loading="lazy" decoding="async" width="1600" height="900">\n${s.body_html}\n</section>`;
+        // Only render an <img> for sections that actually have a local image
+        // file. Previously every section got src="/blog/img/<slug>-section-N.jpg"
+        // but only sections 1-4 are generated — sections 5+ 404'd (broken images
+        // are a "low value content" signal for AdSense/Googlebot). For sections
+        // beyond the generated set, deterministically reuse an existing image of
+        // this post (no new API cost) instead of emitting a dead URL.
+        let image = sectionLocals[i];
+        if (!image) {
+            const n = (i % 4) + 1;
+            const reuse = path.join(BLOG_DIR, 'img', `${topic.slug}-section-${n}.jpg`);
+            if (existsSync(reuse)) image = `/blog/img/${topic.slug}-section-${n}.jpg`;
+        }
+        const imgTag = image
+            ? `\n<img class="section-image" src="${image}" alt="${esc(s.h2)}" loading="lazy" decoding="async" width="1600" height="900">`
+            : '';
+        return `<section class="blog-section">\n<h2>${esc(s.h2)}</h2>${imgTag}\n${s.body_html}\n</section>`;
     }).join('\n\n');
     const faqsHtml = content.faqs.map((f, i) =>
         `<div class="faq-box"><h4>Q${i+1}: ${esc(f.q)}</h4><p>${esc(f.a)}</p></div>`
@@ -1281,23 +1295,46 @@ async function updateBlogsList(topic, content, todayHuman) {
 
 // ---------- 8. Update sitemap.xml ----------
 async function updateSitemap(topic, todayISO) {
-    const xml = await fs.readFile(SITEMAP_XML, 'utf-8');
+    let xml = await fs.readFile(SITEMAP_XML, 'utf-8');
     const START = '<!-- AUTO-BLOG-SITEMAP-START -->';
     if (!xml.includes(START)) {
         console.warn('⚠️  sitemap.xml insertion marker missing — skipping.');
         return;
     }
+    const loc = `https://aitoolsnova.com/blog/${topic.slug}`;
+
+    // Self-heal: strip ANY duplicate <url> blocks for this slug first (re-runs,
+    // retries, or a re-published topic used to leave stacked duplicate entries —
+    // Google flags duplicate URLs in the sitemap as a quality signal).
+    const blockRe = new RegExp(
+        '\\s*<url>\\s*<loc>' + loc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+        '<\\/loc>[\\s\\S]*?<\\/url>', 'g'
+    );
+    const before = xml.length;
+    xml = xml.replace(blockRe, '');
+    if (xml.length !== before) console.log('   ♻️  removed existing duplicate sitemap entry for this slug');
+
+    // Also de-dupe ANY other repeated <loc> in the file so the sitemap is always clean.
+    const seen = new Set();
+    xml = xml.replace(/<url>[\s\S]*?<\/url>/g, (block) => {
+        const m = block.match(/<loc>([^<]+)<\/loc>/);
+        if (!m) return block;
+        if (seen.has(m[1])) return '';
+        seen.add(m[1]);
+        return block;
+    });
+
     const entry = `
     <url>
-        <loc>https://aitoolsnova.com/blog/${topic.slug}</loc>
+        <loc>${loc}</loc>
         <lastmod>${todayISO}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>`;
     const idx = xml.indexOf(START) + START.length;
-    const newXml = xml.slice(0, idx) + entry + xml.slice(idx);
-    await fs.writeFile(SITEMAP_XML, newXml);
-    console.log('✅ sitemap.xml updated');
+    xml = xml.slice(0, idx) + entry + xml.slice(idx);
+    await fs.writeFile(SITEMAP_XML, xml);
+    console.log('✅ sitemap.xml updated (deduplicated)');
 }
 
 // ---------- 9. Ping IndexNow (Bing + Yandex + Naver + others) ----------
@@ -1456,6 +1493,40 @@ async function publishForDate(todayISO) {
             throw new PublishError(`Word count QA failed after write (${wc2} words, floor ${MIN_WORDS}). Thin posts are not published.`, { code: 'qa-word-count' });
         }
         console.log(`   ➤ On-disk visible words ~= ${wc2}`);
+    }
+    // On-disk resource QA: every local /blog/img/* <img> must exist, and every
+    // root-relative internal href must map to a real page. Broken images/links
+    // are a "low value content" signal for AdSense reviewers and Googlebot, so
+    // we repair (or fail loudly) rather than ship a dead page.
+    {
+        const html2 = await fs.readFile(finalPath, 'utf-8');
+        const missingImgs = [...new Set(html2.match(/\/blog\/img\/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|webp)/g) || [])]
+            .filter(p => !existsSync(path.join(ROOT, p.replace(/^\//, ''))));
+        if (missingImgs.length) {
+            // Deterministic self-heal: copy the post hero/section-1 onto each
+            // missing local image slot so nothing 404s.
+            const fallbacks = [path.join(BLOG_DIR, 'img', `${topic.slug}-hero.jpg`),
+                path.join(BLOG_DIR, 'img', `${topic.slug}-section-1.jpg`)]
+                .filter(f => existsSync(f));
+            if (fallbacks.length) {
+                for (const miss of missingImgs) {
+                    await fs.copyFile(fallbacks[0], path.join(ROOT, miss.replace(/^\//, '')));
+                }
+                console.warn(`   🔧 self-healed ${missingImgs.length} missing section image(s) with local fallback`);
+            } else {
+                console.warn(`   ⚠️  missing local images with no fallback: ${missingImgs.join(', ')}`);
+            }
+        }
+        const blogRoutes = new Set(readdirSync(BLOG_DIR).filter(f => f.endsWith('.html')).map(f => '/blog/' + f.slice(0, -5)));
+        const toolRoutes = new Set(readdirSync(path.join(ROOT, 'tools')).filter(f => f.endsWith('.html')).map(f => '/tools/' + f.slice(0, -5)));
+        const links = [...new Set((html2.match(/href="(\/[a-z0-9/-]+?)"/g) || []).map(h => h.match(/href="([^"]+)"/)[1]))]
+            .filter(l => !/\.(jpg|jpeg|png|webp|svg|css|js|ico|xml|txt|json|webmanifest|pdf)$/i.test(l));
+        const hardBad = links.filter(l =>
+            (l.startsWith('/blog/') && !blogRoutes.has(l)) ||
+            (l.startsWith('/tools/') && !toolRoutes.has(l)));
+        if (hardBad.length) {
+            throw new PublishError(`Internal link QA failed — these routes do not exist: ${hardBad.join(', ')}`, { code: 'qa-bad-links' });
+        }
     }
     console.log(`   ✅ Written: blog/${topic.slug}.html (${(finalHtml.length/1024).toFixed(1)} KB)`);
 
