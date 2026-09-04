@@ -1,25 +1,25 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-03T17:55:35.769Z",
+  "generatedAt": "2026-09-04T09:46:57.915Z",
   "automation": {
     "blog": {
       "newest": "2026-09-02",
-      "daysSinceNewest": 1
+      "daysSinceNewest": 2
     },
     "webstory": {
       "newest": "2026-09-02",
-      "daysSinceNewest": 1
+      "daysSinceNewest": 2
     }
   },
   "lastRun": {
     "kind": "blog",
     "ok": true,
-    "date": "2026-08-28",
-    "slug": "ai-language-learning-2026-tools,ai-tools-earn-money-online",
+    "date": "2026-08-30",
+    "slug": "verified-ai-trends-2026,ai-language-learning-tools-2026",
     "pushed": false,
     "reason": "",
-    "at": "2026-09-03T17:55:35.769Z"
+    "at": "2026-09-04T09:46:57.915Z"
   },
   "providers": {
     "groq": true,
@@ -28,6 +28,26 @@
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-09-04T09:46:57.911Z",
+      "date": "2026-08-30",
+      "kind": "blog",
+      "slug": "ai-language-learning-tools-2026",
+      "status": "ok",
+      "reason": "",
+      "words": 1802,
+      "pushed": false
+    },
+    {
+      "at": "2026-09-04T09:45:05.120Z",
+      "date": "2026-08-29",
+      "kind": "blog",
+      "slug": "verified-ai-trends-2026",
+      "status": "ok",
+      "reason": "",
+      "words": 2101,
+      "pushed": false
+    },
     {
       "at": "2026-09-03T17:55:35.759Z",
       "date": "2026-08-28",
@@ -118,24 +138,6 @@
     {
       "at": "2026-08-31T19:50:58.467Z",
       "date": "2026-08-31",
-      "kind": "blog",
-      "slug": "",
-      "status": "fail",
-      "reason": "All providers failed to return valid JSON",
-      "pushed": false
-    },
-    {
-      "at": "2026-08-30T18:24:44.061Z",
-      "date": "2026-08-30",
-      "kind": "blog",
-      "slug": "",
-      "status": "fail",
-      "reason": "All providers failed to return valid JSON",
-      "pushed": false
-    },
-    {
-      "at": "2026-08-28T23:25:39.485Z",
-      "date": "2026-08-28",
       "kind": "blog",
       "slug": "",
       "status": "fail",
