@@ -134,6 +134,25 @@
       "reason": "",
       "words": 1802,
       "pushed": false
+    },
+    {
+      "at": "2026-09-04T17:38:27.690Z",
+      "date": "2026-09-01",
+      "kind": "blog",
+      "slug": "ai-coding-assistants-2026",
+      "status": "ok",
+      "reason": "",
+      "words": 2197,
+      "pushed": false
+    },
+    {
+      "at": "2026-09-04T17:39:49.179Z",
+      "date": "2026-09-03",
+      "kind": "blog",
+      "slug": "",
+      "status": "fail",
+      "reason": "Content below quality floor after 3 expansion pass(es): 923 words (need >= 1000, target 1600).",
+      "pushed": false
     }
   ]
 }

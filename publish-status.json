@@ -1,7 +1,7 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-04T09:46:57.915Z",
+  "generatedAt": "2026-09-04T17:39:49.186Z",
   "automation": {
     "blog": {
       "newest": "2026-09-02",
@@ -15,11 +15,11 @@
   "lastRun": {
     "kind": "blog",
     "ok": true,
-    "date": "2026-08-30",
-    "slug": "verified-ai-trends-2026,ai-language-learning-tools-2026",
+    "date": "2026-09-01",
+    "slug": "ai-coding-assistants-2026",
     "pushed": false,
-    "reason": "",
-    "at": "2026-09-04T09:46:57.915Z"
+    "reason": "Content below quality floor after 3 expansion pass(es): 923 words (need >= 1000, target 1600).",
+    "at": "2026-09-04T17:39:49.186Z"
   },
   "providers": {
     "groq": true,
@@ -28,6 +28,25 @@
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-09-04T17:39:49.179Z",
+      "date": "2026-09-03",
+      "kind": "blog",
+      "slug": "",
+      "status": "fail",
+      "reason": "Content below quality floor after 3 expansion pass(es): 923 words (need >= 1000, target 1600).",
+      "pushed": false
+    },
+    {
+      "at": "2026-09-04T17:38:27.690Z",
+      "date": "2026-09-01",
+      "kind": "blog",
+      "slug": "ai-coding-assistants-2026",
+      "status": "ok",
+      "reason": "",
+      "words": 2197,
+      "pushed": false
+    },
     {
       "at": "2026-09-04T09:46:57.911Z",
       "date": "2026-08-30",
@@ -123,25 +142,6 @@
       "status": "ok",
       "reason": "",
       "words": 2097,
-      "pushed": false
-    },
-    {
-      "at": "2026-08-31T20:07:24.540Z",
-      "date": "2026-08-31",
-      "kind": "blog",
-      "slug": "free-ai-tools-for-drivers",
-      "status": "ok",
-      "reason": "",
-      "words": 2094,
-      "pushed": false
-    },
-    {
-      "at": "2026-08-31T19:50:58.467Z",
-      "date": "2026-08-31",
-      "kind": "blog",
-      "slug": "",
-      "status": "fail",
-      "reason": "All providers failed to return valid JSON",
       "pushed": false
     }
   ]
