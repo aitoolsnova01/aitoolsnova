@@ -1,25 +1,25 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-04T17:39:49.186Z",
+  "generatedAt": "2026-09-05T09:08:44.933Z",
   "automation": {
     "blog": {
-      "newest": "2026-09-02",
-      "daysSinceNewest": 2
+      "newest": "2026-09-04",
+      "daysSinceNewest": 1
     },
     "webstory": {
       "newest": "2026-09-02",
-      "daysSinceNewest": 2
+      "daysSinceNewest": 3
     }
   },
   "lastRun": {
     "kind": "blog",
     "ok": true,
-    "date": "2026-09-01",
-    "slug": "ai-coding-assistants-2026",
+    "date": "2026-09-04",
+    "slug": "ai-voice-tools-marathi-kannada-gujarati,ai-street-vendor-billing",
     "pushed": false,
-    "reason": "Content below quality floor after 3 expansion pass(es): 923 words (need >= 1000, target 1600).",
-    "at": "2026-09-04T17:39:49.186Z"
+    "reason": "",
+    "at": "2026-09-05T09:08:44.933Z"
   },
   "providers": {
     "groq": true,
@@ -28,6 +28,26 @@
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-09-05T09:08:44.926Z",
+      "date": "2026-09-04",
+      "kind": "blog",
+      "slug": "ai-street-vendor-billing",
+      "status": "ok",
+      "reason": "",
+      "words": 1344,
+      "pushed": false
+    },
+    {
+      "at": "2026-09-05T09:08:19.710Z",
+      "date": "2026-09-03",
+      "kind": "blog",
+      "slug": "ai-voice-tools-marathi-kannada-gujarati",
+      "status": "ok",
+      "reason": "",
+      "words": 1813,
+      "pushed": false
+    },
     {
       "at": "2026-09-04T17:39:49.179Z",
       "date": "2026-09-03",
@@ -123,25 +143,6 @@
       "slug": "free-ai-tools-for-drivers",
       "status": "ok",
       "reason": "",
-      "pushed": false
-    },
-    {
-      "at": "2026-09-03T05:02:45.171Z",
-      "date": "2026-08-25",
-      "kind": "webstory",
-      "slug": "free-no-code-ai-apps",
-      "status": "ok",
-      "reason": "",
-      "pushed": false
-    },
-    {
-      "at": "2026-09-02T17:42:05.704Z",
-      "date": "2026-09-02",
-      "kind": "blog",
-      "slug": "free-no-code-ai-apps",
-      "status": "ok",
-      "reason": "",
-      "words": 2097,
       "pushed": false
     }
   ]

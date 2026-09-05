@@ -6,6 +6,18 @@
     <!-- FULL CANONICAL SITEMAP for GSC — 2026-09-03 -->
     <!-- AUTO-BLOG-SITEMAP-START -->
     <url>
+        <loc>https://aitoolsnova.com/blog/ai-street-vendor-billing</loc>
+        <lastmod>2026-09-04</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://aitoolsnova.com/blog/ai-voice-tools-marathi-kannada-gujarati</loc>
+        <lastmod>2026-09-03</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://aitoolsnova.com/blog/ai-coding-assistants-2026</loc>
         <lastmod>2026-09-01</lastmod>
         <changefreq>weekly</changefreq>
