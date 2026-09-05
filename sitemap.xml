@@ -6,6 +6,12 @@
     <!-- FULL CANONICAL SITEMAP for GSC — 2026-09-03 -->
     <!-- AUTO-BLOG-SITEMAP-START -->
     <url>
+        <loc>https://aitoolsnova.com/blog/ai-tools-african-startups</loc>
+        <lastmod>2026-09-05</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://aitoolsnova.com/blog/ai-street-vendor-billing</loc>
         <lastmod>2026-09-04</lastmod>
         <changefreq>weekly</changefreq>

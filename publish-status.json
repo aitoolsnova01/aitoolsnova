@@ -1,11 +1,11 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-05T09:08:44.933Z",
+  "generatedAt": "2026-09-05T16:50:41.811Z",
   "automation": {
     "blog": {
-      "newest": "2026-09-04",
-      "daysSinceNewest": 1
+      "newest": "2026-09-05",
+      "daysSinceNewest": 0
     },
     "webstory": {
       "newest": "2026-09-02",
@@ -15,11 +15,11 @@
   "lastRun": {
     "kind": "blog",
     "ok": true,
-    "date": "2026-09-04",
-    "slug": "ai-voice-tools-marathi-kannada-gujarati,ai-street-vendor-billing",
+    "date": "2026-09-05",
+    "slug": "ai-tools-african-startups",
     "pushed": false,
     "reason": "",
-    "at": "2026-09-05T09:08:44.933Z"
+    "at": "2026-09-05T16:50:41.811Z"
   },
   "providers": {
     "groq": true,
@@ -28,6 +28,16 @@
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-09-05T16:50:41.801Z",
+      "date": "2026-09-05",
+      "kind": "blog",
+      "slug": "ai-tools-african-startups",
+      "status": "ok",
+      "reason": "",
+      "words": 2137,
+      "pushed": false
+    },
     {
       "at": "2026-09-05T09:08:44.926Z",
       "date": "2026-09-04",
@@ -132,15 +142,6 @@
       "date": "2026-09-02",
       "kind": "webstory",
       "slug": "ai-tool-privacy-checklist-before-upload",
-      "status": "ok",
-      "reason": "",
-      "pushed": false
-    },
-    {
-      "at": "2026-09-03T05:02:45.190Z",
-      "date": "2026-08-26",
-      "kind": "webstory",
-      "slug": "free-ai-tools-for-drivers",
       "status": "ok",
       "reason": "",
       "pushed": false
