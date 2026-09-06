@@ -85,6 +85,10 @@ const r = spawnSync('node', ['scripts/_mock-dedup-loader.mjs'], {
         DRY_RUN: '1',
         SKIP_AUTO_PUBLISH: '1',
         SKIP_FEED: '1',
+        // Force the run to attempt today's publish even when the live corpus
+        // already has a post dated today — otherwise resolveDates() exits
+        // "up to date" before the duplicate-topic gate under test ever runs.
+        ALLOW_DUPLICATE_DAY: '1',
     },
 });
 const out = (r.stdout || '') + (r.stderr || '');

@@ -191,43 +191,43 @@
 
 <section class="blog-section">
 <h2>How to Get Started: A Quick 5‑Step Checklist</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-1.jpg" alt="How to Get Started: A Quick 5‑Step Checklist" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-5.jpg" alt="How to Get Started: A Quick 5‑Step Checklist" loading="lazy" decoding="async" width="1600" height="900">
 <ul><li>Identify the exact AI need (chatbot, image tagging, copy).</li><li>Pick the tool from the ranked list that matches your bandwidth.</li><li>Download the desktop client on a machine with at least 2 GB RAM.</li><li>Join the local community Slack or Discord – you’ll save hours.</li><li>Run a pilot on 100‑200 real inputs before scaling.</li></ul><p>Follow this checklist and you’ll avoid the common gotchas I ran into.</p>
 </section>
 
 <section class="blog-section">
 <h2>Integrating AI Tools with Local Payment Gateways</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-2.jpg" alt="Integrating AI Tools with Local Payment Gateways" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-6.jpg" alt="Integrating AI Tools with Local Payment Gateways" loading="lazy" decoding="async" width="1600" height="900">
 <p>Most African startups rely on payment processors like Paystack, Flutterwave, or M-Pesa. When embedding an AI‑driven chatbot (e.g., <strong>Botpress</strong> with GPT‑4 integration) into the checkout flow, the latency budget drops to under 300 ms; otherwise customers abandon at a 12% higher rate. To achieve this, configure the bot to run inference on a regional AWS Edge location (e.g., Africa (Cape Town)). Set the API endpoint to <code>https://af-south-1.api.example.com</code> and allocate a minimum of 2 vCPU and 4 GB RAM; this costs roughly $0.08 per hour, translating to $58 per month at 24/7 operation. Test the integration with a sandbox transaction of 0.01 USD and monitor the <code>response_time</code> metric in CloudWatch. If the average exceeds 250 ms, add a Redis cache layer for frequent intents, which reduces round‑trip time by 40% and adds just $15/month. This concrete setup ensures the AI layer enhances conversion without inflating churn.</p>
 </section>
 
 <section class="blog-section">
 <h2>Data Privacy Compliance When Training Local Language Models</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-3.jpg" alt="Data Privacy Compliance When Training Local Language Models" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-7.jpg" alt="Data Privacy Compliance When Training Local Language Models" loading="lazy" decoding="async" width="1600" height="900">
 <p>Many African markets are adopting data‑protection statutes similar to GDPR (e.g., Kenya's Data Protection Act). When fine‑tuning an open‑source model like <strong>LLaMA‑2 7B</strong> on Swahili customer reviews, you must strip personally identifiable information (PII) before feeding data to the training pipeline. Use a regex pattern <code>/\b\d{9,10}\b/</code> to redact national ID numbers and a Named Entity Recognition (NER) model (spaCy <em>xx_ent_wiki_sm</em>) to mask names. Store the cleaned dataset in an encrypted S3 bucket (AES‑256) with bucket policies limiting access to the IAM role <code>ai‑trainer‑role</code>. Run the fine‑tuning job on a private EC2 instance (t3.large) behind a VPC endpoint; the cost is about $0.10 per hour. After training, run a compliance audit script that scans the model’s output for leaked tokens; any occurrence above 0.1% triggers a rollback. This process keeps the model legally usable while preserving local language nuance.</p>
 </section>
 
 <section class="blog-section">
 <h2>Optimising Image‑Recognition for Low‑Bandwidth Environments</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-4.jpg" alt="Optimising Image‑Recognition for Low‑Bandwidth Environments" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-8.jpg" alt="Optimising Image‑Recognition for Low‑Bandwidth Environments" loading="lazy" decoding="async" width="1600" height="900">
 <p>Startups building inventory apps in rural Tanzania often face 3G speeds of 0.5 Mbps. Deploying a heavy model like <strong>YOLOv8‑large</strong> (≈ 70 MB) is impractical. Instead, convert the model to TensorRT INT8 format, reducing size to 12 MB and inference time to 45 ms on an NVIDIA Jetson Nano. Pair the model with a progressive JPEG compressor that targets 50 KB per image (≈ 70% quality). In practice, a field agent uploads a 2‑MP photo; the app compresses it, sends it over the network in 0.8 seconds, and receives a JSON payload with detected SKUs within 0.6 seconds. The total turnaround is under 2 seconds, meeting the 3‑second SLA for real‑time stock updates. Monitor bandwidth usage with a simple <code>ifconfig</code> script; if daily data exceeds 500 MB, switch to a fallback rule‑based barcode scanner until connectivity improves.</p>
 </section>
 
 <section class="blog-section">
 <h2>Scaling Voice‑AI for Multi‑Dialect Customer Support</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-1.jpg" alt="Scaling Voice‑AI for Multi‑Dialect Customer Support" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-9.jpg" alt="Scaling Voice‑AI for Multi‑Dialect Customer Support" loading="lazy" decoding="async" width="1600" height="900">
 <p>In Nigeria, customers speak English, Yoruba, Igbo, and Hausa. A startup using <strong>Rasa NLU</strong> with Whisper‑large for transcription must allocate language‑specific pipelines. Create four intent files, each tagged with <code>language:yo</code>, <code>language:ig</code>, etc. Deploy Whisper on a dedicated GPU instance (g4dn.xlarge) costing $0.68/hr; process 1,000 minutes of audio per day, which translates to $16.32 daily. To keep costs below $500/month, batch transcriptions in 5‑minute windows and cache repeated phrases in DynamoDB (TTL 30 days). Run a latency test: Yoruba audio of 30 seconds yields 4.2 seconds transcription time, acceptable for a support SLA of 6 seconds. If latency spikes above 7 seconds, route the call to a human agent and log the event for model retraining. This concrete pipeline ensures each dialect receives accurate, timely assistance without exploding the budget.</p>
 </section>
 
 <section class="blog-section">
 <h2>Leveraging Generative AI for Localized Marketing Copy</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-2.jpg" alt="Leveraging Generative AI for Localized Marketing Copy" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-10.jpg" alt="Leveraging Generative AI for Localized Marketing Copy" loading="lazy" decoding="async" width="1600" height="900">
 <p>Marketing teams in Kenya often need ad copy in both English and Swahili within tight deadlines. By integrating <strong>Claude‑3 Opus</strong> via the Anthropic API, you can generate paired headlines in under 2 seconds per request. Set the prompt template to include <code>"Create a 30‑character headline in English and its Swahili translation, focusing on mobile money savings"</code>. Use a rate‑limit of 10 requests per minute to stay within the $0.015 per 1,000‑token budget, which costs roughly $0.12 per day for 100 headlines. Store the generated copy in a PostgreSQL table with columns <code>lang</code>, <code>headline</code>, <code>score</code>. Run a quick A/B test using Firebase Remote Config: show the English version to 60% of users and Swahili to 40%; measure click‑through rates (CTR). In a pilot, Swahili headlines yielded a 3.8% CTR vs. 2.9% for English, proving the ROI of AI‑generated localization. Adjust the prompt based on the highest‑performing phrasing for future batches.</p>
 </section>
 
 <section class="blog-section">
 <h2>Automating Regulatory Reporting with AI‑Driven Document Parsing</h2>
-<img class="section-image" src="/blog/img/ai-tools-african-startups-section-3.jpg" alt="Automating Regulatory Reporting with AI‑Driven Document Parsing" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-tools-african-startups-section-11.jpg" alt="Automating Regulatory Reporting with AI‑Driven Document Parsing" loading="lazy" decoding="async" width="1600" height="900">
 <p>Fintech startups in South Africa must submit monthly AML reports to the FICA regulator, each containing ~200 pages of PDFs. Manually extracting fields takes ~12 hours per report. Deploy <strong>Azure Form Recognizer</strong> with a custom model trained on 30 sample reports; the model achieves 94% field‑level accuracy. Process a new report by uploading it to a Blob Storage container (<code>reports/incoming</code>), triggering an Azure Function that calls the Form Recognizer endpoint. The function parses 200 pages in 45 seconds and writes a JSON payload to a SQL Database. Then a Power Automate flow formats the JSON into the regulator’s XML schema and emails it to the compliance officer. Total cost: $0.02 per page, so a 200‑page report costs $4. The time saved is 11.5 hours, translating to a labor saving of roughly $460 (assuming $40/hr). This concrete workflow turns a monthly bottleneck into a 5‑minute task.</p>
 </section>
 

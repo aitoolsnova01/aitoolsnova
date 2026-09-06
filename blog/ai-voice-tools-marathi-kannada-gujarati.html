@@ -191,37 +191,37 @@
 
 <section class="blog-section">
 <h2>Tips and Tricks for Getting the Most Out of AI Voice Tools</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-1.jpg" alt="Tips and Tricks for Getting the Most Out of AI Voice Tools" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-5.jpg" alt="Tips and Tricks for Getting the Most Out of AI Voice Tools" loading="lazy" decoding="async" width="1600" height="900">
 <p>To get the most out of AI voice tools, it's essential to <strong>use a high-quality microphone</strong> and <strong>minimize background noise</strong>. Additionally, <strong>speaking clearly and slowly</strong> can help improve audio quality and reduce errors. By following these tips, you can unlock the full potential of AI voice tools and enjoy seamless communication in your preferred language.</p>
 </section>
 
 <section class="blog-section">
 <h2>Future of AI Voice Tools in India: What to Expect</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-2.jpg" alt="Future of AI Voice Tools in India: What to Expect" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-6.jpg" alt="Future of AI Voice Tools in India: What to Expect" loading="lazy" decoding="async" width="1600" height="900">
 <p>The future of AI voice tools in India looks promising, with <strong>increasing adoption</strong> and <strong>improving technology</strong>. As more people discover the benefits of AI voice tools, we can expect to see <strong>more languages and dialects supported</strong>, as well as <strong>improved audio quality and latency</strong>. Whether you're a student, professional, or simply someone who wants to communicate more effectively, AI voice tools are definitely worth exploring.</p>
 </section>
 
 <section class="blog-section">
 <h2>Integrating AI Voice with Regional CMS Platforms</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-3.jpg" alt="Integrating AI Voice with Regional CMS Platforms" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-7.jpg" alt="Integrating AI Voice with Regional CMS Platforms" loading="lazy" decoding="async" width="1600" height="900">
 <p>Most Indian content creators host their videos on platforms like WordPress, Joomla, or Drupal. To embed AI‑generated Marathi, Kannada or Gujarati narration, first install the respective plugin (e.g., <strong>WP Text‑to‑Speech</strong> for WordPress). In the plugin settings, select the desired language model (Google Cloud Text‑to‑Speech Marathi v2 or Azure Speech Service Kannada) and input your API key. Then, within the post editor, highlight the script segment and click the "Generate Voice" button. The plugin will call the API, retrieve an <code>mp3</code> file (typically 128 kbps, 0.5 MB per minute of speech), and automatically attach it to the post as a media element. For bulk uploads, use the plugin’s CSV importer: each row contains a post ID, language code, and script text. After processing, the system queues the calls at a rate of 10 requests/second to avoid throttling, completing a 50‑minute article in roughly 8 minutes. Remember to enable caching on your server; serving the generated audio from a CDN reduces latency for end‑users by up to 70 %.
 </section>
 
 <section class="blog-section">
 <h2>Cost‑Benefit Analysis: Pay‑Per‑Use vs. Subscription Models</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-4.jpg" alt="Cost‑Benefit Analysis: Pay‑Per‑Use vs. Subscription Models" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-8.jpg" alt="Cost‑Benefit Analysis: Pay‑Per‑Use vs. Subscription Models" loading="lazy" decoding="async" width="1600" height="900">
 <p>AI voice providers differ sharply in pricing. Google Cloud charges ₹0.016 per 1,000 characters for Marathi, while Azure bills ₹0.018 for Kannada. A 5‑minute tutorial script averages 800 characters, costing roughly ₹0.013 per run on Google. In contrast, services like Resemble.ai offer a flat ₹4,999/month for unlimited regional voices, which translates to a break‑even point after about 380 runs per month. For freelancers producing <strong>10–15 videos weekly</strong>, the subscription saves ₹2,000–₹3,000 monthly. Enterprises generating >5,000 minutes of audio per month should negotiate enterprise contracts, often achieving 20‑30 % discounts. Factor in hidden costs: storage (₹0.02 / GB on AWS S3) and bandwidth (₹0.10 / GB). If you host 100 GB of audio, that adds ₹10 per month—negligible compared to API fees, but worth tracking for large archives.
 </section>
 
 <section class="blog-section">
 <h2>Optimising Pronunciation for Regional Dialects</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-1.jpg" alt="Optimising Pronunciation for Regional Dialects" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-9.jpg" alt="Optimising Pronunciation for Regional Dialects" loading="lazy" decoding="async" width="1600" height="900">
 <p>Marathi, Kannada and Gujarati each have multiple dialects. To fine‑tune pronunciation, use the SSML <code>&lt;phoneme&gt;</code> tag with IPA symbols. For example, the Marathi word "विकास" (development) can be forced to sound like "vikās" by inserting <code>&lt;phoneme alphabet='ipa' ph='vɪkaːs'&gt;विकास&lt;/phoneme&gt;</code>. In practice, create a small lookup table of 20–30 high‑frequency words that the default model mispronounces. During script preparation, run a <strong>find‑replace</strong> macro in your text editor to inject the SSML tags automatically. Test the output on a short 30‑second clip; if latency rises above 300 ms per word, simplify the tags. This method reduces post‑production editing time by up to 40 % for regional podcasts.
 </section>
 
 <section class="blog-section">
 <h2>Batch Processing Workflows with Command‑Line Tools</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-2.jpg" alt="Batch Processing Workflows with Command‑Line Tools" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-10.jpg" alt="Batch Processing Workflows with Command‑Line Tools" loading="lazy" decoding="async" width="1600" height="900">
 <p>When handling dozens of scripts, a CLI pipeline saves hours. Install <code>ffmpeg</code> and the provider's SDK (e.g., <code>pip install google-cloud-texttospeech</code>). Write a Bash script that reads a CSV (columns: <em>id,language,text</em>), calls the API, and stores the result as <code>${id}.mp3</code>. Example loop:
 <pre><code>while IFS=, read id lang txt; do
   python tts.py --lang $lang --text "$txt" --out ${id}.mp3
@@ -233,13 +233,13 @@ The script can run in parallel using GNU <code>parallel</code>, scaling to 20 co
 
 <section class="blog-section">
 <h2>Legal and Copyright Considerations for Regional Audio</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-3.jpg" alt="Legal and Copyright Considerations for Regional Audio" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-11.jpg" alt="Legal and Copyright Considerations for Regional Audio" loading="lazy" decoding="async" width="1600" height="900">
 <p>Indian law treats AI‑generated speech as a "work of the computer" under the Copyright Act, 1957, meaning the user who initiates the generation holds the copyright, provided the input text is original. However, some providers embed a watermark in the audio metadata (e.g., "Generated by Amazon Polly"). To avoid disputes, strip metadata using <code>ffmpeg -i input.mp3 -map_metadata -1 -c copy output.mp3</code>. Additionally, verify that the text does not contain copyrighted material; quoting song lyrics in Marathi without permission can trigger infringement claims. For commercial podcasts, keep a log of API request IDs and timestamps as proof of ownership, which can be crucial if a third party alleges plagiarism.
 </section>
 
 <section class="blog-section">
 <h2>Accessibility Compliance: Meeting Indian WCAG Standards</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-4.jpg" alt="Accessibility Compliance: Meeting Indian WCAG Standards" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-12.jpg" alt="Accessibility Compliance: Meeting Indian WCAG Standards" loading="lazy" decoding="async" width="1600" height="900">
 <p>WCAG 2.2 mandates that audio content be accompanied by text alternatives. When publishing AI‑generated Marathi or Kannada narration, embed a synchronized transcript using the <code>&lt;track kind="captions"&gt;</code> element in HTML5 video. Generate the VTT file automatically: the same script used for TTS can output timestamps (e.g., each sentence gets a 2‑second cue). Example VTT snippet:
 <pre><code>WEBVTT
 
@@ -250,7 +250,7 @@ Testing with screen‑readers like NVDA confirms that users receive both audio a
 
 <section class="blog-section">
 <h2>Performance Benchmarking Across Devices and Networks</h2>
-<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-1.jpg" alt="Performance Benchmarking Across Devices and Networks" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-voice-tools-marathi-kannada-gujarati-section-13.jpg" alt="Performance Benchmarking Across Devices and Networks" loading="lazy" decoding="async" width="1600" height="900">
 <p>Real‑world latency varies by device. On a 4G connection, a 30‑second Marathi clip (128 kbps) streams in ~1.9 seconds, whereas on a 3G network it spikes to 5 seconds, causing user drop‑off. Conduct A/B tests using Chrome DevTools' Network Throttling to simulate 2G, 3G, and 4G conditions. Record metrics: <em>time‑to‑first‑audio</em> and <em>buffer‑underrun rate</em>. For mobile apps, preload the first 5 seconds of audio during the splash screen; this reduces perceived latency by 30 %. On desktop, enable HTTP/2 push for the MP3 files, cutting handshake time by ~150 ms. These tweaks ensure consistent user experience across India's diverse connectivity landscape.
 </section>
 

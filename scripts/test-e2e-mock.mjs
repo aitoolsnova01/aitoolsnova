@@ -87,7 +87,10 @@ const r = spawnSync('node', ['scripts/_mock-loader.mjs'], {
     // BACKFILL_MAX=0 -> exactly one post per run, so the assertions below stay
     // deterministic. Catch-up planning itself is covered by
     // scripts/test-publish-core.mjs (planGaps) and scripts/test-site-health.mjs.
-    env: { ...process.env, GROQ_API_KEY: 'mock-key-for-test', BACKFILL_MAX: '0' },
+    // ALLOW_DUPLICATE_DAY=1 -> attempt today's publish even when the live corpus
+    // already has a post dated today, otherwise resolveDates() exits "up to
+    // date" and the mock post (which the assertions verify) is never written.
+    env: { ...process.env, GROQ_API_KEY: 'mock-key-for-test', BACKFILL_MAX: '0', ALLOW_DUPLICATE_DAY: '1' },
     encoding: 'utf-8',
     cwd: ROOT
 });

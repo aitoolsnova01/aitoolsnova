@@ -191,55 +191,55 @@
 
 <section class="blog-section">
 <h2>Handling Security‑Sensitive Code with AI Assistants</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-1.jpg" alt="Handling Security‑Sensitive Code with AI Assistants" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-5.jpg" alt="Handling Security‑Sensitive Code with AI Assistants" loading="lazy" decoding="async" width="1600" height="900">
 <p>When generating authentication flows or cryptographic routines, the model may hallucinate insecure patterns. Adopt a verification checklist: 1) Ensure all secrets are referenced via environment variables; 2) Confirm usage of vetted libraries (e.g., <code>libsodium</code> instead of custom RNG); 3) Run static analysis tools like <code>Bandit</code> on generated Python. In a pilot at a health‑tech firm, 7 out of 30 AI‑generated OAuth implementations contained hard‑coded client IDs, which were caught by the checklist before deployment. The trade‑off is added manual steps, but the risk reduction—preventing a potential data breach—far outweighs the extra 5‑minute review per module.</p>
 </section>
 
 <section class="blog-section">
 <h2>Version Control Strategies for AI‑Generated Code</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-2.jpg" alt="Version Control Strategies for AI‑Generated Code" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-6.jpg" alt="Version Control Strategies for AI‑Generated Code" loading="lazy" decoding="async" width="1600" height="900">
 <p>Treat AI output as a separate branch to isolate experimental changes. After a model suggests a new feature, create a <code>feature/ai‑<em>name</em></code> branch, commit the diff, and open a pull request with the label <code>ai‑generated</code>. This enables reviewers to apply a stricter review rubric—mandatory unit test coverage of ≥90% and a requirement that the code passes the project's <code>codecov</code> threshold. In a microservice architecture, a team used this workflow to integrate 42 AI‑generated modules over three sprints, achieving a 0.8% defect rate versus the baseline 2.3%. The downside is additional branch management overhead; automate branch creation with a Git hook to keep the process lightweight.</p>
 </section>
 
 <section class="blog-section">
 <h2>Performance Profiling of AI‑Suggested Optimizations</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-3.jpg" alt="Performance Profiling of AI‑Suggested Optimizations" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-7.jpg" alt="Performance Profiling of AI‑Suggested Optimizations" loading="lazy" decoding="async" width="1600" height="900">
 <p>AI assistants often propose algorithmic improvements that need empirical validation. Use a benchmarking harness (e.g., <code>pytest-benchmark</code>) to compare the original and suggested implementations. In a real‑world case, a data‑processing pipeline reduced its runtime from 12.4 seconds to 7.1 seconds after the assistant replaced a nested loop with a vectorized NumPy operation. Record the <code>speedup_factor</code> and store it in a metadata file attached to the commit. Trade‑offs include the time spent running benchmarks—approximately 30 seconds per test—but the performance gains can be quantified and justified to stakeholders.</p>
 </section>
 
 <section class="blog-section">
 <h2>Multi‑Model Orchestration for Specialized Tasks</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-4.jpg" alt="Multi‑Model Orchestration for Specialized Tasks" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-8.jpg" alt="Multi‑Model Orchestration for Specialized Tasks" loading="lazy" decoding="async" width="1600" height="900">
 <p>Combine general‑purpose LLMs with domain‑specific models to improve accuracy. For instance, route UI component generation to a model fine‑tuned on React patterns, while sending backend logic to a model trained on Java Spring code. A fintech company built a router that inspected the file extension and selected the appropriate endpoint, achieving a 15% reduction in syntax errors compared to a single‑model approach. The trade‑off is added infrastructure complexity: you need a service mesh to manage multiple endpoints and health‑check scripts to monitor latency spikes.</p>
 </section>
 
 <section class="blog-section">
 <h2>Maintaining Code Consistency Across Teams</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-1.jpg" alt="Maintaining Code Consistency Across Teams" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-9.jpg" alt="Maintaining Code Consistency Across Teams" loading="lazy" decoding="async" width="1600" height="900">
 <p>Enforce style guides by feeding the AI assistant a style configuration file (e.g., <code>.prettierrc</code> or <code>pylintrc</code>) as part of the prompt. In a distributed team of 12 engineers, this reduced style‑related PR comments from an average of 4.3 per review to 0.9. The assistant inserts <code># fmt: off</code> comments only when a deviation is unavoidable, and developers can later approve these exceptions. The downside is potential over‑reliance on the assistant to "fix" style, which may mask deeper understanding gaps; schedule quarterly code‑walk sessions to keep the team fluent in the style rules.</p>
 </section>
 
 <section class="blog-section">
 <h2>Measuring ROI of AI Coding Assistants</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-2.jpg" alt="Measuring ROI of AI Coding Assistants" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-10.jpg" alt="Measuring ROI of AI Coding Assistants" loading="lazy" decoding="async" width="1600" height="900">
 <p>Quantify the impact by tracking three metrics: <em>development time saved</em>, <em>defect reduction</em>, and <em>cost per token</em>. Over a 6‑month period, a mobile app team logged 1,800 hours of coding activity. With the assistant, they recorded 420 hours of auto‑generated boilerplate, cutting the net coding time to 1,380 hours—a 23% efficiency gain. Defects per 1,000 lines of code fell from 4.2 to 2.8, saving an estimated $12,000 in post‑release fixes. After accounting for $3,600 in API usage, the net ROI was $8,400. Use a simple spreadsheet formula: <code>ROI = (TimeSaved*HourlyRate + DefectSavings) - TokenCost</code>. The trade‑off is the initial time investment to set up monitoring and reporting, typically 2‑3 weeks, but the data-driven insight justifies the effort.</p>
 </section>
 
 <section class="blog-section">
 <h2>Debugging AI‑Generated Code with Real‑World Toolchains</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-3.jpg" alt="Debugging AI‑Generated Code with Real‑World Toolchains" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-11.jpg" alt="Debugging AI‑Generated Code with Real‑World Toolchains" loading="lazy" decoding="async" width="1600" height="900">
 <p>When an AI assistant suggests a code snippet, treat it as a draft, not production‑ready. Start by running the snippet through your static analysis suite—e.g., <strong>ESLint</strong> for JavaScript or <strong>Bandit</strong> for Python—to catch obvious security or style violations. Next, instrument the code with <strong>unit tests</strong> that mirror production edge cases; a typical pattern is to generate a test harness that exercises the AI output with both typical inputs and boundary values (e.g., empty strings, max‑size payloads, null objects). If the AI produces a new function, run it under a debugger (VS Code, PyCharm) and set breakpoints at the entry and exit points to verify variable types and flow. For performance‑critical paths, profile the AI‑generated code with <strong>perf</strong> (Linux) or <strong>dotTrace</strong> (C#) and compare against baseline metrics; a 10‑20% slowdown often signals hidden allocations or suboptimal loops. Finally, log any discrepancies and feed them back to the model via a <code>feedback</code> API call, closing the loop between generation and validation.</p>
 </section>
 
 <section class="blog-section">
 <h2>Licensing and Intellectual Property Risks of Model‑Sourced Code</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-4.jpg" alt="Licensing and Intellectual Property Risks of Model‑Sourced Code" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-12.jpg" alt="Licensing and Intellectual Property Risks of Model‑Sourced Code" loading="lazy" decoding="async" width="1600" height="900">
 <p>AI assistants trained on public repositories can inadvertently reproduce licensed snippets. Conduct a <strong>license audit</strong> after each AI‑driven merge: run <strong>FOSSology</strong> or <strong>ScanCode</strong> on the diff to detect GPL‑3.0, LGPL, or Apache‑2.0 headers that may have been introduced. If a match is found, assess whether the snippet is <em>substantial</em> (typically >30 lines or a unique algorithm); even a short helper function can trigger copyleft obligations. In high‑risk environments, enforce a policy where any AI‑generated code exceeding 10 lines must be manually reviewed for provenance. Maintain a <strong>code provenance ledger</strong> in your repository—store the model version, prompt, and timestamp as commit metadata—so you can trace back the origin if a claim arises. For enterprises, negotiate enterprise‑grade model licenses that include a warranty of non‑infringing output, which can reduce potential litigation costs from $50k‑$200k per incident.</p>
 </section>
 
 <section class="blog-section">
 <h2>Optimizing Prompt Length and Context Windows for Large Models</h2>
-<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-1.jpg" alt="Optimizing Prompt Length and Context Windows for Large Models" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-coding-assistants-2026-section-13.jpg" alt="Optimizing Prompt Length and Context Windows for Large Models" loading="lazy" decoding="async" width="1600" height="900">
 <p>Large language models (LLM) in 2026 often have context windows of 8‑32 k tokens. To stay within limits while preserving relevance, use a <strong>sliding‑window prompt strategy</strong>: extract the last 2 k tokens of the file, prepend a concise <code>// Summary</code> block, and append the specific request (e.g., "Refactor this loop to use async streams"). Empirical testing on GPT‑4‑Turbo shows that prompts under 1 k tokens yield a 12‑15% faster response time and a 5‑7% reduction in hallucinated identifiers. If the task spans multiple files, summarize each file with a <code># File: X.rb – 3‑line purpose</code> bullet list, then ask the model to generate a diff. For codebases larger than 500 k lines, cache the most recent 5 k‑token context in a Redis store and retrieve it for subsequent calls, reducing redundant token consumption by up to 40%. Finally, benchmark different prompt templates using a <strong>latency‑accuracy matrix</strong> to identify the sweet spot between detail and token economy for your team’s typical use cases.</p>
 </section>
 

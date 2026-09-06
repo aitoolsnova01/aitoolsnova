@@ -191,43 +191,43 @@
 
 <section class="blog-section">
 <h2>How to Keep Your Offline AI Toolkit Fresh Without Internet</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-1.jpg" alt="How to Keep Your Offline AI Toolkit Fresh Without Internet" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-5.jpg" alt="How to Keep Your Offline AI Toolkit Fresh Without Internet" loading="lazy" decoding="async" width="1600" height="900">
 <p>Set up a monthly USB sync with a friend who lives in a city with fast broadband. Swap the latest zip releases, verify checksums, and you’ll stay current without ever logging into a website.</p><p>If you’re comfortable with Git, clone the repositories when you have a connection, then pull the changes later. Most of the tools publish releases on GitHub, so a simple <code>git pull</code> does the trick.</p><p>Lastly, document the version you’re using in a tiny <code>versions.txt</code> file. When you switch laptops, you can quickly match the environment and avoid unexpected model mismatches.</p>
 </section>
 
 <section class="blog-section">
 <h2>Future‑Proofing: When Offline AI Might Become Mainstream</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-2.jpg" alt="Future‑Proofing: When Offline AI Might Become Mainstream" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-6.jpg" alt="Future‑Proofing: When Offline AI Might Become Mainstream" loading="lazy" decoding="async" width="1600" height="900">
 <p>Hardware is getting stronger. Your next laptop will likely ship with a dedicated AI accelerator, meaning these local models will run faster and with higher fidelity. That’s why I kept the list open‑source – you can swap in a newer model without rewriting the whole workflow.</p><p>Also, privacy regulations are tightening. Companies are looking for ways to process data on‑device to stay compliant. Expect more vendors to ship offline versions of their popular cloud tools.</p><p>In the meantime, having a solid offline toolbox gives you a safety net. When the internet drops, your productivity doesn’t have to.</p>
 </section>
 
 <section class="blog-section">
 <h2>Hardware Requirements and Performance Benchmarks</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-3.jpg" alt="Hardware Requirements and Performance Benchmarks" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-7.jpg" alt="Hardware Requirements and Performance Benchmarks" loading="lazy" decoding="async" width="1600" height="900">
 <p>Offline AI tools vary widely in CPU, GPU, and RAM demands. For instance, <strong>LocalGPT</strong> runs comfortably on a laptop with an Intel i5‑12400 and 16 GB RAM, delivering ~2 tokens per second on a 7‑B model. By contrast, <em>Stable Diffusion XL</em> needs at least an NVIDIA RTX 3060 (12 GB VRAM) to generate a 512×512 image in under 15 seconds; older GPUs like the GTX 1050 will stall beyond a minute per image.</p><p>When planning a workstation, allocate resources based on the heaviest model you intend to run. A practical rule: <strong>CPU cores × 2 GHz ≥ model parameter count / 1 billion</strong>. So a 13‑B LLM benefits from a 6‑core 3.2 GHz CPU. Disk speed matters too; SSDs cut model load times from 30 seconds to 8 seconds for a 4‑GB model. If you lack a dedicated GPU, consider <strong>Quantized</strong> or <strong>8‑bit</strong> model variants, which halve memory use at a ~10 % quality loss.</p>
 </section>
 
 <section class="blog-section">
 <h2>Security Implications of Running AI Locally</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-4.jpg" alt="Security Implications of Running AI Locally" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-8.jpg" alt="Security Implications of Running AI Locally" loading="lazy" decoding="async" width="1600" height="900">
 <p>Running AI offline removes data exposure to cloud providers, but it introduces new attack surfaces. Models are large binary files; if stored unencrypted, a compromised workstation can leak proprietary prompts. Use <strong>full‑disk encryption (FDE)</strong> and keep model directories under <code>chmod 700</code> permissions.</p><p>Some tools, like <em>ChatBotUI</em>, allow plugin extensions. Only install plugins from verified sources; a malicious plugin can execute arbitrary code during inference. Conduct a <strong>hash verification</strong> (SHA‑256) of downloaded model weights against the publisher’s checksum to prevent tampered files.</p><p>Network isolation is also critical. Even offline tools may attempt to check for updates; block outbound traffic via a firewall rule (e.g., <code>iptables -A OUTPUT -p tcp --dport 443 -j DROP</code>) to guarantee true offline operation.</p>
 </section>
 
 <section class="blog-section">
 <h2>Energy Consumption and Cost Analysis</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-1.jpg" alt="Energy Consumption and Cost Analysis" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-9.jpg" alt="Energy Consumption and Cost Analysis" loading="lazy" decoding="async" width="1600" height="900">
 <p>Offline inference can be power‑hungry. A desktop with an RTX 3070 consumes ~200 W during a 30‑second Stable Diffusion run, translating to ~0.001 kWh per image. At $0.13/kWh, that's $0.00013 per image—practically negligible for occasional use, but scale up to 1,000 images daily and the cost reaches $4.70.</p><p>CPU‑only inference is cheaper but slower. Running a 6‑B LLM on an i7‑10700K draws ~65 W, producing ~5 tokens/second. Over an 8‑hour workday, the energy cost is roughly $0.70. For budget‑conscious freelancers, pairing a modest GPU (RTX 2060) with a power‑efficient CPU can keep monthly electricity under $10 while delivering acceptable performance.</p><p>Consider the <strong>total cost of ownership</strong>: hardware depreciation (e.g., a $500 GPU amortized over 3 years = $0.014/month per hour of use) plus electricity. This metric helps decide whether a cloud subscription or offline setup is financially smarter for your workload.</p>
 </section>
 
 <section class="blog-section">
 <h2>Integration with Existing Productivity Pipelines</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-2.jpg" alt="Integration with Existing Productivity Pipelines" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-10.jpg" alt="Integration with Existing Productivity Pipelines" loading="lazy" decoding="async" width="1600" height="900">
 <p>Most offline AI tools expose a REST API or a command‑line interface, enabling seamless automation. For example, <em>llama.cpp</em> can be called via <code>curl -X POST -d "{\"prompt\":\"Summarize...\"}" http://localhost:8080/v1/completions</code>, allowing you to embed summarization directly into a <strong>Zapier</strong> or <strong>Make.com</strong> workflow that watches a local folder.</p><p>In a typical writing pipeline, a <code>watch</code> script detects new <code>.md</code> files, pipes them to the offline model for a first‑draft rewrite, then pushes the output to a Git repository. The entire loop runs under 30 seconds per 1,000‑word document on a mid‑range GPU.</p><p>For spreadsheet automation, <em>Tabular AI</em> can read CSVs from a local directory, generate insights, and write back a <code>.xlsx</code> file. Hook this into a scheduled <code>cron</code> job to refresh dashboards nightly without ever leaving the corporate network.</p>
 </section>
 
 <section class="blog-section">
 <h2>Licensing, Model Ownership, and Legal Risks</h2>
-<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-3.jpg" alt="Licensing, Model Ownership, and Legal Risks" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/offline-ai-tools-no-signup-section-11.jpg" alt="Licensing, Model Ownership, and Legal Risks" loading="lazy" decoding="async" width="1600" height="900">
 <p>Offline models come with diverse licenses. <strong>Meta's Llama 2</strong> is released under a non‑commercial clause; using it for client work can breach the agreement. In contrast, <em>OpenChatKit</em> uses an MIT license, allowing commercial exploitation without attribution.</p><p>Before deploying, audit the model's <code>LICENSE.txt</code> and any accompanying <code>README</code> for usage restrictions. If a model is <strong>CC‑BY‑SA</strong>, any derivative output must be shared under the same license, which may be undesirable for proprietary content.</p><p>Maintain a <em>model inventory spreadsheet</em> that logs source URL, version, checksum, and license type. This documentation protects you during audits and helps quickly replace a model if a license changes—e.g., when a previously free model becomes gated behind a paid API.</p>
 </section>
 
