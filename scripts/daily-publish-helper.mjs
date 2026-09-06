@@ -239,7 +239,16 @@ export async function commitAndPush({
                 env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
             });
         } catch (err) {
-            const safe = String(err && err.message ? err.message : err).replace(workflowToken, '***');
+            // A PAT without the "workflow" scope is refused exactly like the job
+            // token. The commit we just made MUST NOT survive: if it stays on
+            // HEAD, the workflow's own content push carries the workflow file
+            // along and is rejected too - every content run goes red for a
+            // reason that has nothing to do with content. Undo the commit, the
+            // index and the worktree completely before reporting.
+            await git(['reset', '--mixed', '-q', 'HEAD~1']).catch(() => {});
+            await git(['restore', '--staged', '.github/workflows']).catch(() => {});
+            await git(['restore', '--worktree', '.github/workflows']).catch(() => {});
+            const safe = String(err && err.message ? err.message : err).split(workflowToken).join('***');
             throw new Error(safe);
         }
         return true;

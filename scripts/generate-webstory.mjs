@@ -239,8 +239,8 @@ async function callGroq(messages) {
                     temperature: 0.85,
                     max_tokens: 3600,
                     response_format: { type: 'json_object' },
-                    timeoutMs: 120_000,
                 }),
+                timeoutMs: 120_000,
             });
             if (res.ok) {
                 const data = await res.json();
@@ -313,8 +313,8 @@ async function callGroq(messages) {
                             temperature: 0.85,
                             max_tokens: 3600,
                             response_format: { type: 'json_object' },
-                            timeoutMs: 120_000,
                         }),
+                        timeoutMs: 120_000,
                     });
                     if (!res.ok) {
                         const t = await res.text();
@@ -1035,14 +1035,28 @@ async function healWorkflowsIfAllowed() {
         annotate('warning', 'Workflow YAML drift not applied', msg);
         return 'blocked-no-pat';
     }
+    // Remember where HEAD was so a refused push can be rolled back exactly,
+    // whatever the helper managed (or failed) to do.
+    const before = await git(['rev-parse', 'HEAD']).then(r => r.stdout.trim()).catch(() => '');
     try {
         const pushed = await commitAndPush({ message: 'ci: self-heal workflow files', onlyWorkflows: true });
         console.log(pushed ? '🩹 Workflow fix pushed to main' : '🩹 No workflow changes to push');
         return pushed ? 'pushed' : 'noop';
     } catch (err) {
+        if (before) await git(['reset', '--mixed', '-q', before]).catch(() => {});
+        await git(['restore', '--staged', '.github/workflows']).catch(() => {});
+        await git(['restore', '--worktree', '.github/workflows']).catch(() => {});
         await git(['checkout', '--', '.github/workflows']).catch(() => {});
-        await git(['reset', '-q', '--', '.github/workflows']).catch(() => {});
-        console.warn(`⚠️  Workflow fix push failed: ${describeError(err)}`);
+        const msg = describeError(err);
+        const noScope = /workflows?.*permission|without .workflow/i.test(msg);
+        console.warn(`⚠️  Workflow fix push failed: ${msg}`);
+        annotate('warning', noScope ? 'WORKFLOW_PAT lacks the "workflow" scope' : 'Workflow self-heal push failed',
+            noScope
+                ? 'The WORKFLOW_PAT secret cannot write .github/workflows. Regenerate it as a classic PAT with the "workflow" scope (or delete the secret). Content publishing continues normally.'
+                : `${msg}. Content publishing continues normally.`);
+        // Belt and braces: never let a workflow edit leak into the content commit.
+        const dirty = await git(['status', '--porcelain', '--', '.github/workflows']).then(r => r.stdout.trim()).catch(() => '');
+        if (dirty) console.warn(`⚠️  .github/workflows still dirty after rollback:\n${dirty}`);
         return 'push-failed';
     }
 }
