@@ -1,25 +1,25 @@
 {
   "site": "https://aitoolsnova.com",
   "schemaVersion": 2,
-  "generatedAt": "2026-09-05T16:50:41.811Z",
+  "generatedAt": "2026-09-06T09:28:08.124Z",
   "automation": {
     "blog": {
-      "newest": "2026-09-05",
+      "newest": "2026-09-06",
       "daysSinceNewest": 0
     },
     "webstory": {
       "newest": "2026-09-02",
-      "daysSinceNewest": 3
+      "daysSinceNewest": 4
     }
   },
   "lastRun": {
     "kind": "blog",
     "ok": true,
-    "date": "2026-09-05",
-    "slug": "ai-tools-african-startups",
+    "date": "2026-09-06",
+    "slug": "ai-design-hacks-2026",
     "pushed": false,
     "reason": "",
-    "at": "2026-09-05T16:50:41.811Z"
+    "at": "2026-09-06T09:28:08.124Z"
   },
   "providers": {
     "groq": true,
@@ -28,6 +28,16 @@
     "anyConfigured": true
   },
   "ledgerTail": [
+    {
+      "at": "2026-09-06T09:28:08.117Z",
+      "date": "2026-09-06",
+      "kind": "blog",
+      "slug": "ai-design-hacks-2026",
+      "status": "ok",
+      "reason": "",
+      "words": 1842,
+      "pushed": false
+    },
     {
       "at": "2026-09-05T16:50:41.801Z",
       "date": "2026-09-05",
@@ -135,15 +145,6 @@
       "status": "ok",
       "reason": "",
       "words": 2010,
-      "pushed": false
-    },
-    {
-      "at": "2026-09-03T05:02:48.306Z",
-      "date": "2026-09-02",
-      "kind": "webstory",
-      "slug": "ai-tool-privacy-checklist-before-upload",
-      "status": "ok",
-      "reason": "",
       "pushed": false
     }
   ]
