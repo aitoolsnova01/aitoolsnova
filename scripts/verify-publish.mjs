@@ -34,6 +34,7 @@ import {
     isoDate, daysBetween, publishedDates, readLedger, parseArgs, annotate,
     stepSummary, visibleWords, SITE,
 } from './lib/publish-core.mjs';
+import { duplicateSectionSrc, listSectionImageSrcs } from './lib/section-images.mjs';
 
 const execFileP = promisify(execFile);
 const ROOT = path.resolve(process.env.REPO_ROOT || process.cwd());
@@ -111,6 +112,15 @@ async function main() {
             else ok(`${rel}: ${words} words`);
             if (!html.includes('rel="canonical"')) fail(`${rel} has no canonical URL`);
             if (!html.includes('ca-pub-2278101269918728')) fail(`${rel} lost its AdSense tag`);
+            // Uniqueness gate: a section image used twice = the old wrap/reuse
+            // bug (11 posts shipped with 4 pictures across 11-15 sections).
+            const dupes = duplicateSectionSrc(html);
+            if (dupes.length) {
+                fail(`${rel} reuses section image(s) more than once: ${dupes.join(', ')} — every section needs its own unique image`);
+            } else {
+                const n = listSectionImageSrcs(html).length;
+                if (n) ok(`${rel}: ${n} section images, all unique`);
+            }
         }
         // discoverability: linked from the index + listed in the sitemap
         const indexFile = KIND === 'webstory' ? 'web-stories.html' : 'blogs.html';
@@ -119,6 +129,24 @@ async function main() {
         const sitemap = readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
         if (!sitemap.includes(`${SITE}/${DIR}/${slug}`)) fail(`${slug} is missing from sitemap.xml`);
         await fileOnRemote(rel);
+    }
+
+    // Corpus-wide uniqueness sweep (blog only): the duplicate-section-image
+    // regression can live in ANY post, not just today's, so the gate scans
+    // every published article. Each section image must be unique within its
+    // post; the same file appearing in two <img class="section-image"> tags
+    // is an automatic FAIL.
+    if (KIND === 'blog') {
+        const allPosts = readdirSync(path.join(ROOT, DIR)).filter(f => f.endsWith('.html'));
+        let clean = 0;
+        for (const p of allPosts) {
+            let txt = '';
+            try { txt = readFileSync(path.join(ROOT, DIR, p), 'utf8'); } catch { continue; }
+            const d = duplicateSectionSrc(txt);
+            if (d.length) fail(`${DIR}/${p} reuses section image(s): ${d.join(', ')}`);
+            else clean++;
+        }
+        if (clean) ok(`section-image uniqueness sweep: ${clean}/${allPosts.length} posts clean`);
     }
 
     return finish(problems.length ? false : true);

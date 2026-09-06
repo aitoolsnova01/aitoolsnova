@@ -191,55 +191,55 @@
 
 <section class="blog-section">
 <h2>Comparison Verdict</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-1.jpg" alt="Comparison Verdict" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-5.jpg" alt="Comparison Verdict" loading="lazy" decoding="async" width="1600" height="900">
 <p>After testing all 7 tools, I have to say that Tool 7 is my clear winner. Its 95% accuracy score and comprehensive feedback features make it the best AI tool for language learning. That being said, Tool 5 is a close second, and its user-friendly interface makes it a great option for beginners.</p>
 </section>
 
 <section class="blog-section">
 <h2>Tips for Getting the Most Out of These AI Tools</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-2.jpg" alt="Tips for Getting the Most Out of These AI Tools" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-6.jpg" alt="Tips for Getting the Most Out of These AI Tools" loading="lazy" decoding="async" width="1600" height="900">
 <p>To get the most out of these AI tools, I recommend practicing regularly and focusing on specific areas of improvement. You should also experiment with different tools to find the one that works best for you. Finally, don't be afraid to try out different languages and accents – it's a great way to challenge yourself and improve your skills.</p>
 </section>
 
 <section class="blog-section">
 <h2>How to Combine Two AI Tools for Real‑Time Pronunciation Feedback</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-3.jpg" alt="How to Combine Two AI Tools for Real‑Time Pronunciation Feedback" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-7.jpg" alt="How to Combine Two AI Tools for Real‑Time Pronunciation Feedback" loading="lazy" decoding="async" width="1600" height="900">
 <p>Start by pairing <strong>Tool 2</strong> (speech‑to‑text transcription) with <strong>Tool 4</strong> (pronunciation scoring). Record a 30‑second utterance in your target language, then feed the audio file into Tool 2 via its API endpoint <code>POST /transcribe</code>. Capture the returned text and timestamps, then immediately send the same audio to Tool 4’s <code>/score</code> endpoint. The response includes a numeric score (0‑100) and a phoneme‑level error list.</p><p>Next, script a simple Python loop that repeats this process for a 10‑sentence lesson. Store each sentence’s score and highlight mispronounced phonemes in a spreadsheet. Over a week, you’ll see a <em>average score increase of 12 points</em> if you practice daily for 15 minutes. The trade‑off is latency: combined API calls take ~2.4 seconds per sentence, so batch‑process during idle time to avoid interrupting conversation practice.</p>
 </section>
 
 <section class="blog-section">
 <h2>Using AI‑Generated Cloze Deletions for Vocabulary Retention</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-4.jpg" alt="Using AI‑Generated Cloze Deletions for Vocabulary Retention" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-8.jpg" alt="Using AI‑Generated Cloze Deletions for Vocabulary Retention" loading="lazy" decoding="async" width="1600" height="900">
 <p>Tool 3 can auto‑create cloze‑deletion flashcards from any text. Upload a 500‑word article in the target language, then set the <code>cloze_density</code> parameter to <code>0.20</code>. The tool will mask roughly one‑fifth of the words, prioritizing nouns and verbs with a <em>frequency rank</em> below 2,000 in the language corpus.</p><p>Export the JSON output and import it into Anki using the <code>Import Cloze</code> add‑on. Schedule the cards with a 4‑day initial interval and a 2.5× ease factor. In my test with Spanish learners, the average recall rate rose from 68% to 84% after two weeks, compared to standard front‑back cards. The downside is that overly dense clozes (<code>0.30</code>+) can overwhelm beginners, inflating the failure rate to >45%.</p>
 </section>
 
 <section class="blog-section">
 <h2>Automating Grammar Explanations with Contextual Examples</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-1.jpg" alt="Automating Grammar Explanations with Contextual Examples" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-9.jpg" alt="Automating Grammar Explanations with Contextual Examples" loading="lazy" decoding="async" width="1600" height="900">
 <p>Tool 1’s large‑language model can generate rule‑based explanations plus three contextual sentences. Prompt it with: <code>Explain the use of the subjunctive mood in French, then give three everyday examples.</code> The model returns a concise 80‑word rule followed by three sentences, each tagged with <code>&lt;example&gt;</code> markers.</p><p>Copy the output into a Google Docs table, then use the <code>Docs API</code> to auto‑format the rule in bold and the examples in italics. For a 20‑rule lesson, you spend under five minutes preparing a printable handout. In practice, learners report a 30% faster grasp of the concept versus reading a textbook paragraph. The limitation is that the model occasionally mis‑applies rare exceptions; always verify the third example for irregular verbs.</p>
 </section>
 
 <section class="blog-section">
 <h2>Tracking Progress with AI‑Powered Spaced Repetition Metrics</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-2.jpg" alt="Tracking Progress with AI‑Powered Spaced Repetition Metrics" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-10.jpg" alt="Tracking Progress with AI‑Powered Spaced Repetition Metrics" loading="lazy" decoding="async" width="1600" height="900">
 <p>Tool 6 provides a dashboard that aggregates review data from any SRS app via its webhook. Connect your Anki deck by adding the webhook URL <code>https://api.tool6.com/webhook</code> in Anki’s add‑on settings. Each review sends a JSON payload containing <code>card_id</code>, <code>ease</code>, and <code>interval</code>.</p><p>The dashboard calculates a <strong>Retention Index</strong> (RI) = (Σ ease × interval) / total reviews. An RI above 0.75 indicates stable knowledge. In a pilot with 15 learners, those who kept RI ≥ 0.80 after four weeks improved their TOEFL reading score by an average of 4 points, while the rest saw a 1‑point gain. The trade‑off is privacy: you must consent to sending review data to a third‑party server.</p>
 </section>
 
 <section class="blog-section">
 <h2>Leveraging AI for Real‑World Role‑Play Scenarios</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-3.jpg" alt="Leveraging AI for Real‑World Role‑Play Scenarios" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-11.jpg" alt="Leveraging AI for Real‑World Role‑Play Scenarios" loading="lazy" decoding="async" width="1600" height="900">
 <p>Use Tool 5’s scenario generator to create a 5‑minute dialogue for a specific context (e.g., ordering food in a Japanese restaurant). Input: <code>Generate a role‑play where a learner orders sushi for two, includes polite forms, and expects the server to suggest seasonal specials.</code> The output includes two speaker blocks with timestamps.</p><p>Pair this with Tool 2’s voice synthesis: feed each line into the <code>/synthesize</code> endpoint, selecting a native‑accent voice. Play the audio sequentially while the learner repeats each line, recording their response. Compare the recording to the original using Tool 4’s scoring API. In my trial, learners reduced their response latency from 6 seconds to 3 seconds after three sessions, but the setup requires ~10 minutes of prep per scenario.</p>
 </section>
 
 <section class="blog-section">
 <h2>Customizing AI Flashcards for Different Learning Styles</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-4.jpg" alt="Customizing AI Flashcards for Different Learning Styles" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-12.jpg" alt="Customizing AI Flashcards for Different Learning Styles" loading="lazy" decoding="async" width="1600" height="900">
 <p>Tool 7 lets you tag flashcards with visual, auditory, or kinesthetic cues. Upload a CSV with columns <code>term, definition, style</code>. Set <code>style</code> to <code>visual</code> for cards that include an image URL, <code>auditory</code> for an audio clip URL, or <code>kinesthetic</code> for an interactive drag‑and‑drop task.</p><p>When studying German articles, I created 120 cards: 40 visual (pictures of nouns), 40 auditory (native speaker pronunciations), 40 kinesthetic (match noun to article). Test scores after two weeks showed a 22% boost for visual learners and a 15% boost for auditory learners versus a control group using text‑only cards. The downside is that kinesthetic cards require a web‑compatible interface, limiting use on basic e‑readers.</p>
 </section>
 
 <section class="blog-section">
 <h2>Cost‑Benefit Analysis of Subscription Tiers for Language Learners</h2>
-<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-1.jpg" alt="Cost‑Benefit Analysis of Subscription Tiers for Language Learners" loading="lazy" decoding="async" width="1600" height="900">
+<img class="section-image" src="/blog/img/ai-language-learning-tools-2026-section-13.jpg" alt="Cost‑Benefit Analysis of Subscription Tiers for Language Learners" loading="lazy" decoding="async" width="1600" height="900">
 <p>Each AI tool offers a free tier, a monthly subscription, and an enterprise plan. For a typical learner spending 30 minutes daily, calculate ROI based on time saved. Tool 1 free tier caps at 5,000 tokens per month (~30 minutes of content generation). Upgrading to the $12/mo plan adds 50,000 tokens, equating to roughly 5 hours of generated explanations.</p><p>If a learner values their time at $15/hour, the premium saves $75 worth of effort each month, yielding a net gain of $63 after the subscription cost. Tool 4’s premium also unlocks phoneme‑level feedback, which improves pronunciation accuracy by 10% in my cohort. However, the enterprise tier ($199/mo) is only justified for language coaches handling >30 students, as the per‑student cost drops below $7. Use a spreadsheet to model your own usage patterns before committing.</p>
 </section>
 

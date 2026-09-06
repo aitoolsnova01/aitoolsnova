@@ -33,6 +33,10 @@ import {
     publishContent, writePublishStatus, visibleWords, isCI, parseArgs, dedupeBy,
     callSiteApi, siteApiAllowed, CONTENT_PATHS, normalizeTitle, dedupeManagedCards,
 } from './lib/publish-core.mjs';
+import {
+    generateGeminiImage, generateUniqueSectionImage, downloadToLocalImage,
+    writeBrandedSectionImage, pollinationsUrl, seedFor, duplicateSectionSrc,
+} from './lib/section-images.mjs';
 
 const ROOT = path.resolve(process.env.REPO_ROOT || process.cwd());
 const BLOG_DIR = path.join(ROOT, 'blog');
@@ -617,68 +621,12 @@ async function callGroqForJson(messages, opts = {}) {
     throw lastErr || new Error('All providers failed to return valid JSON');
 }
 
-// ---------- 3c. Gemini image generation ----------
-
-const GEMINI_IMAGE_MODELS = process.env.GEMINI_IMAGE_MODEL
-    ? [process.env.GEMINI_IMAGE_MODEL]
-    : ['gemini-2.5-flash-image', 'gemini-2.0-flash-preview-image-generation'];
-
-/**
- * Generate one image with a Gemini image model and save it to destFile,
- * normalized with sharp to an exact JPEG size (Discover/social friendly).
- * Returns true on success; false means the caller should fall back to the
- * Pollinations URL flow (which still gets localized after page build).
- */
-async function generateGeminiImage(prompt, destFile, { aspect = '16:9', width = 1600, height = 900 } = {}) {
-    if (!GEMINI_KEY) return false;
-    const text = `Generate a single photorealistic image, ${aspect} aspect. ${String(prompt).replace(/\s+/g, ' ').trim().slice(0, 800)}`;
-    for (const model of GEMINI_IMAGE_MODELS) {
-        for (let attempt = 1; attempt <= 2; attempt++) {
-            try {
-                const generationConfig = { responseModalities: ['TEXT', 'IMAGE'] };
-                // imageConfig.aspectRatio only exists on the newer image models
-                if (/^gemini-2\.5|^gemini-3/i.test(model)) generationConfig.imageConfig = { aspectRatio: aspect };
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text }] }], generationConfig })
-                });
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    const msg = data?.error?.message || `HTTP ${res.status}`;
-                    console.warn(`   \u26a0\ufe0f  [img:${model}] ${String(msg).slice(0, 180)}`);
-                    break; // 4xx/5xx on this model -> try the next model
-                }
-                const parts = data?.candidates?.[0]?.content?.parts || [];
-                const imgPart = parts.find(pt => pt.inlineData && pt.inlineData.data);
-                if (!imgPart) {
-                    console.warn(`   \u26a0\ufe0f  [img:${model}] no image part (attempt ${attempt}/2)`);
-                    await sleep(1200 * attempt);
-                    continue;
-                }
-                const raw = Buffer.from(imgPart.inlineData.data, 'base64');
-                if (raw.length < 8000) {
-                    console.warn(`   \u26a0\ufe0f  [img:${model}] tiny image ${raw.length}b (attempt ${attempt}/2)`);
-                    await sleep(1200 * attempt);
-                    continue;
-                }
-                const sharp = (await import('sharp')).default;
-                const out = await sharp(raw)
-                    .resize(width, height, { fit: 'cover', position: 'attention', kernel: 'lanczos3' })
-                    .jpeg({ quality: 90, progressive: true, mozjpeg: true })
-                    .toBuffer();
-                await fs.writeFile(destFile, out);
-                console.log(`   \u2714 Gemini image (${model}) -> ${path.basename(destFile)} (${(out.length / 1024).toFixed(0)} KB)`);
-                return true;
-            } catch (e) {
-                console.warn(`   \u26a0\ufe0f  [img:${model}] ${e.message}`);
-                await sleep(1200 * attempt);
-            }
-        }
-    }
-    return false;
-}
+// ---------- 3c. Image generation ----------
+// generateGeminiImage / generateUniqueSectionImage live in
+// lib/section-images.mjs so the generator and the repair script share ONE
+// fallback chain: Gemini -> Pollinations (seeded per section) -> offline
+// branded card with the section heading. Every section gets a unique file;
+// wrapping/reusing another section's image is forbidden.
 
 // ---------- 3b. Robust JSON extractor ----------
 /**
@@ -1055,18 +1003,12 @@ function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null, secti
     const heroImg = heroLocal ? heroLocal.abs : heroRemote;
     const heroImgSrc = heroLocal ? heroLocal.rel : heroRemote;
     const sectionsHtml = content.sections.map((s, i) => {
-        // Only render an <img> for sections that actually have a local image
-        // file. Previously every section got src="/blog/img/<slug>-section-N.jpg"
-        // but only sections 1-4 are generated — sections 5+ 404'd (broken images
-        // are a "low value content" signal for AdSense/Googlebot). For sections
-        // beyond the generated set, deterministically reuse an existing image of
-        // this post (no new API cost) instead of emitting a dead URL.
-        let image = sectionLocals[i];
-        if (!image) {
-            const n = (i % 4) + 1;
-            const reuse = path.join(BLOG_DIR, 'img', `${topic.slug}-section-${n}.jpg`);
-            if (existsSync(reuse)) image = `/blog/img/${topic.slug}-section-${n}.jpg`;
-        }
+        // Every section gets its OWN unique image, produced per section by the
+        // Gemini → Pollinations → branded-fallback chain in publishForDate().
+        // Reusing/wrapping another section's file here is exactly the bug that
+        // shipped 11 posts with only 4 pictures between 11-15 sections — it
+        // must never come back (verify-publish.mjs fails the run if it does).
+        const image = sectionLocals[i];
         const imgTag = image
             ? `\n<img class="section-image" src="${image}" alt="${esc(s.h2)}" loading="lazy" decoding="async" width="1600" height="900">`
             : '';
@@ -1326,7 +1268,7 @@ function buildHtml(topic, content, todayISO, todayHuman, heroLocal = null, secti
 }
 
 // ---------- 7. Update blogs.html ----------
-async function updateBlogsList(topic, content, todayHuman) {
+async function updateBlogsList(topic, content, todayHuman, heroImageName = `${topic.slug}-hero.jpg`) {
     const html = await fs.readFile(BLOGS_HTML, 'utf-8');
     const START = '<!-- AUTO-BLOG-INSERT-START -->';
     const END   = '<!-- AUTO-BLOG-INSERT-END -->';
@@ -1337,7 +1279,7 @@ async function updateBlogsList(topic, content, todayHuman) {
     const cardCategory = ['ai','seo','social','productivity','coding','image','writing'].includes(topic.category) ? topic.category : 'ai';
     const shortDesc = (content.meta_description || '').replace(/"/g, '&quot;');
     const card = `                    <article class="blog-card" data-category="${cardCategory}">
-                        <div class="blog-img"><img src="blog/img/${topic.slug}-hero.jpg" alt="${esc(topic.title)}" loading="lazy" decoding="async" width="1600" height="900"></div>
+                        <div class="blog-img"><img src="blog/img/${heroImageName}" alt="${esc(topic.title)}" loading="lazy" decoding="async" width="1600" height="900"></div>
                         <div class="blog-content">
                             <span class="blog-tag">${(topic.category || 'ai').toUpperCase()}</span>
                             <h3>${esc(topic.title)}</h3>
@@ -1567,32 +1509,69 @@ async function publishForDate(todayISO) {
         await fs.mkdir(path.dirname(heroDest), { recursive: true });
         if (existsSync(heroDest) || await generateGeminiImage(heroPrompt, heroDest, { aspect: '16:9', width: 1600, height: 900 })) {
             heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` };
+        } else if (await downloadToLocalImage(heroRemote, heroDest)) {
+            // Pollinations seeded per slug: unique per post, never a hotlink.
+            heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` };
+            console.log('   ✔ Pollinations hero image localized');
         } else {
-            // Never publish a hotlink: use a bundled local image if Gemini is unavailable.
-            const fallback = readdirSync(path.join(BLOG_DIR, 'img')).find(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
-            if (fallback) { await fs.copyFile(path.join(BLOG_DIR, 'img', fallback), heroDest); heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` }; }
-            console.log('   ℹ️  Gemini image unavailable — bundled local fallback used.');
+            // Offline last resort: a branded card with the post title — unique
+            // to THIS post. Copying some other post's image here is forbidden.
+            const name = await writeBrandedSectionImage({
+                imgDir: path.join(BLOG_DIR, 'img'),
+                baseName: `${topic.slug}-hero`,
+                heading: topic.title,
+                slug: topic.slug,
+                index: 0,
+            });
+            heroLocal = { rel: `/blog/img/${name}`, abs: `${SITE_URL}/blog/img/${name}` };
+            console.log('   ℹ️  Gemini/Pollinations unavailable — branded offline hero used.');
         }
     } catch (e) {
-        const fallback = readdirSync(path.join(BLOG_DIR, 'img')).find(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
-        if (fallback) { const heroDest = path.join(BLOG_DIR, 'img', `${topic.slug}-hero.jpg`); await fs.copyFile(path.join(BLOG_DIR, 'img', fallback), heroDest); heroLocal = { rel: `/blog/img/${topic.slug}-hero.jpg`, abs: `${SITE_URL}/blog/img/${topic.slug}-hero.jpg` }; }
-        console.warn(`   ⚠️  Hero image step failed (${e.message}) — bundled local fallback used.`);
+        try {
+            const name = await writeBrandedSectionImage({
+                imgDir: path.join(BLOG_DIR, 'img'),
+                baseName: `${topic.slug}-hero`,
+                heading: topic.title,
+                slug: topic.slug,
+                index: 0,
+            });
+            heroLocal = { rel: `/blog/img/${name}`, abs: `${SITE_URL}/blog/img/${name}` };
+        } catch { /* heroRemote stays in the HTML; localizeBlogHero gets one more chance */ }
+        console.warn(`   ⚠️  Hero image step failed (${e.message}) — branded offline fallback used.`);
     }
 
-    console.log('\n🖼️  Generating 3–4 section images (Gemini first, local fallback)...');
+    console.log(`\n🖼️  Generating ${content.sections.length} unique section images (Gemini → Pollinations → branded fallback)...`);
+    // EVERY section gets its own file through the shared chain in
+    // lib/section-images.mjs. The chain always succeeds (branded offline card
+    // as the last step), so there is never an excuse to wrap/reuse another
+    // section's image — that bug shipped 11 posts with 4 identical pictures.
     const sectionLocals = {};
-    const sectionPrompts = content.sections.slice(0, 4);
-    const existingFallbacks = readdirSync(path.join(BLOG_DIR, 'img')).filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
-    for (let i = 0; i < sectionPrompts.length; i++) {
-        const dest = path.join(BLOG_DIR, 'img', `${topic.slug}-section-${i + 1}.jpg`);
-        const prompt = `${sectionPrompts[i].h2 || topic.title}, relevant editorial photograph, real people and setting, natural light, no text, no watermark`;
-        let ok = existsSync(dest) || await generateGeminiImage(prompt, dest, { aspect: '16:9', width: 1600, height: 900 });
-        if (!ok) {
-            // Deterministic local fallback: copy a bundled image rather than leaving a hotlink.
-            const fallback = existingFallbacks[i % Math.max(existingFallbacks.length, 1)];
-            if (fallback) { await fs.copyFile(path.join(BLOG_DIR, 'img', fallback), dest); ok = true; }
+    for (let i = 0; i < content.sections.length; i++) {
+        const heading = content.sections[i].h2 || topic.title;
+        const baseName = `${topic.slug}-section-${i + 1}`;
+        // A file left behind by an earlier interrupted run for THIS section is
+        // still unique to it — keep it instead of regenerating.
+        const existing = ['jpg', 'jpeg', 'png', 'webp', 'svg']
+            .map(ext => `${baseName}.${ext}`)
+            .find(f => existsSync(path.join(BLOG_DIR, 'img', f)));
+        if (existing) {
+            sectionLocals[i] = `/blog/img/${existing}`;
+            continue;
         }
-        if (ok) sectionLocals[i] = `/blog/img/${topic.slug}-section-${i + 1}.jpg`;
+        const name = await generateUniqueSectionImage({
+            imgDir: path.join(BLOG_DIR, 'img'),
+            slug: topic.slug,
+            index: i + 1,
+            heading,
+        });
+        sectionLocals[i] = `/blog/img/${name}`;
+    }
+    // Hard invariant: no two sections may point at the same file.
+    {
+        const used = Object.values(sectionLocals);
+        if (new Set(used).size !== used.length) {
+            throw new PublishError('Section image uniqueness invariant violated — refusing to publish duplicate section images.', { code: 'qa-duplicate-images' });
+        }
     }
 
     console.log('\n📄 Building HTML file...');
@@ -1616,23 +1595,35 @@ async function publishForDate(todayISO) {
     // are a "low value content" signal for AdSense reviewers and Googlebot, so
     // we repair (or fail loudly) rather than ship a dead page.
     {
-        const html2 = await fs.readFile(finalPath, 'utf-8');
-        const missingImgs = [...new Set(html2.match(/\/blog\/img\/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|webp)/g) || [])]
+        let html2 = await fs.readFile(finalPath, 'utf-8');
+        const missingImgs = [...new Set(html2.match(/\/blog\/img\/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|webp|svg)/g) || [])]
             .filter(p => !existsSync(path.join(ROOT, p.replace(/^\//, ''))));
         if (missingImgs.length) {
-            // Deterministic self-heal: copy the post hero/section-1 onto each
-            // missing local image slot so nothing 404s.
-            const fallbacks = [path.join(BLOG_DIR, 'img', `${topic.slug}-hero.jpg`),
-                path.join(BLOG_DIR, 'img', `${topic.slug}-section-1.jpg`)]
-                .filter(f => existsSync(f));
-            if (fallbacks.length) {
-                for (const miss of missingImgs) {
-                    await fs.copyFile(fallbacks[0], path.join(ROOT, miss.replace(/^\//, '')));
+            // Self-heal WITHOUT reuse: write a fresh branded card (carrying the
+            // tag's alt/heading text) into every missing slot. Copying the hero
+            // or section-1 file here is what used to create duplicate images.
+            for (const miss of missingImgs) {
+                const escRe = miss.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const altMatch = html2.match(new RegExp(`<img[^>]*src="${escRe}"[^>]*alt="([^"]*)"`, 'i'))
+                    || html2.match(new RegExp(`<img[^>]*alt="([^"]*)"[^>]*src="${escRe}"`, 'i'));
+                const base = path.basename(miss).replace(/\.(jpg|jpeg|png|webp|svg)$/i, '');
+                const secMatch = base.match(/-section-(\d+)$/);
+                const name = await writeBrandedSectionImage({
+                    imgDir: path.join(BLOG_DIR, 'img'),
+                    baseName: base,
+                    heading: altMatch ? altMatch[1] : topic.title,
+                    slug: topic.slug,
+                    index: secMatch ? Number(secMatch[1]) : 0,
+                });
+                if (name !== path.basename(miss)) {
+                    // sharp was unavailable, so the card was saved as .svg even
+                    // though the HTML referenced a raster extension — point the
+                    // HTML at the file that actually exists.
+                    html2 = html2.split(miss).join(miss.slice(0, miss.lastIndexOf('.')) + path.extname(name));
                 }
-                console.warn(`   🔧 self-healed ${missingImgs.length} missing section image(s) with local fallback`);
-            } else {
-                console.warn(`   ⚠️  missing local images with no fallback: ${missingImgs.join(', ')}`);
             }
+            await fs.writeFile(finalPath, html2);
+            console.warn(`   🔧 self-healed ${missingImgs.length} missing image(s) with fresh branded fallbacks (no reuse)`);
         }
         const blogRoutes = new Set(readdirSync(BLOG_DIR).filter(f => f.endsWith('.html')).map(f => '/blog/' + f.slice(0, -5)));
         const toolRoutes = new Set(readdirSync(path.join(ROOT, 'tools')).filter(f => f.endsWith('.html')).map(f => '/tools/' + f.slice(0, -5)));
@@ -1644,11 +1635,20 @@ async function publishForDate(todayISO) {
         if (hardBad.length) {
             throw new PublishError(`Internal link QA failed — these routes do not exist: ${hardBad.join(', ')}`, { code: 'qa-bad-links' });
         }
+        // Final invariant (same gate verify-publish.mjs applies): no section
+        // image may appear twice in the post.
+        const dupeSrcs = duplicateSectionSrc(html2);
+        if (dupeSrcs.length) {
+            throw new PublishError(`Duplicate section images in blog/${topic.slug}.html: ${dupeSrcs.join(', ')} — every section needs its own unique image`, { code: 'qa-duplicate-images' });
+        }
     }
     console.log(`   ✅ Written: blog/${topic.slug}.html (${(finalHtml.length/1024).toFixed(1)} KB)`);
 
     console.log('\n🔗 Updating blogs.html and sitemap.xml...');
-    await updateBlogsList(topic, content, todayHuman);
+    const heroImageName = heroLocal && heroLocal.rel.startsWith('/blog/img/')
+        ? path.basename(heroLocal.rel)
+        : `${topic.slug}-hero.jpg`;
+    await updateBlogsList(topic, content, todayHuman, heroImageName);
     await updateSitemap(topic, todayISO);
     await rebuildFeedBestEffort();
 
