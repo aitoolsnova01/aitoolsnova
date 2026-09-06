@@ -143,9 +143,22 @@ export async function onRequest(context) {
 
   // ---- Production static traffic: pass through with security headers ------
   const response = await next();
+  const headers = applySecurityHeaders(response);
+  // A 404 must never be cached at the edge. Every auto-published post is
+  // requested (by the health check, IndexNow, Googlebot, the sitemap ping)
+  // seconds after the commit and BEFORE the Pages deploy finishes - the edge
+  // cached that 404 and kept serving it for hours after the page existed
+  // (same URL + ?v=1 returned 200 while the bare URL was still 404). Both
+  // headers are set: Cloudflare-CDN-Cache-Control is what the CDN reads, and
+  // the plain header is the browser side; Vary-free so it applies everywhere.
+  if (response.status === 404 || response.status >= 500) {
+    headers.set('Cache-Control', 'no-store, max-age=0');
+    headers.set('Cloudflare-CDN-Cache-Control', 'no-store');
+    headers.set('CDN-Cache-Control', 'no-store');
+  }
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
-    headers: applySecurityHeaders(response),
+    headers,
   });
 }
